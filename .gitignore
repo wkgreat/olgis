@@ -1,0 +1,3 @@
+# Project exclude paths
+/olgis-domain/target/
+/.idea/
