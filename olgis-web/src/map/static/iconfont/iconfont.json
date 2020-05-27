@@ -1,0 +1,51 @@
+{
+  "id": "1292163",
+  "name": "ol-react",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "337270",
+      "name": "up",
+      "font_class": "up",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "337273",
+      "name": "down",
+      "font_class": "down",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "704796",
+      "name": "target",
+      "font_class": "target",
+      "unicode": "eaf6",
+      "unicode_decimal": 60150
+    },
+    {
+      "icon_id": "979199",
+      "name": "delete",
+      "font_class": "delete",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "4471937",
+      "name": "setting",
+      "font_class": "setting",
+      "unicode": "e6ef",
+      "unicode_decimal": 59119
+    },
+    {
+      "icon_id": "5354485",
+      "name": "46-Ruler",
+      "font_class": "-Ruler",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    }
+  ]
+}

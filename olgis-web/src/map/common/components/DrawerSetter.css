@@ -1,0 +1,11 @@
+.drawer-setter .ant-drawer-content-wrapper {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.drawer-setter .ant-drawer-mask {
+    background-color: transparent;
+}
+
+.drawer-setter .ant-drawer-content-wrapper div {
+    background-color: rgba(0, 0, 0, 0);
+}
