@@ -1,8 +1,6 @@
 import {storiesOf} from "@storybook/react";
 import ScalebarSetting from "./scalebarSetting";
-import React, {useState} from "react";
-import {Box} from "@material-ui/core";
-import ToolDialog from "../toolDialog";
+import React from "react";
 import {showWithMap} from "../../../stories";
 import ScalebarSettingDialog from "./scalebarSettingDialog";
 

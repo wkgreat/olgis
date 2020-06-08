@@ -1,4 +1,4 @@
-import React, {CSSProperties, DOMAttributes, useContext, useEffect} from "react";
+import React, {CSSProperties, useContext, useEffect} from "react";
 import OlMap from "../../olmap/olMap";
 import {MapContext} from "../MapContext/mapContext";
 

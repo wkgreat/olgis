@@ -1,17 +1,7 @@
-import React, {FC, ReactNode, useContext, useEffect, useRef, useState} from "react";
+import React, {FC, useContext, useEffect, useState} from "react";
 import {MapContext} from "../../MapContext/mapContext";
 import {Options, Units} from 'ol/control/ScaleLine'
-import {
-    Box,
-    Button,
-    FormControl,
-    FormControlLabel,
-    FormGroup,
-    FormLabel, Grid, MenuItem, Select,
-    Slider,
-    Switch,
-    Typography
-} from "@material-ui/core";
+import {Box, Grid, MenuItem, Select, Slider, Switch} from "@material-ui/core";
 import {ScaleLine} from "ol/control";
 import BaseToolProps from "../baseToolProps";
 import {rowConfig, showButton, showTitle} from "../toolDialog";

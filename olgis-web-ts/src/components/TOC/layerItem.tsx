@@ -1,5 +1,5 @@
 import * as React from "react";
-import {ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, styled} from "@material-ui/core";
+import {ListItemIcon, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
 import LayerVisibleCheckBox from "./layerVisibleCheckBox";
 import LayerInfoProps from "./layerInfoProps";
 import LayerUpButton from "./layerUpButton";

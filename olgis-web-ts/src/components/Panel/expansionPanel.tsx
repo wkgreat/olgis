@@ -1,6 +1,9 @@
 import {
-    ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails as MuiExpansionPanelDetails,
-    ExpansionPanelSummary as MuiExpansionPanelSummary, ListItem, styled,
+    ExpansionPanel as MuiExpansionPanel,
+    ExpansionPanelDetails as MuiExpansionPanelDetails,
+    ExpansionPanelSummary as MuiExpansionPanelSummary,
+    ListItem,
+    styled,
     withStyles
 } from "@material-ui/core";
 import * as React from "react";

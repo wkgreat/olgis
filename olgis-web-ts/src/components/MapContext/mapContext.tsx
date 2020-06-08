@@ -1,5 +1,4 @@
 import React, {createContext, ReactNode} from "react";
-import {createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
 import OlMap, {OlMapOptions} from "../../olmap/olMap";
 import 'ol/ol.css'
 import '../../style/index.scss'

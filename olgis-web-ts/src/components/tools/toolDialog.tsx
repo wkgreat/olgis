@@ -5,7 +5,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import {Box, Grid, GridSize, Slider, Typography} from "@material-ui/core";
+import {Box, Grid, GridSize, Typography} from "@material-ui/core";
 import BaseToolProps from "./baseToolProps";
 
 /**

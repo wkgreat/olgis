@@ -3,9 +3,8 @@ import {OSM} from "ol/source";
 import TileLayer from "ol/layer/Tile";
 import {Map, View} from "ol";
 import {fromLonLat} from "ol/proj";
-import {Control, ScaleLine} from "ol/control";
+import {ScaleLine} from "ol/control";
 import {Options} from 'ol/control/ScaleLine'
-import BaseLayer from "ol/layer/Base";
 
 export interface OlMapOptions extends MapOptions{
 

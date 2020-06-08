@@ -1,4 +1,4 @@
-import React, {FC, ReactNode, useEffect, useState} from "react";
+import React, {FC, ReactNode} from "react";
 import {Drawer, DrawerProps} from "@material-ui/core";
 
 export interface ToolDrawerProps extends DrawerProps{

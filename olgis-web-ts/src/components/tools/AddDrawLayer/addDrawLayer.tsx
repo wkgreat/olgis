@@ -1,5 +1,5 @@
 import React, {ChangeEvent, FC, useContext, useEffect, useState} from "react";
-import {Box, BoxProps, Button, ButtonGroup, Grid, PropTypes, useTheme} from "@material-ui/core";
+import {Box, BoxProps, Button, ButtonGroup, Grid, PropTypes} from "@material-ui/core";
 import BaseToolProps from "../baseToolProps";
 import {rowConfig, showButton, showTitle} from "../toolDialog";
 import TextField from "@material-ui/core/TextField/TextField";

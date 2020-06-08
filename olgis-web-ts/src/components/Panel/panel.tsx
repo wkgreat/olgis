@@ -1,11 +1,7 @@
 import React, {FC, useState} from "react";
 import ToolDrawer from "../tools/toolDrawer";
 import TOC from "../TOC/toc";
-import {
-    Box,
-    List,
-    Typography
-} from "@material-ui/core";
+import {List, Typography} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary} from "./expansionPanel";
 import ListItemActivator from "../tools/toolActivator";
@@ -14,9 +10,7 @@ import AddDrawLayerToolDrawer from "../tools/AddDrawLayer/addDrawLayerToolDrawer
 import ScalebarSettingDialog from "../tools/ScalebarSetting/scalebarSettingDialog";
 import AddMapboxVectorTileLayer from "../tools/AddMapboxVectorTileLayer/addMapboxVectorTileLayer";
 import {defaultMinWidth, panelStyle} from "./panel.style";
-import classNames from "classnames";
 import IconButton from "@material-ui/core/IconButton";
-import {ArrowLeft} from "@material-ui/icons";
 import clsx from "clsx";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';

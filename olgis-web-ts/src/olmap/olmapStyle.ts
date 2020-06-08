@@ -1,12 +1,10 @@
 /**
  * Map Style
  * */
-import Style, {Options} from "ol/style/Style";
+import Style from "ol/style/Style";
 import {Circle, Fill, RegularShape, Stroke} from "ol/style";
 // import stylefunction from "ol-mapbox-style/dist/stylefunction";
-import BaseLayer from "ol/layer/Base";
 import VectorTileLayer from "ol/layer/VectorTile";
-import {Source} from "ol/source";
 
 type AnyStyleProps = {[key:string]:any}
 export type Color =  number[] | string;

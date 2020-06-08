@@ -1,7 +1,6 @@
 import React from 'react';
 import MapContextProvider from "./components/MapContext/mapContext";
 import Map from "./components/Map/map";
-import TOC from "./components/TOC/toc";
 import {createMuiTheme, CssBaseline, ThemeProvider} from "@material-ui/core";
 import Panel from "./components/Panel/panel";
 
