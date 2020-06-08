@@ -26,7 +26,6 @@ class OlMap extends Map {
 
     init (options: OlMapOptions) {
 
-
         if(!options.showDefaultControls) {
             this.getControls().clear();
         }
@@ -48,9 +47,6 @@ class OlMap extends Map {
             });
             this.setView(view);
         }
-
-
-
 
     }
 

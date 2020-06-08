@@ -1,0 +1,9 @@
+declare enum OlMapLayerEventType {
+    LAYER_RENAME = 'LAYER_RENAME',
+    LAYER_ADD = 'LAYER_ADD',
+    LAYER_REMOVE = 'LAYER_REMOVE',
+    LAYER_ORDER_CHANGE = 'LAYER_ORDER_CHANGE',
+    LAYER_PROP_CHANGE = 'LAYER_PROP_CHANGE'
+}
+
+export default OlMapLayerEventType;

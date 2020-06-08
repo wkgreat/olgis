@@ -5,6 +5,7 @@ import LayerInfoProps from "./layerInfoProps";
 import LayerUpButton from "./layerUpButton";
 import LayerDownButton from "./layerDownButton";
 import LayerDeleteIconButton from "./layerDeteteIconButton";
+import {ListItemButton} from "../Panel/expansionPanel";
 
 interface LayerItemProps extends LayerInfoProps{
     key: number
@@ -35,11 +36,5 @@ const LayerItem: React.FC<LayerItemProps> = (props) => {
     );
 
 };
-
-const ListItemButton = styled(ListItem)({
-    borderWidth: 1,
-    color: 'white',
-    height: 20,
-});
 
 export default LayerItem;

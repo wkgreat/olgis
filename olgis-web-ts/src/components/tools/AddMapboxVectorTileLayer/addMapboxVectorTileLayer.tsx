@@ -3,9 +3,9 @@ import ToolDialog from "../toolDialog";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField/TextField";
 import {Switch} from "@material-ui/core";
+import BaseToolProps from "../baseToolProps";
 
-interface AddMapboxVectorTileLayerProps {
-    open : boolean
+interface AddMapboxVectorTileLayerProps extends BaseToolProps{
 }
 
 /**

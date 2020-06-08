@@ -16,6 +16,7 @@ const MapContextProvider: React.FC<MapContextProviderProps> = ({children, ...res
 
     return (
         <MapContext.Provider value={olmap}>
+            <div id='tool-div'/>
             {children}
         </MapContext.Provider>
     );

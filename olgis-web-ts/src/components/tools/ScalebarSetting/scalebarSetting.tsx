@@ -1,4 +1,4 @@
-import React, {FC, ReactNode, useContext, useState} from "react";
+import React, {FC, ReactNode, useContext, useEffect, useRef, useState} from "react";
 import {MapContext} from "../../MapContext/mapContext";
 import {Options, Units} from 'ol/control/ScaleLine'
 import {
@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import {ScaleLine} from "ol/control";
 import BaseToolProps from "../baseToolProps";
-import {rowConfig} from "../toolDialog";
+import {rowConfig, showButton, showTitle} from "../toolDialog";
 
 ;
 
@@ -63,10 +63,12 @@ const ScalebarSetting: FC<ScalebarSettingProps> = (props) => {
     const [options, setOptions] = useState(initOptions());
 
     const onOK = (event:any) => {
+        setOpen(false);
         if(props.onOK) props.onOK(event);
     };
 
     const onCancel = (event:any) => {
+        setOpen(false);
         if(props.onCancel) props.onCancel(event);
         olmap.setScaleBar(initV, initO);
     }
@@ -75,6 +77,25 @@ const ScalebarSetting: FC<ScalebarSettingProps> = (props) => {
         setVisible(value);
         olmap.toggleScalaBar(value, options);
     };
+
+    useEffect(()=>{
+        let overlayDiv = document.getElementsByClassName("ol-overlaycontainer-stopevent").item(0);
+        let scaleDiv = document.getElementsByClassName("ol-scale-line").item(0) ||
+            document.getElementsByClassName("ol-scale-bar").item(0);
+        if(open && visible && overlayDiv && scaleDiv) {
+            let theOverlayDiv = overlayDiv as HTMLDivElement;
+            let theScaleDiv = scaleDiv as HTMLDivElement;
+            theOverlayDiv.style.zIndex = "2000";
+            theScaleDiv.style.zIndex = "2000";
+        }
+        if(!open) {
+            if (overlayDiv && scaleDiv){
+                let theOverlayDiv = overlayDiv as HTMLDivElement;
+                let theScaleDiv = scaleDiv as HTMLDivElement;
+                theOverlayDiv.style.zIndex = "0";
+                theScaleDiv.style.zIndex = "0";
+        }}
+    });
 
     const onBarChange = (event: any, value: any) => {
         options.bar = Boolean(value);
@@ -100,34 +121,10 @@ const ScalebarSetting: FC<ScalebarSettingProps> = (props) => {
         olmap.setScaleBar(visible, options);
     };
 
-    const showTitle = ():ReactNode => {
-        return (
-            <Box css={{display: 'flex', justifyContent: 'flex-start'}}>
-                <Box css={{display: "inline-block"}}>
-                    {props.title ? <Typography variant="h6"> {props.title} </Typography> : null}
-                </Box>
-            </Box>
-        )
-    }
-
-    const showButton = ():ReactNode => {
-        return (
-            <Box css={{display: 'flex', justifyContent: 'flex-end', marginTop: 20}}>
-                {props.enablerCancel ? <Button variant="outlined" size="small" color="primary" onClick={onCancel}>Cancel</Button> : null}
-                {props.enableOK ? <Button variant="outlined" size="small" color="primary" onClick={onOK}>OK</Button> : null}
-            </Box>
-        )
-    };
-
-    const lable = (id:string, value:string): ReactNode => (
-        <Typography id={id} gutterBottom>{value}</Typography>
-    );
-
     if(open) {
         return (
             <Box>
-                {showTitle()}
-
+                {showTitle(props.title || "")}
                 <Grid container spacing={2} justify="flex-end" alignItems="center">
                     {rowConfig("visible", 3, 3, false)(
                         <Switch
@@ -147,15 +144,6 @@ const ScalebarSetting: FC<ScalebarSettingProps> = (props) => {
                             inputProps={{'aria-label': 'primary checkbox'}}
                         />
                     )}
-                    {rowConfig("minWidth", 3, 3, true)(
-                        <Slider
-                            value={options.minWidth}
-                            onChange={handleMinWidthChange}
-                            aria-labelledby="input-slider"
-                            valueLabelDisplay="auto"
-                        />
-                    )}
-
                     {rowConfig("units", 3, 3, true)(
                         <Select
                             value={options.units}
@@ -168,8 +156,18 @@ const ScalebarSetting: FC<ScalebarSettingProps> = (props) => {
                             <MenuItem value="metric" selected>metric</MenuItem>
                         </Select>
                     )}
+                    {rowConfig("minWidth", 3, 9, false)(
+                        <Slider
+                            value={options.minWidth}
+                            min={0}
+                            max={1000}
+                            onChange={handleMinWidthChange}
+                            aria-labelledby="input-slider"
+                            valueLabelDisplay="auto"
+                        />
+                    )}
 
-                    {rowConfig("steps", 3, 3, true)(
+                    {rowConfig("steps", 3, 9, true)(
                         <Slider
                             value={options.steps}
                             min={0}
@@ -182,7 +180,7 @@ const ScalebarSetting: FC<ScalebarSettingProps> = (props) => {
                     )}
 
                 </Grid>
-                {showButton()}
+                {showButton(Boolean(props.enableOK), onOK, Boolean(props.enableCancel), onCancel)}
             </Box>
         );
     } else {
@@ -194,7 +192,7 @@ const ScalebarSetting: FC<ScalebarSettingProps> = (props) => {
 ScalebarSetting.defaultProps = {
     title: "比例尺设置",
     enableOK: true,
-    enablerCancel: true
+    enableCancel: true
 }
 
 export default ScalebarSetting;

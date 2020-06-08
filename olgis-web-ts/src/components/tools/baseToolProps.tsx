@@ -1,6 +1,11 @@
-type ToolCallback = (event:any) => void
+type ToolCallback = (event?:any) => void
 
 interface BaseToolProps {
+
+    /**
+     * 激活信号
+     * */
+    signal ?: number
 
     /**
      * 工具名称
@@ -25,7 +30,7 @@ interface BaseToolProps {
     /**
      * 是否显示Cancel按钮
      * */
-    enablerCancel ?: boolean;
+    enableCancel ?: boolean;
 
     /**
      * Cancel的回调函数

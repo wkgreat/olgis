@@ -83,7 +83,7 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
             .then(res=>{
                 const layer = LayerUtils.makeGeoJsonLayer(olmap, inputName, res.data.data);
                 if(layer) {
-                    olmap.addLayer(layer);
+                    LayerUtils.addLayer(olmap, layer);
                     LayerUtils.zoomToLayer(olmap, layer.get('name'));
                 }
             }).catch(()=>{

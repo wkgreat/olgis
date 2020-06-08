@@ -1,11 +1,12 @@
-import React, {FC, ReactNode} from "react";
+import React, {FC, ReactNode, useEffect, useState} from "react";
 import DraggablePaper from "./draggablePaper";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import {Grid, GridSize, Slider, Typography} from "@material-ui/core";
+import {Box, Grid, GridSize, Slider, Typography} from "@material-ui/core";
+import BaseToolProps from "./baseToolProps";
 
 /**
  *  open
@@ -17,41 +18,49 @@ import {Grid, GridSize, Slider, Typography} from "@material-ui/core";
 
 type OnButtonClickCallBack = (event:React.MouseEvent<HTMLButtonElement, Event>) => void
 
-export interface ToolDialogProps {
-    open ?: boolean;
-    title ?: string;
-    enableOK ?: boolean;
-    enableCancel ?: boolean;
-    onOK ?: OnButtonClickCallBack;
-    onCancel ?: OnButtonClickCallBack;
+export interface ToolDialogProps extends BaseToolProps{
     children ?: React.ReactNode
 }
 
-const ToolDialog: FC<ToolDialogProps> = ({open, title, enableOK, enableCancel, onOK, onCancel, children}) => (
-    <Dialog
-        open={Boolean(open)}
-        onClose={onCancel}
-        PaperComponent={DraggablePaper}
-        aria-labelledby="draggable-dialog-title"
-        fullWidth={true}
-    >
-        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-            {title}
-        </DialogTitle>
-        <DialogContent>
-            {children}
-        </DialogContent>
-        <DialogActions>
-            {enableCancel ? <Button autoFocus onClick={onCancel} color="primary">Cancel</Button> : null}
-            {enableOK ? <Button onClick={onOK} color="primary">Ok</Button> : null}
-        </DialogActions>
-    </Dialog>
-);
+const ToolDialog: FC<ToolDialogProps> = ({open, title, enableOK, enableCancel, onOK, onCancel, children}) => {
+
+    const [isOpen, setIsOpen] = useState(Boolean(open));
+
+    useEffect(()=>{
+        setIsOpen(Boolean(open));
+    },[open]);
+
+    if(isOpen) {
+        return (
+            <Dialog
+                open={Boolean(open)}
+                onClose={onCancel}
+                PaperComponent={DraggablePaper}
+                aria-labelledby="draggable-dialog-title"
+                fullWidth={true}
+            >
+                <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                    {title}
+                </DialogTitle>
+                <DialogContent>
+                    {children}
+                </DialogContent>
+                <DialogActions>
+                    {enableCancel ? <Button autoFocus onClick={onCancel} color="primary">Cancel</Button> : null}
+                    {enableOK ? <Button onClick={onOK} color="primary">Ok</Button> : null}
+                </DialogActions>
+            </Dialog>
+        )
+    } else {
+        return <></>;
+    }
+
+}
 
 ToolDialog.defaultProps = {
     enableOK: true,
     enableCancel: true
-}
+};
 
 export default ToolDialog;
 
@@ -70,4 +79,23 @@ export const rowConfig = (label:string, xs1:GridSize, xs2:GridSize, row ?:boolea
             }
         </>
     );
+};
+
+export const showTitle = (title:string):ReactNode => {
+    return (
+        <Box css={{display: 'flex', justifyContent: 'flex-start'}}>
+            <Box css={{display: "inline-block"}}>
+                {title ? <Typography variant="h6"> {title} </Typography> : null}
+            </Box>
+        </Box>
+    )
+};
+
+export const showButton = (enableOK: boolean, onOK: (event: any)=>void, enableCancel: boolean, onCancel:(event: any)=>void):ReactNode => {
+    return (
+        <Box css={{display: 'flex', justifyContent: 'flex-end', marginTop: 20}}>
+            {enableCancel ? <Button variant="outlined" size="small" color="secondary" onClick={onCancel}>Cancel</Button> : null}
+            {enableOK ? <Button variant="outlined" size="small" color="secondary" onClick={onOK}>OK</Button> : null}
+        </Box>
+    )
 };

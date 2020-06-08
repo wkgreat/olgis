@@ -1,10 +1,20 @@
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import ToolDialog from "../toolDialog";
 import ScalebarSetting from "./scalebarSetting";
+import BaseToolProps from "../baseToolProps";
 
-const ScalebarSettingDialog: FC = (props)=> {
+export interface ScalebarSettingDialogProps extends BaseToolProps{
 
-    const [open, setOpen] = useState(true);
+}
+
+const ScalebarSettingDialog: FC<ScalebarSettingDialogProps> = (props)=> {
+
+    const [open, setOpen] = useState(props.open);
+
+    useEffect(()=>{
+        console.log("activate");
+        setOpen(props.open);
+    },[props.open, props.signal]);
 
     return (
         <ToolDialog

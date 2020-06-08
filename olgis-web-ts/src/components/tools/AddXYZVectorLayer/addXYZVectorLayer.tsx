@@ -31,7 +31,7 @@ const AddXYZVectorLayer = React.forwardRef((props, ref) => {
     const handleOK = () => {
         let fullURL = makeURL(url, token);
         let layer = LayerUtils.makeXYZVectorLayer(olmap, layerName, fullURL);
-        olmap.addLayer(layer);
+        LayerUtils.addLayer(olmap,layer);
         setOpen(false)
     };
 

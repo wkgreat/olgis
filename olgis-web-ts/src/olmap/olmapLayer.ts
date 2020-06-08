@@ -21,6 +21,7 @@ import {createXYZ} from 'ol/tilegrid';
 import mbStyle from './style.json';
 import GeoJSON from "ol/format/GeoJSON";
 import BaseLayer from "ol/layer/Base";
+import OlMapLayerEventType from './olMapLayerEventType'
 
 //layer编号生成器
 export const layerIDGen = function* layerIdGenerator() {
@@ -41,6 +42,11 @@ export const genLayerName = (olmap:Map, name:string):string => {
     name = name || "layer";
     const layersNames = olmap.getLayers().getArray().map(l => l.get('name'));
     return layersNames.includes(name) ? name + "_" + layerIDGen.next().value : name;
+};
+
+export const addLayer = (olmap: Map, layer: BaseLayer): void => {
+    olmap.addLayer(layer);
+    olmap.dispatchEvent(String(OlMapLayerEventType.LAYER_ADD));
 };
 
 /**
@@ -99,6 +105,7 @@ export const removeLayerByName = (olmap:Map, name:string) => {
     const layer = findLayerByName(olmap, name);
     if (layer) {
         olmap.removeLayer(layer);
+        olmap.dispatchEvent(String(OlMapLayerEventType.LAYER_REMOVE))
     }
 
 };
@@ -112,6 +119,7 @@ export const renameLayer = (olmap:Map, name1:string, name2:string) => {
     if (layer && name2) {
         const newName = genLayerName(olmap, name2);
         layer.set("name", newName);
+        olmap.dispatchEvent(String(OlMapLayerEventType.LAYER_RENAME))
     }
 
 };
@@ -123,6 +131,7 @@ export const setLayerProps = (olmap:Map, name:string, props:{[key:string]:any}) 
     const layer = findLayerByName(olmap, name);
     if (layer) {
         layer.setProperties(props);
+        olmap.dispatchEvent(String(OlMapLayerEventType.LAYER_PROP_CHANGE));
     }
 };
 
@@ -232,6 +241,7 @@ export const layerUp = (olmap:Map, name:string) => {
         const theLayer = olmap.getLayers().item(layerIndex);
         olmap.removeLayer(theLayer);
         olmap.getLayers().insertAt(layerIndex + 1, theLayer);
+        olmap.dispatchEvent(String(OlMapLayerEventType.LAYER_ORDER_CHANGE));
     }
 };
 
@@ -246,6 +256,7 @@ export const layerDown = (olmap:Map, name:string) => {
         const theLayer = olmap.getLayers().item(layerIndex);
         olmap.removeLayer(theLayer);
         olmap.getLayers().insertAt(layerIndex - 1, theLayer);
+        olmap.dispatchEvent(String(OlMapLayerEventType.LAYER_ORDER_CHANGE));
     }
 };
 
