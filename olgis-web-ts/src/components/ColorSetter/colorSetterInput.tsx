@@ -1,5 +1,5 @@
 import React, {ChangeEvent, FC, useState} from "react";
-import {decomposeColor, hexToRgb, InputAdornment, TextField} from "@material-ui/core";
+import {decomposeColor, hexToRgb, InputAdornment, Paper, TextField} from "@material-ui/core";
 import ColorSetterButton from "./colorSetterButton";
 import {ColorResult} from "react-color";
 import {rgbArrayToColorObject, rgbObjectToArray} from "./color";
@@ -30,26 +30,35 @@ const ColorSetterInput: FC<ColorSetterInputProps> = (props) => {
         props.onColorChange && props.onColorChange(theColor);
     };
 
+    const showColor = `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`;
+
     return (
         <TextField
             id={props.id}
             label={props.label}
             value={color}
-            style={{
-                backgroundColor: `rgba(${color[0]},${color[1]},${color[2]},${color[3]})`
-            }}
+            margin="dense"
             InputProps={{
                 startAdornment: (
-                    <InputAdornment position="start">
+                    <InputAdornment position="end">
                         <ColorSetterButton
                             color={rgbArrayToColorObject(color)}
                             onChange={onColorChange}
                             iconButtonProps={{
-                                size: "small"
+                                size: "small",
+                                style: {
+                                    position: "absolute",
+                                    right: 10,
+                                    bottom: 1
+                                }
                             }}
                         />
                     </InputAdornment>
                 ),
+                style : {
+                    borderLeft: '5px solid #000',
+                    borderColor: showColor
+                }
             }}
         />
     );
