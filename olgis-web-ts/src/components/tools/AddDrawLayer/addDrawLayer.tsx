@@ -30,22 +30,24 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
 
     useEffect(()=>{
 
-        source = new VectorSource();
-        layer = new VectorLayer({
-            source: source,
-            style: StyleUtils.getDefaultStyle()
-        });
-        layer.set('name', genLayerName(olmap, layerName));
-        LayerUtils.addLayer(olmap, layer);
+        if(props.open) {
+            console.log("addDrawLayer useEffect!!");
+            source = new VectorSource();
+            layer = new VectorLayer({
+                source: source,
+                style: StyleUtils.getDefaultStyle()
+            });
+            layer.set('name', genLayerName(olmap, layerName));
+            LayerUtils.addLayer(olmap, layer);
 
-        drawInteraction = new Draw({
-            source: source,
-            type: layerType
-        });
+            drawInteraction = new Draw({
+                source: source,
+                type: layerType
+            });
+            olmap.addInteraction(drawInteraction);
+        }
 
-        olmap.addInteraction(drawInteraction);
-
-    }, []);
+    }, [props.open]);
 
 
 

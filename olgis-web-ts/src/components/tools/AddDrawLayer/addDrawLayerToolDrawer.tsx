@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import ToolDrawer from "../toolDrawer";
 import AddDrawLayer from "./addDrawLayer";
 import BaseToolProps from "../baseToolProps";
@@ -12,6 +12,10 @@ const AddDrawLayerToolDrawer: FC<AddDrawLayerToolDrawerProps> = (props)=> {
 
     const [isOpen, setIsOpen] = useState(Boolean(props.open));
     const theme = useTheme();
+
+    useEffect(()=>{
+        setIsOpen(Boolean(props.open));
+    },[props.open, props.signal]);
 
     return (
         <ToolDrawer open={isOpen}
