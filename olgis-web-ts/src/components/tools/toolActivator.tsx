@@ -1,9 +1,9 @@
-import React, {FC, useState} from "react";
+import React, {FC, FunctionComponentElement, ReactNode, useState} from "react";
 import {ListItemButton} from "../Panel/expansionPanel";
-import {ListItemText, Portal} from "@material-ui/core";
+import {IconButton, IconButtonProps, ListItemProps, ListItemText, ListItemTypeMap, Portal} from "@material-ui/core";
 import BaseToolProps from "./baseToolProps";
 
-export interface ActivatorProps{
+export interface ActivatorProps<T>{
     /**
      * 激活Button的Label名称
      * */
@@ -11,12 +11,16 @@ export interface ActivatorProps{
     /**
      * 需要激活的对象
      * */
-    target: FC<BaseToolProps>
+    //target: FC<BaseToolProps>
+        target: FunctionComponentElement<any>
+
+    triggerProps ?: T
+
+    children ?: ReactNode
 }
 
-const ListItemActivator: FC<ActivatorProps> = ({label, target})=> {
+export const ListItemActivator: FC<ActivatorProps<ListItemProps>> = ({label, target})=> {
 
-    const Target = target;
     const [open, setOpen] = useState(false);
     const [signal, setSignal] = useState(0);
 
@@ -31,10 +35,30 @@ const ListItemActivator: FC<ActivatorProps> = ({label, target})=> {
                 <ListItemText>{label}</ListItemText>
             </ListItemButton>
             <Portal container={document.getElementById('tool-div')}>
-                <Target open={open} signal={signal}/>
+                {React.cloneElement(target, {open,signal})}
             </Portal>
         </>
     );
 };
 
-export default ListItemActivator;
+export const IconButtonActivator: FC<ActivatorProps<IconButtonProps>> = ({label, target, children, triggerProps}) => {
+
+    const [open, setOpen] = useState(false);
+    const [signal, setSignal] = useState(0);
+
+    const handleActivate = () => {
+        console.log("DSDFSDF");
+        setSignal((signal+1)%10000);
+        setOpen(true);
+    };
+
+    return (
+        <>
+            <IconButton {...triggerProps} onClick={handleActivate}>{children}</IconButton>
+            <Portal container={document.getElementById('tool-div')}>
+                {React.cloneElement(target, {open, signal})}
+            </Portal>
+        </>
+    );
+
+};

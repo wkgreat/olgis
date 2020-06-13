@@ -64,30 +64,27 @@ ToolDialog.defaultProps = {
 
 export default ToolDialog;
 
-export const rowConfig = (label:string, xs1:GridSize, xs2:GridSize, row ?:boolean): (input:ReactNode)=>void => {
+export const rowConfig = (label:string, xs1: 0|GridSize, xs2: 0|GridSize, row ?:boolean): (input:ReactNode)=>void => {
     return (input: ReactNode) => (
+
         <>
-            <Grid item xs={xs1}>
-                <Typography id={label}>{label}</Typography>
-            </Grid>
-            <Grid item xs={xs2}>
-                {input}
-            </Grid>
-            {xs1!=='auto' && xs2!=='auto' && row
-                ? <Grid item xs={12-xs1-xs2 as GridSize}/>
-                : <></>
-            }
+            {xs1==='auto' || xs1!==0 ? <Grid item xs={xs1}>
+                <div style={{display:"flex", flexDirection:"row-reverse"}}>
+                    <Typography id={label}>{label}</Typography></div></Grid> : <></>}
+            {xs2==='auto' || xs2!==0 ? <Grid item xs={xs2}>{input}</Grid>: <></>}
+            {xs1!=='auto' && xs2!=='auto' && row && xs1+xs2<12 ? <Grid item xs={12-xs1-xs2 as GridSize}/> : <></>}
         </>
     );
 };
 
+
 export const showTitle = (title:string):ReactNode => {
     return (
-        <Box css={{display: 'flex', justifyContent: 'flex-start'}}>
+        <div style={{display: "flex", flexDirection: "column", width: '100%'}}>
             <Box css={{display: "inline-block"}}>
                 {title ? <Typography variant="h6"> {title} </Typography> : null}
             </Box>
-        </Box>
+        </div>
     )
 };
 

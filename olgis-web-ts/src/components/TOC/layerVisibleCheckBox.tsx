@@ -1,8 +1,10 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import LayerInfoProps from "./layerInfoProps";
 import {MapContext} from "../MapContext/mapContext";
 import {LayerUtils} from "../../olmap"
+import OlMapLayerEventType from "../../olmap/olMapLayerEventType";
+import BaseLayer from "ol/layer/Base";
 
 type onChangeCallback = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 
@@ -24,7 +26,7 @@ const LayerVisibleCheckBox:React.FC<LayerVisibleCheckBoxProps> = (props) => {
     const getLayer = () => {
         if(!olmap || !layerName) return undefined;
         return LayerUtils.findLayerByName(olmap, layerName);
-    }
+    };
 
     const getChecked = ():boolean => {
         const theLayer = getLayer();
@@ -41,6 +43,18 @@ const LayerVisibleCheckBox:React.FC<LayerVisibleCheckBoxProps> = (props) => {
             theLayer.setVisible(change);
         }
     };
+
+    useEffect(()=>{
+        let theLayer = getLayer();
+        if(theLayer) {
+            theLayer.on(['change:visible'], ()=>setChecked(!checked));
+            return ()=>{
+                if(theLayer) {
+                    theLayer.un(['change:visible'], ()=>setChecked(!checked));
+                }
+            }
+        }
+    });
 
     return (
         <Checkbox

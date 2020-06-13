@@ -20,8 +20,9 @@ import {createXYZ} from 'ol/tilegrid';
 
 import mbStyle from './style.json';
 import GeoJSON from "ol/format/GeoJSON";
-import BaseLayer from "ol/layer/Base";
+import BaseLayer, {Options as BaseLayerOptions} from "ol/layer/Base";
 import OlMapLayerEventType from './olMapLayerEventType'
+import OlMap from "./olMap";
 
 //layer编号生成器
 export const layerIDGen = function* layerIdGenerator() {
@@ -294,4 +295,51 @@ export const getLayerType = (layer:BaseLayer) => {
     } else {
         return "BaseLayer";
     }
+};
+
+
+/**
+ * @description
+ * get options of BaseLayer
+ *
+ * @param {BaseLayer} layer openlayers BaseLayer.
+ * @return {BaseLayerOptions}
+ * */
+export const getOptionsFromBaseLayer = (layer: BaseLayer): BaseLayerOptions => ({
+    className: layer.getClassName(),
+    opacity: layer.getOpacity(),
+    visible: layer.getVisible(),
+    extent: layer.getExtent(),
+    zIndex: layer.getZIndex(),
+    minResolution: layer.getMinResolution(),
+    maxResolution: layer.getMaxResolution(),
+    minZoom: layer.getMinZoom(),
+    maxZoom: layer.getMaxZoom(),
+});
+
+/**
+ * @param {BaseLayer} layer the layer.
+ * @param {BaseLayerOptions} opts the options which to be assign to the layer.
+ * @param {Map} olmap the map contains the layer and to fire events if exists.
+ * @return {void}
+ * */
+export const setBaseLayerFromOptions = (layer: BaseLayer, opts: BaseLayerOptions, olmap ?: Map) => {
+
+    const {opacity,visible,extent,zIndex,minResolution, maxResolution, minZoom, maxZoom} = opts;
+
+    console.log(opts);
+
+    opacity && layer.setOpacity(opacity);
+    layer.setVisible(Boolean(visible));
+    extent && layer.setExtent(extent);
+    zIndex && layer.setZIndex(zIndex);
+    minResolution && layer.setMinResolution(minResolution);
+    maxResolution && layer.setMaxResolution(maxResolution);
+    minZoom && layer.setMinZoom(minZoom);
+    maxZoom && layer.setMaxZoom(maxZoom);
+
+    if(olmap) {
+        olmap.dispatchEvent(String(OlMapLayerEventType.LAYER_PROP_CHANGE));
+    }
+
 };

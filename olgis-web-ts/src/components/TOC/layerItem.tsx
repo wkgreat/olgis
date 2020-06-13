@@ -6,6 +6,14 @@ import LayerUpButton from "./layerUpButton";
 import LayerDownButton from "./layerDownButton";
 import LayerDeleteIconButton from "./layerDeteteIconButton";
 import {ListItemButton} from "../Panel/expansionPanel";
+import IconButton from "@material-ui/core/IconButton";
+import ArrowUpward from "@material-ui/core/SvgIcon/SvgIcon";
+import {IconButtonActivator} from "../tools/toolActivator";
+import VectorStyleSettingDrawer from "../style/vectorStyleSettingDrawer";
+import {useContext} from "react";
+import {MapContext} from "../MapContext/mapContext";
+import {LayerUtils} from "../../olmap";
+import LayerStyleButton from "./layerStyleButton";
 
 interface LayerItemProps extends LayerInfoProps{
     key: number
@@ -13,7 +21,11 @@ interface LayerItemProps extends LayerInfoProps{
 
 const LayerItem: React.FC<LayerItemProps> = (props) => {
 
-    const labelId = `layerItem-${props.layerName}`;
+    const {layerName} = props;
+
+    const labelId = `layerItem-${layerName}`;
+
+    const olmap = useContext(MapContext);
 
     return (
 
@@ -23,12 +35,13 @@ const LayerItem: React.FC<LayerItemProps> = (props) => {
             </ListItemIcon>
 
             <ListItemText id={labelId}>
-                {props.layerName}
+                {layerName}
             </ListItemText>
             <ListItemSecondaryAction>
-                <LayerUpButton layerName={props.layerName}/>
-                <LayerDownButton layerName={props.layerName}/>
-                <LayerDeleteIconButton layerName={props.layerName}/>
+                <LayerUpButton layerName={layerName}/>
+                <LayerDownButton layerName={layerName}/>
+                <LayerDeleteIconButton layerName={layerName}/>
+                <LayerStyleButton layerName={layerName}/>
             </ListItemSecondaryAction>
 
         </ListItemButton>

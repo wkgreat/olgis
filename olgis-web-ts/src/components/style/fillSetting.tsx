@@ -1,29 +1,13 @@
+import {BasicStyleSettingProps, getColor} from "./basicStyleSetting";
+import Fill, {Options as FillOptions} from "ol/style/Fill";
 import React, {FC} from "react";
-import {Fill} from "ol/style";
-import {Options as FillOptions} from 'ol/style/Fill'
-import {Box} from "@material-ui/core";
-import {showTitle} from "../tools/toolDialog";
-import {BasicStyleSettingProps} from "./basicStyleSetting";
+import {Box, Grid, GridSize, MenuItem, Paper, Select, Slider, Switch, Typography} from "@material-ui/core";
+import {rowConfig, showTitle} from "../tools/toolDialog";
 import ColorSetterInput from "../ColorSetter/colorSetterInput";
 
 export type FillSettingProps = BasicStyleSettingProps<Fill, FillOptions>;
 
-const FillSetting: FC<FillSettingProps> = ({open, fillOrOptions, onChange, boxProps}) => {
-
-    //TODO analyze the colorLike type
-    const getColor = () => {
-        let theColor;
-        if(fillOrOptions instanceof Fill) {
-            theColor = fillOrOptions.getColor();
-        } else if (typeof fillOrOptions === 'object') {
-            theColor = fillOrOptions.color;
-        }
-        if(theColor instanceof Array) {
-            return theColor;
-        } else {
-            return '#ffffff';
-        }
-    };
+const FillSetting: FC<FillSettingProps> = ({open, style, onChange, paperProps, title}) => {
 
     const onColorChange = (color: number[]) => {
         if(color && onChange) {
@@ -33,10 +17,15 @@ const FillSetting: FC<FillSettingProps> = ({open, fillOrOptions, onChange, boxPr
 
     if(open) {
         return (
-            <Box {...boxProps}>
-                {showTitle("Fill")}
-                <ColorSetterInput label="color" color={getColor()} onColorChange={onColorChange}/>
-            </Box>
+            <Paper {...paperProps}>
+                {Boolean(title) ? showTitle(title as string) : null}
+                <Grid container spacing={4} alignItems="center">
+                    <Grid item xs={3}>
+                        <div style={{display:"flex", flexDirection:"row-reverse"}}>
+                            <Typography>Color</Typography></div></Grid>
+                    <Grid item xs={3}><ColorSetterInput label="Fill Color" color={getColor(style)} onColorChange={onColorChange}/></Grid>
+                </Grid>
+            </Paper>
         );
     } else {
         return <></>;

@@ -4,7 +4,7 @@ import TOC from "../TOC/toc";
 import {List, Typography} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary} from "./expansionPanel";
-import ListItemActivator from "../tools/toolActivator";
+import {ListItemActivator} from "../tools/toolActivator";
 import AddXYZTileLayerTool from "../tools/AddXYZTileLayer/addXYZTileLayerTool";
 import AddDrawLayerToolDrawer from "../tools/AddDrawLayer/addDrawLayerToolDrawer";
 import ScalebarSettingDialog from "../tools/ScalebarSetting/scalebarSettingDialog";
@@ -80,10 +80,10 @@ const Panel:FC<PanelProps> = (props) => {
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <List>
-                        <ListItemActivator label="添加XYZ瓦片图层" target={AddXYZTileLayerTool}/>
-                        <ListItemActivator label="通过绘制添加图层" target={AddDrawLayerToolDrawer}/>
+                        <ListItemActivator label="添加XYZ瓦片图层" target={<AddXYZTileLayerTool/>}/>
+                        <ListItemActivator label="通过绘制添加图层" target={<AddDrawLayerToolDrawer/>}/>
                         {/*<ListItemActivator label="添加XYZ矢量瓦片图层" target={AddXYZVectorLayer}/>*/}
-                        <ListItemActivator label="添加Mapbox矢量瓦片图层" target={AddMapboxVectorTileLayer}/>
+                        <ListItemActivator label="添加Mapbox矢量瓦片图层" target={<AddMapboxVectorTileLayer/>}/>
                     </List>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -97,7 +97,7 @@ const Panel:FC<PanelProps> = (props) => {
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <List>
-                        <ListItemActivator label="比例尺设置" target={ScalebarSettingDialog}/>
+                        <ListItemActivator label="比例尺设置" target={<ScalebarSettingDialog/>}/>
                     </List>
                 </ExpansionPanelDetails>
             </ExpansionPanel>

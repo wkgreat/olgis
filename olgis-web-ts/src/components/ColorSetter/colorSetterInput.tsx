@@ -38,6 +38,7 @@ const ColorSetterInput: FC<ColorSetterInputProps> = (props) => {
             label={props.label}
             value={color}
             margin="dense"
+            size="small"
             InputProps={{
                 startAdornment: (
                     <InputAdornment position="end">
