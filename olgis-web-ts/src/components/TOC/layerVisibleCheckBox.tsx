@@ -3,8 +3,6 @@ import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import LayerInfoProps from "./layerInfoProps";
 import {MapContext} from "../MapContext/mapContext";
 import {LayerUtils} from "../../olmap"
-import OlMapLayerEventType from "../../olmap/olMapLayerEventType";
-import BaseLayer from "ol/layer/Base";
 
 type onChangeCallback = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 

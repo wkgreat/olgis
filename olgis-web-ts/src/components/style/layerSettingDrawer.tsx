@@ -5,8 +5,6 @@ import VectorStyleSetting from "./vectorStyleSetting";
 import BaseLayer from "ol/layer/Base";
 import BaseVectorLayer from "ol/layer/BaseVector";
 import BaseTileLayer from "ol/layer/BaseTile";
-import {Typography} from "@material-ui/core";
-import LayerBasePropsSetting from "./layerBasePropsSetting";
 import RasterLayerSetting from "./rasterLayerSetting";
 
 export interface VectorStyleSettingDrawerProps extends BaseToolProps {

@@ -1,5 +1,5 @@
 import React, {ChangeEvent, FC, useState} from "react";
-import {decomposeColor, hexToRgb, InputAdornment, Paper, TextField} from "@material-ui/core";
+import {decomposeColor, hexToRgb, InputAdornment, TextField} from "@material-ui/core";
 import ColorSetterButton from "./colorSetterButton";
 import {ColorResult} from "react-color";
 import {rgbArrayToColorObject, rgbObjectToArray} from "./color";

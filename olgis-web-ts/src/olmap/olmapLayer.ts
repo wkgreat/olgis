@@ -22,7 +22,6 @@ import mbStyle from './style.json';
 import GeoJSON from "ol/format/GeoJSON";
 import BaseLayer, {Options as BaseLayerOptions} from "ol/layer/Base";
 import OlMapLayerEventType from './olMapLayerEventType'
-import OlMap from "./olMap";
 
 //layer编号生成器
 export const layerIDGen = function* layerIdGenerator() {

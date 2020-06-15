@@ -1,7 +1,6 @@
 import React, {ChangeEvent, FC, useContext, useEffect, useState} from "react";
-import {Box, BoxProps, Button, ButtonGroup, Divider, Grid, InputLabel, PropTypes} from "@material-ui/core";
+import {Box, BoxProps, Button, ButtonGroup, Divider, InputLabel, PropTypes} from "@material-ui/core";
 import BaseToolProps from "../baseToolProps";
-import {rowConfig} from "../toolDialog";
 import TextField from "@material-ui/core/TextField/TextField";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";

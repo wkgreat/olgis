@@ -1,5 +1,5 @@
-import {BoxProps, PaperProps} from "@material-ui/core";
-import {Fill, Icon, Stroke, RegularShape, Circle, Text} from "ol/style";
+import {PaperProps} from "@material-ui/core";
+import {Circle, Fill, Icon, RegularShape, Stroke, Text} from "ol/style";
 import Style, {Options as StyleOptions} from "ol/style/Style";
 import {Options as FillOptions} from "ol/style/Fill";
 import {Options as StrokeOptions} from "ol/style/Stroke";

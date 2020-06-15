@@ -1,7 +1,6 @@
-import {addDecorator, addParameters, configure} from '@storybook/react'
+import {addDecorator, configure} from '@storybook/react'
 
 import * as React from "react";
-import {withInfo} from "@storybook/addon-info";
 import MapContextProvider from "../src/components/MapContext/mapContext";
 import {View} from "ol";
 import {fromLonLat} from "ol/proj";

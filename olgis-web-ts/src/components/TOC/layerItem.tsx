@@ -6,8 +6,6 @@ import LayerUpButton from "./layerUpButton";
 import LayerDownButton from "./layerDownButton";
 import LayerDeleteIconButton from "./layerDeteteIconButton";
 import {ListItemButton} from "../Panel/expansionPanel";
-import {useContext} from "react";
-import {MapContext} from "../MapContext/mapContext";
 import LayerSettingButton from "./layerSettingButton";
 
 interface LayerItemProps extends LayerInfoProps{

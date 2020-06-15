@@ -1,7 +1,4 @@
-import {
-    BasicStyleSettingProps,
-    getOptionsFromRegularShape,
-} from "./basicStyleSetting";
+import {BasicStyleSettingProps, getOptionsFromRegularShape,} from "./basicStyleSetting";
 import RegularShape, {Options as RegularShapeOptions} from "ol/style/RegularShape";
 import React, {FC, useState} from "react";
 import {Box, Typography} from "@material-ui/core";

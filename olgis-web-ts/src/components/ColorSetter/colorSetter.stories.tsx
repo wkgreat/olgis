@@ -2,7 +2,6 @@ import {storiesOf} from "@storybook/react";
 import ColorSetterButton from "./colorSetterButton";
 import React from "react";
 import ColorSetterInput from "./colorSetterInput";
-import {action} from "@storybook/addon-actions";
 
 storiesOf("颜色设置组件", module)
 .add("颜色设置按钮", ()=>(

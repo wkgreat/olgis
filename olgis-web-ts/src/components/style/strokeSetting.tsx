@@ -1,9 +1,9 @@
 import {BasicStyleSettingProps, getColor} from "./basicStyleSetting";
 import {Stroke} from "ol/style";
 import {Options} from "ol/style/Stroke";
-import React, {ChangeEvent, FC, useState} from "react";
-import {Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select} from "@material-ui/core";
-import {rowConfig, showTitle} from "../tools/toolDialog";
+import React, {FC, useState} from "react";
+import {Box, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {showTitle} from "../tools/toolDialog";
 import ColorSetterInput from "../ColorSetter/colorSetterInput";
 import Slider from "../common/slider";
 import Switch from "../common/switch";

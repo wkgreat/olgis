@@ -1,10 +1,5 @@
 import React, {FC} from "react";
-import {
-    Box,
-    InputLabel,
-    Switch as MSwitch,
-    SwitchProps as MSwitchProps,
-} from "@material-ui/core";
+import {Box, InputLabel, Switch as MSwitch, SwitchProps as MSwitchProps,} from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 interface ExtraSwitchProps {

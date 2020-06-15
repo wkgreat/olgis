@@ -1,5 +1,5 @@
 import {InputLabel, Slider as MSlider, SliderTypeMap, styled} from "@material-ui/core"
-import React, {CSSProperties, FC} from "react";
+import React, {FC} from "react";
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 import {DefaultComponentProps} from "@material-ui/core/OverridableComponent";
 
