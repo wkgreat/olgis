@@ -2,9 +2,11 @@ import {BasicStyleSettingProps, getColor} from "./basicStyleSetting";
 import {Stroke} from "ol/style";
 import {Options} from "ol/style/Stroke";
 import React, {ChangeEvent, FC, useState} from "react";
-import {Box, Grid, MenuItem, Paper, Select, Slider, Switch} from "@material-ui/core";
+import {Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select} from "@material-ui/core";
 import {rowConfig, showTitle} from "../tools/toolDialog";
 import ColorSetterInput from "../ColorSetter/colorSetterInput";
+import Slider from "../common/slider";
+import Switch from "../common/switch";
 
 export type StrokeSettingProps = BasicStyleSettingProps<Stroke, Options>
 
@@ -53,79 +55,78 @@ const StrokeSetting: FC<StrokeSettingProps> = ({open, style, onChange, paperProp
 
     if(open) {
         return (
-            <Paper {...paperProps}>
+            <Box boxShadow={5}>
                 {Boolean(title) ? showTitle(title as string) : null}
-                <Grid container spacing={4} alignItems="center">
-                    {rowConfig("Color",3,3, false)(
+                <Box display="flex" p={1} m={1} flexWrap="wrap">
+                    <FormControl>
                         <ColorSetterInput label="color" color={getColor(style)} onColorChange={(color)=>setOp({color})}/>
-                    )}
-                    {rowConfig("lineCap", 3, 3, false)(
+                    </FormControl>
+                    <FormControl style={{marginLeft: 10}}>
+                        <InputLabel shrink>lineCap</InputLabel>
                         <Select
-                            value={options.lineCap}
-                            onChange={(event)=>setOp({lineCap:event.target.value as CanvasLineCap})}
+                                value={options.lineCap}
+                                onChange={(event)=>setOp({lineCap:event.target.value as CanvasLineCap})}
                         >
                             <MenuItem value="round">round</MenuItem>
                             <MenuItem value="butt">butt</MenuItem>
                             <MenuItem value="square">square</MenuItem>
                         </Select>
-                    )}
-                    {rowConfig("lineJoin", 3, 3, false)(
+                    </FormControl>
+                    <FormControl style={{marginLeft: 10}}>
+                        <InputLabel shrink>lineJoin</InputLabel>
                         <Select
-                            value={options.lineJoin}
-                            onChange={(event)=>setOp({lineJoin:event.target.value as CanvasLineJoin})}
+                                value={options.lineJoin}
+                                onChange={(event)=>setOp({lineJoin:event.target.value as CanvasLineJoin})}
+
                         >
                             <MenuItem value="round">round</MenuItem>
                             <MenuItem value="bevel">bevel</MenuItem>
-                            <MenuItem value="miter">miter</MenuItem>
+                            <MenuItem value="miter">>miter</MenuItem>
                         </Select>
-                    )}
-                    {rowConfig("Enable lineDash", 3, 3, false)(
-                        <Switch checked={enableLineDash} onChange={(e,v)=>setEnableLineDash(v)}/>
-                    )}
-                    {rowConfig(`lineDash ${options.lineDash ? options.lineDash.join('.'):""}`, 3, 3, false)(
-                        <Slider
-                            track={false}
-                            disabled={!enableLineDash}
-                            aria-labelledby="track-false-range-slider"
-                            defaultValue={[1, 2, 4]}
-                            valueLabelDisplay="auto"
-                            max={20}
-                            onChange={(e,v)=>setOp({lineDash: enableLineDash ? v as number[] : undefined})}
-                        />
-                    )}
-                    {rowConfig("lineDashOffset", 3, 3, false)(
-                        <Slider
-                            disabled={!enableLineDash}
-                            value={options.lineDashOffset}
-                            min={0}
-                            max={20}
-                            onChange={(event, value) => {setOp({lineDashOffset: value as number})}}
-                            aria-labelledby="input-slider"
-                            valueLabelDisplay="auto"
-                        />
-                    )}
-                    {rowConfig("miterLimit", 3, 3, false)(
-                        <Slider
-                            value={options.miterLimit}
-                            min={0}
-                            max={100}
-                            onChange={(event, value) => setOp({miterLimit: value as number})}
-                            aria-labelledby="input-slider"
-                            valueLabelDisplay="auto"
-                        />
-                    )}
-                    {rowConfig("width", 3, 3, false)(
-                        <Slider
-                            value={options.width}
-                            min={0}
-                            max={50}
-                            onChange={(event, value) => setOp({width: value as number})}
-                            aria-labelledby="input-slider"
-                            valueLabelDisplay="auto"
-                        />
-                    )}
-                </Grid>
-            </Paper>
+                    </FormControl>
+                    <Switch label="EnableLineDash" checked={enableLineDash} onChange={(e,v)=>setEnableLineDash(Boolean(v))}/>
+                </Box>
+                <Box display="flex" flexWrap="wrap">
+                    <Slider
+                        wrapper="div"
+                        label="lineDash"
+                        disabled={!enableLineDash}
+                        defaultValue={[1, 2, 4]}
+                        valueLabelDisplay="auto"
+                        max={20}
+                        onChange={(e,v)=>setOp({lineDash: enableLineDash ? v as number[] : undefined})}
+                    />
+                    <Slider
+                        wrapper="div"
+                        label="lineDashOffset"
+                        disabled={!enableLineDash}
+                        value={options.lineDashOffset}
+                        min={0}
+                        max={20}
+                        onChange={(event, value) => {setOp({lineDashOffset: value as number})}}
+                        valueLabelDisplay="auto"
+                    />
+                    <Slider
+                        wrapper="div"
+                        label="miterLimit"
+                        value={options.miterLimit}
+                        min={0}
+                        max={100}
+                        onChange={(event, value) => setOp({miterLimit: value as number})}
+                        valueLabelDisplay="auto"
+                    />
+                    <Slider
+                        wrapper="div"
+                        label="width"
+                        value={options.width}
+                        min={0}
+                        max={50}
+                        onChange={(event, value) => setOp({width: value as number})}
+                        valueLabelDisplay="auto"
+                    />
+                </Box>
+
+            </Box>
         );
     } else {
         return (<></>);

@@ -1,4 +1,4 @@
-type ToolCallback = (event?:any) => void
+export type ToolCallback = (event?:any) => void
 
 interface BaseToolProps {
 

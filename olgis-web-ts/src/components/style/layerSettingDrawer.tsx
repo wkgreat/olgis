@@ -1,4 +1,4 @@
-import BaseToolProps from "../tools/baseToolProps";
+import BaseToolProps, {ToolCallback} from "../tools/baseToolProps";
 import React, {FC, useEffect, useState} from "react";
 import ToolDrawer from "../tools/toolDrawer";
 import VectorStyleSetting from "./vectorStyleSetting";
@@ -7,6 +7,7 @@ import BaseVectorLayer from "ol/layer/BaseVector";
 import BaseTileLayer from "ol/layer/BaseTile";
 import {Typography} from "@material-ui/core";
 import LayerBasePropsSetting from "./layerBasePropsSetting";
+import RasterLayerSetting from "./rasterLayerSetting";
 
 export interface VectorStyleSettingDrawerProps extends BaseToolProps {
     layer ?: BaseLayer
@@ -15,17 +16,16 @@ export interface VectorStyleSettingDrawerProps extends BaseToolProps {
 /**
  * TODO justify layer type (vector layer ? raster layer)
  * */
-const getStyleSettingByType = (layer: BaseLayer) => {
+const getStyleSettingByType = (layer: BaseLayer, onOK: ToolCallback, onCancel: ToolCallback) => {
     if(layer instanceof BaseVectorLayer) {
-        return <VectorStyleSetting open={true} layer={layer as BaseVectorLayer}/>;
+        return (
+            <VectorStyleSetting open={true} layer={layer as BaseVectorLayer} onOK={onOK} onCancel={onCancel}/>
+        );
     } else if (layer instanceof BaseTileLayer){
         //TODO
         return (
 
-            <div style={{maxWidth: 680, minWidth: 320, margin: 10}}>
-                <div><Typography variant="h6" color="secondary">图层属性</Typography></div>
-                <LayerBasePropsSetting open={true} layer={layer} isLayerChange={true} paperProps={{elevation:2}}/>
-            </div>
+            <RasterLayerSetting open={true} layer={layer} onOK={onOK}/>
 
         );
     } else {
@@ -33,7 +33,7 @@ const getStyleSettingByType = (layer: BaseLayer) => {
     }
 };
 
-const VectorStyleSettingDrawer: FC<VectorStyleSettingDrawerProps> = (props) => {
+const LayerSettingDrawer: FC<VectorStyleSettingDrawerProps> = (props) => {
 
     const {layer} = props;
 
@@ -43,6 +43,13 @@ const VectorStyleSettingDrawer: FC<VectorStyleSettingDrawerProps> = (props) => {
         setIsOpen(Boolean(props.open));
     }, [props.open, props.signal]);
 
+    const onOK = (event: any) => {
+        setIsOpen(false);
+    };
+    const onCancel = (evnet: any) => {
+        setIsOpen(false);
+    };
+
     if(isOpen && layer) {
         return (
             <ToolDrawer
@@ -51,11 +58,12 @@ const VectorStyleSettingDrawer: FC<VectorStyleSettingDrawerProps> = (props) => {
                 PaperProps={{
                     elevation: 10,
                     style: {
+                        maxWidth: 540,
                         opacity: 0.95
                     }
                 }}
             >
-                {getStyleSettingByType(layer)}
+                {getStyleSettingByType(layer, onOK, onCancel)}
             </ToolDrawer>
         );
     } else {
@@ -64,4 +72,4 @@ const VectorStyleSettingDrawer: FC<VectorStyleSettingDrawerProps> = (props) => {
 
 };
 
-export default VectorStyleSettingDrawer;
+export default LayerSettingDrawer;

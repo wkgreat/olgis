@@ -1,7 +1,7 @@
 import React, {ChangeEvent, FC, useContext, useEffect, useState} from "react";
-import {Box, BoxProps, Button, ButtonGroup, Grid, PropTypes} from "@material-ui/core";
+import {Box, BoxProps, Button, ButtonGroup, Divider, Grid, InputLabel, PropTypes} from "@material-ui/core";
 import BaseToolProps from "../baseToolProps";
-import {rowConfig, showButton, showTitle} from "../toolDialog";
+import {rowConfig} from "../toolDialog";
 import TextField from "@material-ui/core/TextField/TextField";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
@@ -10,6 +10,7 @@ import {MapContext} from "../../MapContext/mapContext";
 import {genLayerName} from "../../../olmap/olmapLayer";
 import {LayerUtils, StyleUtils} from "../../../olmap";
 import GeometryType from "ol/geom/GeometryType";
+import ToolTitle from "../../common/toolTitle";
 
 
 interface AddDrawLayerProps extends BaseToolProps{
@@ -85,39 +86,37 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     if(props.open) {
         return (
             <Box {...props.boxProps}>
-                {showTitle(props.title || "绘制图层")}
-                <Grid container spacing={0} justify="flex-end" alignItems="center">
-                    {rowConfig("图层名称:", 12 ,12, false)(
-                        <TextField id="standard-basic" label="图层名称" margin="normal" fullWidth={true}
-                                   value={layerName} onChange={onLayerNameChange}
-                        />
-                    )}
-                    {rowConfig("要素类型:", 12 ,12, false)(
-                        <ButtonGroup size="small" aria-label="small outlined button group">
-                            <Button
-                                size="small"
-                                color={getButtonColor(GeometryType.POINT, layerType)}
-                                onClick={()=>{onLayerTypeChange(GeometryType.POINT)}}
-                            >Point</Button>
-                            <Button
-                                size="small"
-                                color={getButtonColor(GeometryType.LINE_STRING, layerType)}
-                                onClick={()=>{onLayerTypeChange(GeometryType.LINE_STRING)}}
-                            >LineString</Button>
-                            <Button
-                                size="small"
-                                color={getButtonColor(GeometryType.POLYGON, layerType)}
-                                onClick={()=>{onLayerTypeChange(GeometryType.POLYGON)}}
-                            >Polygon</Button>
-                            <Button
-                                size="small"
-                                color={getButtonColor(GeometryType.CIRCLE, layerType)}
-                                onClick={()=>{onLayerTypeChange(GeometryType.CIRCLE)}}
-                            >Circle</Button>
-                        </ButtonGroup>
-                    )}
-                </Grid>
-                {showButton(Boolean(props.enableOK), onOK, Boolean(props.enableCancel), onCancel)}
+                <ToolTitle title={props.title || "绘制图层"}
+                           showOK={Boolean(props.enableOK)} showCancel={Boolean(props.enableCancel)}
+                           onOK={onOK} onCancel={onCancel}
+                />
+                <Divider/>
+                <TextField id="standard-basic" label="图层名称" margin="normal" fullWidth={true}
+                           value={layerName} onChange={onLayerNameChange}
+                />
+                <Box><InputLabel shrink={true}>要素类型</InputLabel></Box>
+                <ButtonGroup size="small" aria-label="small outlined button group">
+                    <Button
+                        size="small"
+                        color={getButtonColor(GeometryType.POINT, layerType)}
+                        onClick={()=>{onLayerTypeChange(GeometryType.POINT)}}
+                    >Point</Button>
+                    <Button
+                        size="small"
+                        color={getButtonColor(GeometryType.LINE_STRING, layerType)}
+                        onClick={()=>{onLayerTypeChange(GeometryType.LINE_STRING)}}
+                    >LineString</Button>
+                    <Button
+                        size="small"
+                        color={getButtonColor(GeometryType.POLYGON, layerType)}
+                        onClick={()=>{onLayerTypeChange(GeometryType.POLYGON)}}
+                    >Polygon</Button>
+                    <Button
+                        size="small"
+                        color={getButtonColor(GeometryType.CIRCLE, layerType)}
+                        onClick={()=>{onLayerTypeChange(GeometryType.CIRCLE)}}
+                    >Circle</Button>
+                </ButtonGroup>
             </Box>
         );
     } else {

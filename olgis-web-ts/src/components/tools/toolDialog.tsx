@@ -66,7 +66,6 @@ export default ToolDialog;
 
 export const rowConfig = (label:string, xs1: 0|GridSize, xs2: 0|GridSize, row ?:boolean): (input:ReactNode)=>void => {
     return (input: ReactNode) => (
-
         <>
             {xs1==='auto' || xs1!==0 ? <Grid item xs={xs1}>
                 <div style={{display:"flex", flexDirection:"row-reverse"}}>

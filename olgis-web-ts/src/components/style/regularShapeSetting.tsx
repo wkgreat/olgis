@@ -4,12 +4,14 @@ import {
 } from "./basicStyleSetting";
 import RegularShape, {Options as RegularShapeOptions} from "ol/style/RegularShape";
 import React, {FC, useState} from "react";
-import {Box, Grid, Paper, Slider, TextField, Typography} from "@material-ui/core";
-import {rowConfig, showTitle} from "../tools/toolDialog";
+import {Box, Typography} from "@material-ui/core";
+import {showTitle} from "../tools/toolDialog";
 import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
 import StrokeSetting, {defaultOptions as defaultStrokeOptions} from './strokeSetting'
 import FillSetting from "./fillSetting";
+import Slider from "../common/slider";
+import TextField from "../common/textField";
 
 export type RegularShapeSettingProps = BasicStyleSettingProps<RegularShape, RegularShapeOptions>
 
@@ -56,68 +58,54 @@ const RegularShapeSetting: FC<RegularShapeSettingProps> = (props) => {
 
     if(open) {
         return (
-            <Paper {...paperProps}>
+            <Box boxShadow={5}>
                 {Boolean(title) ? showTitle(title as string) : null}
-                <Grid container spacing={4} alignItems="center">
-                    <Grid item xs={3}>
-                        <div style={{display:"flex", flexDirection:"row", marginLeft: 50}}><Typography variant="button">RegularShape</Typography></div>
-                    </Grid>
-                    <Grid item xs={9}/>
-                    {rowConfig("Points:",3,3, false)(
+                <div><Typography variant="button">RegularShape</Typography></div>
+                <Box boxShadow={5}>
+                    <Box display="flex" p={1} m={1} flexWrap="wrap">
                         <TextField id="filled-number" label="Points" type="number" inputProps={{min:0, step:1, max:20}}
                                    value={options.points} onChange={(e)=>setOp({points:Number(e.target.value)})}
                                    InputLabelProps={{shrink: true}} size="small"
                         />
-                    )}
-                    {rowConfig("Radius:",3,3, false)(
                         <TextField id="filled-number" label="Radius" type="number" inputProps={{min:0, step:0.1, max:100}}
                                    value={options.radius} onChange={(e)=>setOp({radius:Number(e.target.value)})}
                                    InputLabelProps={{shrink: true}} size="small"
                         />
-                    )}
-                    {rowConfig("Radius1:",3,3, false)(
                         <TextField id="filled-number" label="Radius1" type="number" inputProps={{min:0, step:0.1, max:100}}
                                    value={options.radius1} onChange={(e)=>setOp({radius1:Number(e.target.value)})}
                                    InputLabelProps={{shrink: true}} size="small"
                         />
-                    )}
-                    {rowConfig("Radius2:",3,3, false)(
                         <TextField id="filled-number" label="Radius2" type="number" inputProps={{min:0, step:0.1, max:100}}
                                    value={options.radius2} onChange={(e)=>setOp({radius2:Number(e.target.value)})}
                                    InputLabelProps={{shrink: true}} size="small"
                         />
-                    )}
-                    {rowConfig("Angle:",3,3, false)(
                         <TextField id="filled-number" label="Angle" type="number" inputProps={{min:-360, step:0.1, max:360}}
                                    value={options.angle} onChange={(e)=>setOp({angle:Number(e.target.value)})}
                                    InputLabelProps={{shrink: true}} size="small"
                         />
-                    )}
-                    {rowConfig("Displacement:",3,3, false)(
+                    </Box>
+                    <Box>
                         <Slider
+                            label="Displacement"
                             track={false}
                             value={options.displacement}
                             valueLabelDisplay="auto"
                             max={20}
                             onChange={(e,v)=>setOp({displacement:v as number[]|undefined})}
                         />
-                    )}
-                    <Grid item xs={3}>
-                        <div style={{display:"flex", flexDirection:"row", marginLeft: 50}}><Typography variant="button">RegularShape Fill</Typography></div>
-                    </Grid>
-                    <Grid item xs={9}/>
-                    {rowConfig("Fill:",0,12, true)(
-                        <FillSetting open={true} style={options.fill} onChange={opt=>setOp({fill:new Fill(opt)})}/>
-                    )}
-                    <Grid item xs={3}>
-                        <div style={{display:"flex", flexDirection:"row", marginLeft: 50}}><Typography variant="button">RegularShape Stroke</Typography></div>
-                    </Grid>
-                    <Grid item xs={9}/>
-                    {rowConfig("Stroke:",0,12, false)(
-                        <StrokeSetting open={true} onChange={(opts)=>setOp({stroke: new Stroke(opts)})}/>
-                    )}
-                </Grid>
-            </Paper>
+                    </Box>
+                </Box>
+
+
+                <div><Typography variant="button">RegularShape Fill</Typography></div>
+                <Box>
+                    <FillSetting open={true} style={options.fill} onChange={opt=>setOp({fill:new Fill(opt)})}/>
+                </Box>
+                <div><Typography variant="button">RegularShape Stroke</Typography></div>
+                <Box>
+                    <StrokeSetting open={true} onChange={(opts)=>setOp({stroke: new Stroke(opts)})}/>
+                </Box>
+            </Box>
         );
     } else {
         return <></>;

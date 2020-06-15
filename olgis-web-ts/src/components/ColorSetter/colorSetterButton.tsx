@@ -24,7 +24,7 @@ const ColorSetterButton:FC<ColorSetterButtonProps> = (props) => {
     return (
         <>
             <IconButton {...props.iconButtonProps} onClick={handleClick}>
-                <ColorizeOutlined color="primary"/>
+                <ColorizeOutlined color="primary" fontSize="small"/>
             </IconButton>
             <Popover
                 open={open}
