@@ -12,19 +12,17 @@ const ScalebarSettingDialog: FC<ScalebarSettingDialogProps> = (props)=> {
     const [open, setOpen] = useState(props.open);
 
     useEffect(()=>{
-        console.log("activate");
         setOpen(props.open);
     },[props.open, props.signal]);
 
     return (
         <ToolDialog
-            title="比例尺设置"
             open={open}
             enableOK={false}
             enableCancel={false}
         >
             <ScalebarSetting
-                title=""
+                title="比例尺设置"
                 open={true}
                 onOK={()=>{setOpen(false)}}
                 onCancel={()=>setOpen(false)}

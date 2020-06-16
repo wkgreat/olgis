@@ -2,8 +2,8 @@ import React, {FC, useState} from "react";
 import ToolDialog from "../toolDialog";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField/TextField";
-import {Switch} from "@material-ui/core";
 import BaseToolProps from "../baseToolProps";
+import Switch from "../../common/switch";
 
 interface AddMapboxVectorTileLayerProps extends BaseToolProps{
 }
@@ -26,9 +26,11 @@ const AddMapboxVectorTileLayer: FC<AddMapboxVectorTileLayerProps> = (props) => {
     };
 
     const handleOK = () => {
+        setOpen(false);
     }
 
     const handleCancel = () => {
+        setOpen(false);
     }
 
     const handleLayerNameChange = (e: any) => {
@@ -48,8 +50,8 @@ const AddMapboxVectorTileLayer: FC<AddMapboxVectorTileLayerProps> = (props) => {
     }
 
 
-    return (
-        <>
+    if(open) {
+        return (
             <ToolDialog
                 open={open}
                 title="添加XYZ瓦片图层"
@@ -74,6 +76,7 @@ const AddMapboxVectorTileLayer: FC<AddMapboxVectorTileLayerProps> = (props) => {
                                    helperText="Mapbox Token"/>
                         <br/>
                         <Switch
+                            label="declutter"
                             checked={declutter}
                             onChange={handleDeclutterChange}
                             name="Declutter"
@@ -82,8 +85,11 @@ const AddMapboxVectorTileLayer: FC<AddMapboxVectorTileLayerProps> = (props) => {
                     </form>
                 </Box>
             </ToolDialog>
-        </>
-    )
+        )
+    } else {
+        return <></>;
+    }
+
 };
 
 export default AddMapboxVectorTileLayer;

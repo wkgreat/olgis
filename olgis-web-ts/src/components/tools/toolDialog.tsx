@@ -39,9 +39,12 @@ const ToolDialog: FC<ToolDialogProps> = ({open, title, enableOK, enableCancel, o
                 aria-labelledby="draggable-dialog-title"
                 fullWidth={true}
             >
-                <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                    {title}
-                </DialogTitle>
+                {title ?
+                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                        {title}
+                    </DialogTitle> :
+                    <></>}
+
                 <DialogContent>
                     {children}
                 </DialogContent>

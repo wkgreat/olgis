@@ -1,5 +1,5 @@
 import React, {FC} from "react";
-import {Box, BoxProps, Button, ButtonProps, Typography, TypographyProps} from "@material-ui/core";
+import {Box, BoxProps, Button, ButtonProps, Divider, Typography, TypographyProps} from "@material-ui/core";
 
 export interface ToolTitleProps {
 
@@ -33,15 +33,18 @@ const ToolTitle: FC<ToolTitleProps> = (props) => {
     const helpPorps = Object.assign(Object.assign({}, buttonProps), helpButtonProps);
 
     return (
-
-        <Box {...wrapperBoxProps} display="flex" justifyContent="space-between" flexWrap="wrap">
-            <Typography {...titleTypographyProps}>{title}</Typography>
-            <Box>
-                {showHelp ? <Button {...helpPorps} onClick={onHelp}>Help</Button> : null}
-                {showCancel ? <Button {...cancelPorps} onClick={onCancel}>Cancel</Button> : null}
-                {showOK ? <Button {...okPorps} onClick={onOK}>OK</Button> : null}
+        <Box>
+            <Box {...wrapperBoxProps} display="flex" justifyContent="space-between" flexWrap="wrap">
+                <Typography {...titleTypographyProps}>{title}</Typography>
+                <Box>
+                    {showHelp ? <Button {...helpPorps} onClick={onHelp} >Help</Button> : null}
+                    {showCancel ? <Button {...cancelPorps} onClick={onCancel}>Cancel</Button> : null}
+                    {showOK ? <Button {...okPorps} onClick={onOK}>OK</Button> : null}
+                </Box>
             </Box>
+            <Divider style={{marginTop: 4, marginBottom: 4}}/>
         </Box>
+
 
     )
 

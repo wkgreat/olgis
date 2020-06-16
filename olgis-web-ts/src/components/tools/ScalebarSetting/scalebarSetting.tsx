@@ -4,7 +4,8 @@ import {Options, Units} from 'ol/control/ScaleLine'
 import {Box, Grid, MenuItem, Select, Slider, Switch} from "@material-ui/core";
 import {ScaleLine} from "ol/control";
 import BaseToolProps from "../baseToolProps";
-import {rowConfig, showButton, showTitle} from "../toolDialog";
+import {rowConfig} from "../toolDialog";
+import ToolTitle from "../../common/toolTitle";
 
 ;
 
@@ -114,7 +115,9 @@ const ScalebarSetting: FC<ScalebarSettingProps> = (props) => {
     if(open) {
         return (
             <Box>
-                {showTitle(props.title || "")}
+                <ToolTitle title={props.title || ""} showOK={Boolean(props.enableOK)} onOK={onOK}
+                           showCancel={Boolean(props.enableCancel)} onCancel={onCancel}
+                />
                 <Grid container spacing={2} justify="flex-end" alignItems="center">
                     {rowConfig("visible", 3, 3, false)(
                         <Switch
@@ -170,7 +173,6 @@ const ScalebarSetting: FC<ScalebarSettingProps> = (props) => {
                     )}
 
                 </Grid>
-                {showButton(Boolean(props.enableOK), onOK, Boolean(props.enableCancel), onCancel)}
             </Box>
         );
     } else {
