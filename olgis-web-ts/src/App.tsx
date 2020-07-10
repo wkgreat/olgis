@@ -10,7 +10,7 @@ const darkTheme = createMuiTheme({
     },
 } );
 
-darkTheme.palette.primary.main = '#55ffec';
+darkTheme.palette.primary.main = 'rgba(18,255,92,0.9)';
 
 function App() {
   return (

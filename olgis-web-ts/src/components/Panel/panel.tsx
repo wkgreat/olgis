@@ -1,7 +1,7 @@
 import React, {FC, useState} from "react";
 import ToolDrawer from "../tools/toolDrawer";
 import TOC from "../TOC/toc";
-import {List, Typography} from "@material-ui/core";
+import {Box, List, Typography} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary} from "./expansionPanel";
 import {ListItemActivator} from "../tools/toolActivator";
@@ -53,13 +53,13 @@ const Panel:FC<PanelProps> = (props) => {
             variant="permanent"
             anchor="left"
         >
-            <div className={classes.panelHeader}>
+            <Box className={classes.panelHeader}>
                 {isOpen ? <Typography display="block" variant="body1" align="center" >OLGIS 功能面板</Typography> : null}
                 <IconButton className={classes.toggleButton} size="small" onClick={handleCloseButtonClick}>
                     {isOpen ? <ChevronLeftIcon fontSize="small"/> : <ChevronRightIcon fontSize="small"/>}
                 </IconButton>
-            </div>
-            <ExpansionPanel square>
+            </Box>
+            <ExpansionPanel>
                 <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon fontSize="small"/>}
                     aria-controls="panel1a-content"

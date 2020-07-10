@@ -26,13 +26,16 @@ export const ExpansionPanel = withStyles({
     expanded: {},
 })(MuiExpansionPanel);
 
+const panelHeaderHeight = 36;
+
 export const ExpansionPanelSummary = withStyles({
     root: {
         backgroundColor: 'rgba(0, 0, 0, .1)',
         borderBottom: '1px solid rgba(1, 1, 1, .5)',
-        minHeight: 56,
+        height: panelHeaderHeight,
+        minHeight: panelHeaderHeight,
         '&$expanded': {
-            minHeight: 56,
+            minHeight: panelHeaderHeight
         },
     },
     content: {
