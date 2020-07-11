@@ -92,71 +92,66 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
     };
 
     return (
-
-        <>
-            <ToolDialog
-                open={open}
-                title="添加XYZ瓦片图层"
-                onOK={handleOK}
-                onCancel={handleCancel}
-            >
-                <Box component='div'>
-                    <TextField id="standard-basic" label="图层名称" value={inputName}
-                               margin="normal" fullWidth={true}
-                               onChange={handleInputNameChange}
-                    />
-                    <Divider/>
-                    <TextField id="standard-basic" label="Geohash位数" value={len}
-                               margin="normal" fullWidth={true}
-                               onChange={(e)=>{setLen(Number(e.target.value))}}
-                    />
-                    <Divider/>
-                    <Typography variant="button"> 经纬度范围: </Typography>
-                    <br/>
-                    <Grid container>
-                        <Grid item xs={12} style={{textAlign: 'center'}}>
-                            <TextField
-                                error={northError}
-                                id="extent-north"
-                                label="North Latitude"
-                                value={north}
-                                helperText={northError? "North should in [-90, 90]": ""}
-                                onChange={onNorthChange}/>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <TextField
-                                error={westError}
-                                id="filled-error"
-                                label="West Longitude"
-                                value={west}
-                                helperText={eastError ? "West should in [-180, 180]": ""}
-                                onChange={onWestChange}/>
-                        </Grid>
-                        <Grid item xs={4}/>
-                        <Grid item xs={4}>
-                            <TextField
-                                error={eastError}
-                                id="filled-error"
-                                label="East Longitude"
-                                value={east}
-                                helperText={eastError ? "East should in [-180, 180]": ""}
-                                onChange={onEastChange}/>
-                        </Grid>
-                        <Grid item xs={12} style={{textAlign: 'center'}}>
-                            <TextField
-                                error={southError}
-                                id="filled-error"
-                                label="South Latitude"
-                                value={south}
-                                helperText={southError ? "South should in [-90, 90]": ""}
-                                onChange={onSouthChange}/>
-                        </Grid>
+        <ToolDialog
+            open={open}
+            title="添加XYZ瓦片图层"
+            onOK={handleOK}
+            onCancel={handleCancel}
+        >
+            <Box component='div'>
+                <TextField id="standard-basic" label="图层名称" value={inputName}
+                           margin="normal" fullWidth={true}
+                           onChange={handleInputNameChange}
+                />
+                <Divider/>
+                <TextField id="standard-basic" label="Geohash位数" value={len}
+                           margin="normal" fullWidth={true}
+                           onChange={(e)=>{setLen(Number(e.target.value))}}
+                />
+                <Divider/>
+                <Typography variant="button"> 经纬度范围: </Typography>
+                <br/>
+                <Grid container>
+                    <Grid item xs={12} style={{textAlign: 'center'}}>
+                        <TextField
+                            error={northError}
+                            id="extent-north"
+                            label="North Latitude"
+                            value={north}
+                            helperText={northError? "North should in [-90, 90]": ""}
+                            onChange={onNorthChange}/>
                     </Grid>
-                </Box>
-            </ToolDialog>
-
-        </>
-
+                    <Grid item xs={4}>
+                        <TextField
+                            error={westError}
+                            id="filled-error"
+                            label="West Longitude"
+                            value={west}
+                            helperText={eastError ? "West should in [-180, 180]": ""}
+                            onChange={onWestChange}/>
+                    </Grid>
+                    <Grid item xs={4}/>
+                    <Grid item xs={4}>
+                        <TextField
+                            error={eastError}
+                            id="filled-error"
+                            label="East Longitude"
+                            value={east}
+                            helperText={eastError ? "East should in [-180, 180]": ""}
+                            onChange={onEastChange}/>
+                    </Grid>
+                    <Grid item xs={12} style={{textAlign: 'center'}}>
+                        <TextField
+                            error={southError}
+                            id="filled-error"
+                            label="South Latitude"
+                            value={south}
+                            helperText={southError ? "South should in [-90, 90]": ""}
+                            onChange={onSouthChange}/>
+                    </Grid>
+                </Grid>
+            </Box>
+        </ToolDialog>
     )
 };
 

@@ -1,5 +1,8 @@
 export type ToolCallback = (event?:any) => void
 
+/**
+ * 定义的所有工具属性应该继承BaseToolProps
+ * */
 interface BaseToolProps {
 
     /**

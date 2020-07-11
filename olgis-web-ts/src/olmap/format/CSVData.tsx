@@ -9,10 +9,30 @@ let rangeArray = (start:number, end:number) => Array(end - start + 1).fill(0).ma
  * */
 
 export interface CSVData {
+    /**
+     * 字段名称
+     * */
     columnNames: string[],
+
+    /**
+     * 行数据
+     * */
     rows: any[][],
+
+    /**
+     * 第一行是否字段名称
+     * */
     header : boolean,
-    delimiter : string
+
+    /**
+     * 字段分割符，一般为逗号
+     * */
+    delimiter : string,
+
+    /**
+     * 列数
+     * */
+    numCols : number
 }
 
 export const parseCSVText = (text : string, header : boolean = false, delimiter : string = ','): CSVData => {
@@ -20,7 +40,7 @@ export const parseCSVText = (text : string, header : boolean = false, delimiter 
     let columnNames;
     let rows;
 
-    let allRows = text
+    let allRows = text.trim()
         .split("\n")
         .map(s=>s.trim())
         .filter(s => s != null && s.length > 0);
@@ -39,7 +59,8 @@ export const parseCSVText = (text : string, header : boolean = false, delimiter 
         columnNames,
         rows,
         header,
-        delimiter
+        delimiter,
+        numCols
     }
 
 };

@@ -15,6 +15,7 @@ import clsx from "clsx";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import AddXYZVectorLayer from "../tools/AddXYZVectorLayer/addXYZVectorLayer";
+import AddCSVPointsLayer from "../tools/AddCSVPointsLayer/addCSVPointsLayer";
 
 export interface PanelProps {
     open ?: boolean
@@ -85,6 +86,7 @@ const Panel:FC<PanelProps> = (props) => {
                         <ListItemActivator label="通过绘制添加图层" target={<AddDrawLayerToolDrawer/>}/>
                         <ListItemActivator label="添加XYZ矢量瓦片图层" target={<AddXYZVectorLayer/>}/>
                         <ListItemActivator label="添加Mapbox矢量瓦片图层" target={<AddMapboxVectorTileLayer/>}/>
+                        <ListItemActivator label="添加CSV矢量图层" target={<AddCSVPointsLayer/>}/>
                     </List>
                 </ExpansionPanelDetails>
             </ExpansionPanel>

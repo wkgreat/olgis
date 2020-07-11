@@ -3,7 +3,7 @@ import ToolDialog from "../toolDialog";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField/TextField";
 import BaseToolProps from "../baseToolProps";
-import Switch from "../../common/switch";
+import {Switch} from "../../common/switch";
 
 interface AddMapboxVectorTileLayerProps extends BaseToolProps{
 }
@@ -16,10 +16,10 @@ interface AddMapboxVectorTileLayerProps extends BaseToolProps{
  * */
 const AddMapboxVectorTileLayer: FC<AddMapboxVectorTileLayerProps> = (props) => {
     const [open, setOpen] = useState(Boolean(props.open));
-    const [layerName, setLayerName] = useState("mapbox-vector-layer")
-    const [styleUrl, setStyleUrl] = useState("")
-    const [token, setToken] = useState("")
-    const [declutter, setDeclutter] = useState(true)
+    const [layerName, setLayerName] = useState("mapbox-vector-layer");
+    const [styleUrl, setStyleUrl] = useState("");
+    const [token, setToken] = useState("");
+    const [declutter, setDeclutter] = useState(true);
 
     const onHandlerClick = () => {
         setOpen(true);
@@ -27,27 +27,27 @@ const AddMapboxVectorTileLayer: FC<AddMapboxVectorTileLayerProps> = (props) => {
 
     const handleOK = () => {
         setOpen(false);
-    }
+    };
 
     const handleCancel = () => {
         setOpen(false);
-    }
+    };
 
     const handleLayerNameChange = (e: any) => {
         setLayerName(e.target.value)
-    }
+    };
 
     const handleStyleURLChange = (e: any) => {
         setStyleUrl(e.target.value)
-    }
+    };
 
     const handleTokenChange = (e: any) => {
         setToken(e.target.value)
-    }
+    };
 
     const handleDeclutterChange = (e: any) => {
         setDeclutter(e.target.value)
-    }
+    };
 
 
     if(open) {

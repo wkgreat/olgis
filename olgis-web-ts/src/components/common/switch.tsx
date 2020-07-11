@@ -8,7 +8,7 @@ interface ExtraSwitchProps {
 
 export type SwitchProps = ExtraSwitchProps & MSwitchProps;
 
-const Switch: FC<SwitchProps> = ({label, ...restProps}) => {
+export const Switch: FC<SwitchProps> = ({label, ...restProps}) => {
     return (
         <Box display="inline" css={{maxWidth: 50, marginLeft: 10}}>
             <FormControlLabel

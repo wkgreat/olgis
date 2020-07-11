@@ -1,10 +1,9 @@
-import Feature, {FeatureLike} from "ol/Feature";
+import Feature from "ol/Feature";
 import FormatType from "ol/format/FormatType";
 import {Geometry, Point} from "ol/geom";
 import Projection from "ol/proj/Projection";
-import {CSVData, parseCSVText} from "./CSVData";
+import {CSVData} from "./CSVData";
 import FeatureFormat, {ReadOptions, transformGeometryWithOptions, WriteOptions} from "ol/format/Feature";
-import {equivalent} from "ol/proj";
 
 interface CSVPointsReadOptions extends ReadOptions {
     x_field ?: string,
@@ -61,7 +60,6 @@ export default class CSVPoints extends FeatureFormat{
             return new Feature<Geometry>(geom);
         }
 
-
     }
 
     //TODO 添加属性信息
@@ -75,9 +73,9 @@ export default class CSVPoints extends FeatureFormat{
                 header: source.header,
                 delimiter: source.delimiter,
                 columnNames: source.columnNames,
+                numCols: source.numCols,
                 rows:[r]
-            }
-            ,opt_options)
+            },opt_options)
         )
     }
 

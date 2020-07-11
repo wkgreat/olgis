@@ -22,6 +22,8 @@ import mbStyle from './style.json';
 import GeoJSON from "ol/format/GeoJSON";
 import BaseLayer, {Options as BaseLayerOptions} from "ol/layer/Base";
 import OlMapLayerEventType from './olMapLayerEventType'
+import CSVPoints from "./format/CSVPoints";
+import {CSVData, parseCSVText} from "./format/CSVData";
 
 //layer编号生成器
 export const layerIDGen = function* layerIdGenerator() {
@@ -218,6 +220,22 @@ export const makeGeoJsonLayer = (olmap:Map, name:string, geojson:string): BaseLa
     let features = geojsonFormat.readFeatures(geojson, {
         dataProjection: 'EPSG:4326',
         featureProjection: 'EPSG:3857'
+    });
+    const layer = new VectorLayer({
+        source: new VectorSource({
+            features
+        }),
+        style: STYLE.getDefaultStyle()
+    });
+    layer.set("name", genLayerName(olmap, name));
+    return layer;
+};
+
+export const makeCSVPointsLayer = (olmap: Map, name:string, csv:CSVData): BaseLayer | null => {
+    let csvFormat = new CSVPoints();
+    let features = csvFormat.readFeatures(csv, {
+        dataProjection: "EPSG:4326",
+        featureProjection: "EPSG:3857"
     });
     const layer = new VectorLayer({
         source: new VectorSource({

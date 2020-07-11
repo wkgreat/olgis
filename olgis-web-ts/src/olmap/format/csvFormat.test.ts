@@ -1,6 +1,3 @@
-import {parseCSVText} from "./CSVData";
-import CSVPoints from "./CSVPoints";
-
 // test('should pasrse csv data', function () {
 //
 //     let csv = `col1, col2, col3

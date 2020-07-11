@@ -4,7 +4,7 @@ import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField/TextField";
 import {MapContext} from "../../MapContext/mapContext";
 import {LayerUtils} from "../../../olmap";
-import Switch from "../../common/switch";
+import {Switch} from "../../common/switch";
 import BaseToolProps from "../baseToolProps";
 
 interface AddXYZVectorLayerProps extends BaseToolProps{}
