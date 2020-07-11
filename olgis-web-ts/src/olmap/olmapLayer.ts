@@ -231,11 +231,18 @@ export const makeGeoJsonLayer = (olmap:Map, name:string, geojson:string): BaseLa
     return layer;
 };
 
-export const makeCSVPointsLayer = (olmap: Map, name:string, csv:CSVData): BaseLayer | null => {
+export const makeCSVPointsLayer = (olmap: Map, name:string, csv:CSVData,
+                                   xField: string, yField: string, zField ?:string,
+                                   mField?:string, tField?:string): BaseLayer | null => {
     let csvFormat = new CSVPoints();
     let features = csvFormat.readFeatures(csv, {
         dataProjection: "EPSG:4326",
-        featureProjection: "EPSG:3857"
+        featureProjection: "EPSG:3857",
+        x_field: xField,
+        y_field: yField,
+        z_field: zField,
+        m_field: mField,
+        t_field: tField
     });
     const layer = new VectorLayer({
         source: new VectorSource({

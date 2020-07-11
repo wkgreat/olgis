@@ -6,10 +6,11 @@ import {CSVData} from "./CSVData";
 import FeatureFormat, {ReadOptions, transformGeometryWithOptions, WriteOptions} from "ol/format/Feature";
 
 interface CSVPointsReadOptions extends ReadOptions {
-    x_field ?: string,
-    y_field ?: string,
+    x_field : string,
+    y_field : string,
     z_field ?: string,
-    m_field ?: string
+    m_field ?: string,
+    t_field ?: string
 }
 
 export default class CSVPoints extends FeatureFormat{
@@ -46,6 +47,14 @@ export default class CSVPoints extends FeatureFormat{
         }
     }
 
+    getTField(opt_options ?: CSVPointsReadOptions) {
+        if(opt_options && opt_options.t_field){
+            return opt_options.t_field
+        } else {
+            return ""
+        }
+    }
+
     getType(): FormatType {
         return FormatType.TEXT;
     }
@@ -75,7 +84,7 @@ export default class CSVPoints extends FeatureFormat{
                 columnNames: source.columnNames,
                 numCols: source.numCols,
                 rows:[r]
-            },opt_options)
+            }, opt_options)
         )
     }
 
@@ -86,7 +95,6 @@ export default class CSVPoints extends FeatureFormat{
         //TODO Z and M field
         let point = new Point([x,y]);
         let transformedPoint = transformGeometryWithOptions(point,false, opt_options);
-        console.log(transformedPoint);
         return transformedPoint;
     }
 

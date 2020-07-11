@@ -68,8 +68,7 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
 
     const addLayer = () => {
         const csvData = parseCSVText(csv, header, delimiter);
-        console.log(csvData);
-        const layer = makeCSVPointsLayer(olmap, layerName, csvData);
+        const layer = makeCSVPointsLayer(olmap, layerName, csvData, xField, yField);
         if(layer) {
             LayerUtils.addLayer(olmap, layer);
             LayerUtils.zoomToLayer(olmap, layer.get("name"));
