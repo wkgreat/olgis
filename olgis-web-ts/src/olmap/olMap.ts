@@ -5,11 +5,6 @@ import {Map, View} from "ol";
 import {fromLonLat} from "ol/proj";
 import {ScaleLine} from "ol/control";
 import {Options} from 'ol/control/ScaleLine'
-import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
-import CSVPoints from "./format/CSVPoints";
-import {parseCSVText} from "./format/CSVData";
-import {GCJ02} from "./proj";
 
 export interface OlMapOptions extends MapOptions{
 

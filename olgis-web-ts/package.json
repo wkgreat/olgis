@@ -21,6 +21,7 @@
     "clsx": "latest",
     "node-sass": "^4.14.1",
     "ol": "^6.3.1",
+    "ol-proj-ch": "1.0.3",
     "react": "^16.13.1",
     "react-color": "^2.18.1",
     "react-dom": "^16.13.1",

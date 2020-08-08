@@ -92,7 +92,7 @@ export default class CSVPoints extends FeatureFormat{
         let row = source.rows[0];
         let x = row[source.columnNames.indexOf(this.getXField(opt_options))];
         let y = row[source.columnNames.indexOf(this.getYField(opt_options))];
-        //TODO Z and M field
+        //TODO Z, T and M field
         let point = new Point([x,y]);
         let transformedPoint = transformGeometryWithOptions(point,false, opt_options);
         return transformedPoint;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Box from "@material-ui/core/Box";
 import ToolDialog from "../toolDialog";
 import TextField from "@material-ui/core/TextField";
@@ -15,6 +15,10 @@ const AddXYZTileLayerTool: React.FC<AddXYZTileLayerToolPorps> = (props) => {
     const [open, setOpen] = React.useState(Boolean(props.open));
     const [inputName, setInputName] = React.useState("OSM Black and White");
     const [inputURL, setInputURL] = React.useState("http://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png");
+
+    useEffect(()=>{
+        setOpen(!!props.open)
+    }, [props.open, props.signal]);
 
     return (
         <ToolDialog
