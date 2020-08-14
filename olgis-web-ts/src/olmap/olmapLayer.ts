@@ -350,8 +350,6 @@ export const setBaseLayerFromOptions = (layer: BaseLayer, opts: BaseLayerOptions
 
     const {opacity,visible,extent,zIndex,minResolution, maxResolution, minZoom, maxZoom} = opts;
 
-    console.log(opts);
-
     opacity && layer.setOpacity(opacity);
     layer.setVisible(Boolean(visible));
     extent && layer.setExtent(extent);
