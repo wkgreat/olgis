@@ -46,6 +46,11 @@ export const genLayerName = (olmap:Map, name:string):string => {
     return layersNames.includes(name) ? name + "_" + layerIDGen.next().value : name;
 };
 
+/**
+ * @param olmap the Map
+ * @param layer the Layer
+ * @returns void 无返回值
+ * */
 export const addLayer = (olmap: Map, layer: BaseLayer): void => {
     olmap.addLayer(layer);
     olmap.dispatchEvent(String(OlMapLayerEventType.LAYER_ADD));
@@ -113,6 +118,9 @@ export const removeLayerByName = (olmap:Map, name:string) => {
 
 /**
  * 重命名图层
+ * @param olmap the Map
+ * @param name1 the layer name
+ * @param name2 the new name of name1
  */
 export const renameLayer = (olmap:Map, name1:string, name2:string) => {
 
@@ -127,6 +135,9 @@ export const renameLayer = (olmap:Map, name1:string, name2:string) => {
 
 /**
  * 设置指定名字的图层的属性
+ * @param olmap the Map
+ * @param name which layer (find the layer by the name)
+ * @param props layer properties
  */
 export const setLayerProps = (olmap:Map, name:string, props:{[key:string]:any}) => {
     const layer = findLayerByName(olmap, name);
@@ -136,7 +147,13 @@ export const setLayerProps = (olmap:Map, name:string, props:{[key:string]:any}) 
     }
 };
 
-export const makeVectorLayer = (olmap:Map, name:string) => {
+/**
+ * 依据图层名称创建空矢量图层
+ * @param olmap the Map
+ * @param name the name of the created layer (if olmap alreay has a layer with this name, the name will be appended a uid)
+ * @returns the VectorLayer
+ * */
+export const makeVectorLayer = (olmap:Map, name:string):VectorLayer => {
     let source = new VectorSource();
     const layer = new VectorLayer({
         source: source,
@@ -152,40 +169,57 @@ export const makeVectorLayer = (olmap:Map, name:string) => {
  * @param name 生成的图层名称
  * @param csv csv数据
  * @param {object} fieldIndex 地理字段信息
+ * @returns the vectorLayer that contains csv data or null
  * @example fieldIndex {'lon':1, 'lat':2, 'time':3} key为字段类型，value为第一个字段
  *
  */
-export const makeCSVLayer = (olmap:Map, name:string, csv:string, fieldIndex:{[key:string]:number}) => {
+export const makeCSVLayer = (olmap:Map, name:string, csv:string, fieldIndex:{[key:string]:number}): VectorLayer|null=> {
 
-    const features = csv
-        .split("\n") //拆分行
-        .slice(1) //去掉第一行
-        .filter(s => s != null && s.length > 0) //去掉空行
-        .map(r => {
-            const values = r.split(",");
-            const lon = Number(values[fieldIndex['lon']]);
-            const lat = Number(values[fieldIndex['lat']]);
-            const timeIndex = fieldIndex['time'];
-            const time = (timeIndex < 0) ? '' : values[timeIndex];
-            return new Feature({
-                geometry: new Point(fromLonLat([lon, lat])),
-                name: time
+    if(!csv) {
+        return null;
+    }
+
+    try {
+        const features = csv
+            .split("\n") //拆分行
+            .slice(1) //去掉第一行
+            .filter(s => s != null && s.length > 0) //去掉空行
+            .map(r => {
+                const values = r.split(",");
+                const lon = Number(values[fieldIndex['lon']]);
+                const lat = Number(values[fieldIndex['lat']]);
+                const timeIndex = fieldIndex['time'];
+                const time = (timeIndex < 0) ? '' : values[timeIndex];
+                return new Feature({
+                    geometry: new Point(fromLonLat([lon, lat])),
+                    name: time
+                });
             });
+
+        const layer = new VectorLayer({
+            source: new VectorSource({
+                features
+            }),
+            style: STYLE.getDefaultStyle()
         });
-
-    const layer = new VectorLayer({
-        source: new VectorSource({
-            features
-        }),
-        style: STYLE.getDefaultStyle()
-    });
-    layer.set("name",genLayerName(olmap, name));
-    return layer;
-
+        layer.set("name",genLayerName(olmap, name));
+        return layer;
+    } catch (e) {
+        console.error(e);
+    }
+    return null;
 
 };
 
-export const makeWKTLayer = (olmap:Map, name:string, wkts:string) => {
+/**
+ * Create vector layer according to wkt data
+ * 根据WKT数据创建矢量图层
+ * @param olmap the map
+ * @param name the layer name
+ * @param wkts wkt data
+ * @returns the vector layer
+ * */
+export const makeWKTLayer = (olmap:Map, name:string, wkts:string): VectorLayer|null => {
     let wktFormat = new WKT();
     wkts = wkts.trim();
     if (!wkts) {
@@ -210,7 +244,15 @@ export const makeWKTLayer = (olmap:Map, name:string, wkts:string) => {
     return layer;
 };
 
-export const makeGeoJsonLayer = (olmap:Map, name:string, geojson:string): BaseLayer|null => {
+/**
+ * Create vector layer according to GeoJSON data
+ * 根据GeoJSON数据创建矢量图层
+ * @param olmap the map
+ * @param name the laer name
+ * @param geojson the geojson data
+ * @returns the vector layer or null
+ * */
+export const makeGeoJsonLayer = (olmap:Map, name:string, geojson:string): VectorLayer|null => {
     let geojsonFormat = new GeoJSON();
     geojson = geojson.trim();
     if(!geojson) {
