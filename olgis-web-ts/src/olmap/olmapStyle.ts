@@ -23,6 +23,9 @@ export const defaultPointStyle = new Style({
 
 });
 
+/**
+ * @returns default style
+ * */
 export const getDefaultStyle = () => {
     return new Style({
         image: getPointRegularShapeImage({}),
@@ -93,7 +96,8 @@ export const getFill = (props:AnyStyleProps) => {
 
 
 /**
- *
+ * @param rgb color
+ * @returns {{r:number,g:number,b:number,a:number}} color object
  * */
 export const rgbArrayToObject = (rgb:Color) => {
     if ((typeof rgb) === 'object') {

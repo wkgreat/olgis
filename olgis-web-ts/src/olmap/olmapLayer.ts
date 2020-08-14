@@ -68,7 +68,6 @@ export const makeXYZLayer = (olmap:Map, name:string, url:string) => {
     return layer;
 };
 /**
- *
  * 使用pbf的VectorTile瓦片 (MVT)
  * */
 export const makeXYZVectorLayer = (olmap:Map, name:string, url:string) => {
