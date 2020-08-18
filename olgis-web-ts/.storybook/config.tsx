@@ -48,5 +48,6 @@ const storyWrapper = (storyFn: any) => (
             </MapContextProvider>
         </ThemeProvider>
     </div>
-)
-addDecorator(storyWrapper)
+);
+
+addDecorator(storyWrapper);

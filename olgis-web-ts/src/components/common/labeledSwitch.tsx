@@ -1,5 +1,5 @@
 import React, {FC} from "react";
-import {Box, InputLabel, Switch as MSwitch, SwitchProps as MSwitchProps,} from "@material-ui/core";
+import {Box, InputLabel, Switch as MSwitch, SwitchProps as MSwitchProps} from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 interface ExtraSwitchProps {
@@ -8,7 +8,7 @@ interface ExtraSwitchProps {
 
 export type SwitchProps = ExtraSwitchProps & MSwitchProps;
 
-export const Switch: FC<SwitchProps> = ({label, ...restProps}) => {
+export const LabeledSwitch: FC<SwitchProps> = ({label, ...restProps}) => {
     return (
         <Box display="inline" css={{maxWidth: 50, marginLeft: 10}}>
             <FormControlLabel
@@ -20,4 +20,4 @@ export const Switch: FC<SwitchProps> = ({label, ...restProps}) => {
     );
 };
 
-export default Switch;
+export default LabeledSwitch;

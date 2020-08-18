@@ -3,7 +3,7 @@ import ToolDialog from "../toolDialog";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField/TextField";
 import BaseToolProps from "../baseToolProps";
-import {Switch} from "../../common/switch";
+import {LabeledSwitch} from "../../common/labeledSwitch";
 
 interface AddMapboxVectorTileLayerProps extends BaseToolProps{
 }
@@ -75,7 +75,7 @@ const AddMapboxVectorTileLayer: FC<AddMapboxVectorTileLayerProps> = (props) => {
                                    onChange={handleTokenChange}
                                    helperText="Mapbox Token"/>
                         <br/>
-                        <Switch
+                        <LabeledSwitch
                             label="declutter"
                             checked={declutter}
                             onChange={handleDeclutterChange}

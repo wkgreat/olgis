@@ -6,7 +6,7 @@ import {Box, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core"
 import {showTitle} from "../tools/toolDialog";
 import ColorSetterInput from "../ColorSetter/colorSetterInput";
 import Slider from "../common/slider";
-import Switch from "../common/switch";
+import LabeledSwitch from "../common/labeledSwitch";
 
 export type StrokeSettingProps = BasicStyleSettingProps<Stroke, Options>
 
@@ -84,7 +84,7 @@ const StrokeSetting: FC<StrokeSettingProps> = ({open, style, onChange, paperProp
                             <MenuItem value="miter">>miter</MenuItem>
                         </Select>
                     </FormControl>
-                    <Switch label="EnableLineDash" checked={enableLineDash} onChange={(e,v)=>setEnableLineDash(Boolean(v))}/>
+                    <LabeledSwitch label="EnableLineDash" checked={enableLineDash} onChange={(e, v)=>setEnableLineDash(Boolean(v))}/>
                 </Box>
                 <Box display="flex" flexWrap="wrap">
                     <Slider

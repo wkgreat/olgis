@@ -3,7 +3,7 @@ import React, {FC, useContext, useState} from "react";
 import {PaperProps} from "@material-ui/core";
 import {LayerUtils} from "../../olmap";
 import {MapContext} from "../MapContext/mapContext";
-import Switch from "../common/switch";
+import LabeledSwitch from "../common/labeledSwitch";
 import Box from "@material-ui/core/Box";
 import TextField from "../common/textField";
 
@@ -55,7 +55,7 @@ const LayerBasePropsSetting: FC<LayerBasePropsSettingProps> = ({open, layer, onC
     if(open && layer) {
         return (
             <Box boxShadow={5} display="flex" p={1} m={1} flexWrap="wrap">
-                <Switch label="Visible" checked={options.visible} onChange={(e,v)=>setOp({visible: v})}/>
+                <LabeledSwitch label="Visible" checked={options.visible} onChange={(e, v)=>setOp({visible: v})}/>
                 <TextField id="baselayer-opacity" label="Opacity" type="number" inputProps={{min:0, step:0.01, max:1}}
                            value={options.opacity} onChange={(e)=>setOp({opacity:Number(e.target.value)})}
                            size="small"
