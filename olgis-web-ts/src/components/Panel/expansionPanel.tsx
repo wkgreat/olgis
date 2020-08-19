@@ -6,10 +6,12 @@ import {
     styled,
     withStyles
 } from "@material-ui/core";
-import * as React from "react";
 
 export const minWidth = 240;
 
+/**
+ * 扩展列表
+ * */
 export const ExpansionPanel = withStyles({
     root: {
         border: '1px solid rgba(0, 0, 0, .125)',
@@ -28,6 +30,9 @@ export const ExpansionPanel = withStyles({
 
 const panelHeaderHeight = 36;
 
+/**
+ * 扩展列表标题
+ * */
 export const ExpansionPanelSummary = withStyles({
     root: {
         backgroundColor: 'rgba(0, 0, 0, .1)',
@@ -46,6 +51,9 @@ export const ExpansionPanelSummary = withStyles({
     expanded: {}
 })(MuiExpansionPanelSummary);
 
+/**
+ * 扩展列表内容
+ * */
 export const ExpansionPanelDetails = withStyles((theme) => ({
     root: {
         minWidth: 240,

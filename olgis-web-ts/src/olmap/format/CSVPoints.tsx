@@ -104,17 +104,14 @@ export default class CSVPoints extends FeatureFormat{
 
     writeFeature(feature: Feature<Geometry>, opt_options?: WriteOptions): string {
         throw Error("writeFeature 未实现");
-        return "";
     }
 
     writeFeatures(features: Feature<Geometry>[], opt_options?: WriteOptions): string {
         throw Error("writeFeatures 未实现");
-        return "";
     }
 
     writeGeometry(geometry: Geometry, opt_options?: WriteOptions): string {
         throw Error("writeGeometry 未实现");
-        return "";
     }
 
 }

@@ -47,7 +47,7 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
             olmap.addInteraction(drawInteraction);
         }
 
-    }, [props.open]);
+    }, [props.open,layerName,layerType,olmap]);
 
 
 

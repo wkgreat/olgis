@@ -54,9 +54,9 @@ const AddXYZTileLayerTool: React.FC<AddXYZTileLayerToolPorps> = (props) => {
     }
 
 
-    function onHandlerClick() {
-        setOpen(true);
-    }
+    // function onHandlerClick() {
+    //     setOpen(true);
+    // }
 
     function handleOK() {
         let layer = LayerUtils.makeXYZLayer(olmap, inputName, inputURL);

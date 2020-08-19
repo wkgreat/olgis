@@ -23,7 +23,7 @@ import GeoJSON from "ol/format/GeoJSON";
 import BaseLayer, {Options as BaseLayerOptions} from "ol/layer/Base";
 import OlMapLayerEventType from './olMapLayerEventType'
 import CSVPoints from "./format/CSVPoints";
-import {CSVData, parseCSVText} from "./format/CSVData";
+import {CSVData} from "./format/CSVData";
 
 //layer编号生成器
 export const layerIDGen = function* layerIdGenerator() {

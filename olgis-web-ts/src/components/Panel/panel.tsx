@@ -29,7 +29,6 @@ const Panel:FC<PanelProps> = (props) => {
     const [isOpen, setIsOpen] = useState(props.open);
 
     const handleCloseButtonClick = ()=>{
-        console.log("cliked!!!");
         setIsOpen(!isOpen);
     };
 
@@ -40,6 +39,10 @@ const Panel:FC<PanelProps> = (props) => {
     const paperClasses = clsx({
         [classes.paperOpen]: isOpen,
         [classes.paperClose]: !isOpen
+    });
+    const panelContentClasses = clsx({
+        [classes.panelContentOpen]: isOpen,
+        [classes.panelContentClose]: !isOpen
     });
 
     return (
@@ -60,50 +63,53 @@ const Panel:FC<PanelProps> = (props) => {
                     {isOpen ? <ChevronLeftIcon fontSize="small"/> : <ChevronRightIcon fontSize="small"/>}
                 </IconButton>
             </Box>
-            <ExpansionPanel>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon fontSize="small"/>}
-                    aria-controls="panel1a-content"
-                    id="toc-panel-header"
-                >
-                    TOC
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <TOC open={true} boxProps={{css: {minWidth: props.minWidth}}}/>
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon fontSize="small"/>}
-                    aria-controls="panel1a-content"
-                    id="layer-panel-header"
-                >
-                    图层工具
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <List>
-                        <ListItemActivator label="添加XYZ瓦片图层" target={<AddXYZTileLayerTool/>}/>
-                        <ListItemActivator label="通过绘制添加图层" target={<AddDrawLayerToolDrawer/>}/>
-                        <ListItemActivator label="添加XYZ矢量瓦片图层" target={<AddXYZVectorLayer/>}/>
-                        <ListItemActivator label="添加Mapbox矢量瓦片图层" target={<AddMapboxVectorTileLayer/>}/>
-                        <ListItemActivator label="添加CSV矢量图层" target={<AddCSVPointsLayer/>}/>
-                    </List>
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon fontSize="small"/>}
-                    aria-controls="panel1a-content"
-                    id="map-com-panel-header"
-                >
-                    地图组件
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <List>
-                        <ListItemActivator label="比例尺设置" target={<ScalebarSettingDialog/>}/>
-                    </List>
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
+            <Box className={panelContentClasses}>
+                <ExpansionPanel>
+                    <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon fontSize="small"/>}
+                        aria-controls="panel1a-content"
+                        id="toc-panel-header"
+                    >
+                        TOC
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <TOC open={true} boxProps={{css: {minWidth: props.minWidth}}}/>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+                <ExpansionPanel>
+                    <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon fontSize="small"/>}
+                        aria-controls="panel1a-content"
+                        id="layer-panel-header"
+                    >
+                        图层工具
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <List>
+                            <ListItemActivator label="添加XYZ瓦片图层" target={<AddXYZTileLayerTool/>}/>
+                            <ListItemActivator label="通过绘制添加图层" target={<AddDrawLayerToolDrawer/>}/>
+                            <ListItemActivator label="添加XYZ矢量瓦片图层" target={<AddXYZVectorLayer/>}/>
+                            <ListItemActivator label="添加Mapbox矢量瓦片图层" target={<AddMapboxVectorTileLayer/>}/>
+                            <ListItemActivator label="添加CSV矢量图层" target={<AddCSVPointsLayer/>}/>
+                        </List>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+                <ExpansionPanel>
+                    <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon fontSize="small"/>}
+                        aria-controls="panel1a-content"
+                        id="map-com-panel-header"
+                    >
+                        地图组件
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <List>
+                            <ListItemActivator label="比例尺设置" target={<ScalebarSettingDialog/>}/>
+                        </List>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+            </Box>
+
 
 
         </ToolDrawer>

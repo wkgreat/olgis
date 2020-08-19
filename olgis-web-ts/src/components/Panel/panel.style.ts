@@ -19,9 +19,7 @@ export const panelStyle = makeStyles((theme)=>({
         }),
         overflowX: 'hidden',
         overflowY: 'hidden',
-        width: 56,
-        height: 56,
-        backgroundColor: "rgba(0,0,0,0)"
+        width: 12
 
     },
     paperOpen: {
@@ -40,10 +38,7 @@ export const panelStyle = makeStyles((theme)=>({
         }),
         overflowX: 'hidden',
         overflowY: 'hidden',
-        width: 56,
-        height: 56,
-        opacity: 0.95,
-        backgroundColor: "rgba(0,0,0,0.1)"
+        width: 12
     },
     panelHeader: {
         height: 56,
@@ -55,6 +50,13 @@ export const panelStyle = makeStyles((theme)=>({
         position: 'absolute',
         top: 14,
         right: 14
+    },
+
+    panelContentOpen: {
+        visibility: "visible"
+    },
+    panelContentClose: {
+        visibility: "hidden"
     }
 
 }));

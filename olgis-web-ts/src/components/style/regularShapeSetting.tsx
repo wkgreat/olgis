@@ -29,7 +29,6 @@ const RegularShapeSetting: FC<RegularShapeSettingProps> = (props) => {
 
     const {
         open,
-        paperProps,
         style,
         title,
         onChange

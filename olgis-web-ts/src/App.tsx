@@ -3,6 +3,7 @@ import MapContextProvider from "./components/MapContext/mapContext";
 import Map from "./components/Map/map";
 import {createMuiTheme, CssBaseline, ThemeProvider} from "@material-ui/core";
 import Panel from "./components/Panel/panel";
+import StatusBar from "./components/StatusBar/statusBar";
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -19,6 +20,7 @@ function App() {
           <MapContextProvider showDefaultControls={false}>
               <Map/>
               <Panel open={true}/>
+              <StatusBar visible={true}/>
           </MapContextProvider>
       </ThemeProvider>
 

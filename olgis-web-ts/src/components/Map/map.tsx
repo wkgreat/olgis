@@ -39,8 +39,6 @@ export const OLMap: React.FC<MapProps> = ({id, bgColor, mapType, className, styl
 
     useEffect(()=>{
 
-        console.log("Map UseEffect");
-
         document.body.onload = mapDivResizeFunc;
         document.body.onresize = mapDivResizeFunc;
         document.body.onchange = mapDivResizeFunc;
@@ -57,7 +55,6 @@ export const OLMap: React.FC<MapProps> = ({id, bgColor, mapType, className, styl
     }, []);
 
     const refresh = () => {
-        console.log("Map Refresh")
         if(olmap) {
             olmap.render();
             olmap.updateSize();
@@ -65,8 +62,6 @@ export const OLMap: React.FC<MapProps> = ({id, bgColor, mapType, className, styl
     };
 
     const handleDivLoad = (event:React.SyntheticEvent<HTMLDivElement,Event>) => {
-
-        console.log("map handleDivLoad")
 
         if(mapType==="full") {
             event.preventDefault();
@@ -77,8 +72,6 @@ export const OLMap: React.FC<MapProps> = ({id, bgColor, mapType, className, styl
     };
 
     const handleDivChange = (event:React.SyntheticEvent<HTMLDivElement,Event>) => {
-
-        console.log("map handleDivChange")
 
         if(mapType==="full") {
             event.preventDefault();

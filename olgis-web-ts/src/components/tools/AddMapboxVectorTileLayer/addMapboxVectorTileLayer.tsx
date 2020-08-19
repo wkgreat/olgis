@@ -21,9 +21,9 @@ const AddMapboxVectorTileLayer: FC<AddMapboxVectorTileLayerProps> = (props) => {
     const [token, setToken] = useState("");
     const [declutter, setDeclutter] = useState(true);
 
-    const onHandlerClick = () => {
-        setOpen(true);
-    };
+    // const onHandlerClick = () => {
+    //     setOpen(true);
+    // };
 
     const handleOK = () => {
         setOpen(false);

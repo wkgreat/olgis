@@ -36,8 +36,8 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
     `);
     const [xField, setXField] = useState("C0");
     const [yField, setYField] = useState("C1");
-    const [header, setHeader] = useState(true);
-    const [delimiter, setDelimiter] = useState(",");
+    const [header] = useState(true);
+    const [delimiter] = useState(",");
     //TODO other setting
 
     const olmap = useContext(MapContext);
