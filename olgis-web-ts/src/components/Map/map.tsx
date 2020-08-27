@@ -26,8 +26,6 @@ export const OLMap: React.FC<MapProps> = ({id, bgColor, mapType, className, styl
 
     const mapDivResizeFunc = () => {
 
-        console.log("Map mapDivResizeFunc");
-
         if(id && mapType==="full") {
             let mapDiv = document.getElementById(id);
             if(mapDiv) {

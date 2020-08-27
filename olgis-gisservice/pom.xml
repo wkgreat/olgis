@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<artifactId>wkgreat</artifactId>
+	<artifactId>olgis-gisservice</artifactId>
 	<name>olgis-gisservice</name>
 	<packaging>jar</packaging>
 	<description>Demo project for Spring Boot</description>
@@ -48,6 +48,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>wkgreat</groupId>
 			<artifactId>olgis-domain</artifactId>
 		</dependency>
@@ -55,6 +60,16 @@
 		<dependency>
 			<groupId>wkgreat</groupId>
 			<artifactId>doraemon</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-spatial</artifactId>
 		</dependency>
 
 		<dependency>

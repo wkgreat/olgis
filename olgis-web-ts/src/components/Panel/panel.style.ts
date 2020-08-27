@@ -1,29 +1,18 @@
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles, Theme} from "@material-ui/core/styles";
 
-export const defaultMinWidth = 240;
+interface StyleProps {
+    width ?: number
+}
 
-export const panelStyle = makeStyles((theme)=>({
+export const panelStyle = makeStyles<Theme,StyleProps>((theme)=>({
 
-    panelOpen: {
-        width: defaultMinWidth,
-        transition: theme.transitions.create(['width','height'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        overflowX: 'hidden',
+    drawer: {
+        width: props => props.width || 240,
+        flexShrink: 0,
     },
-    panelClose: {
-        transition: theme.transitions.create(['width','height'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        overflowX: 'hidden',
-        overflowY: 'hidden',
-        width: 12
 
-    },
     paperOpen: {
-        width: defaultMinWidth,
+        width: props => props.width || 240,
         transition: theme.transitions.create(['width','height'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
@@ -32,13 +21,13 @@ export const panelStyle = makeStyles((theme)=>({
         overflowX: 'hidden',
     },
     paperClose: {
+        width: 0,
         transition: theme.transitions.create(['width','height'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
         overflowX: 'hidden',
-        overflowY: 'hidden',
-        width: 12
+        overflowY: 'hidden'
     },
     panelHeader: {
         height: 56,
@@ -52,11 +41,8 @@ export const panelStyle = makeStyles((theme)=>({
         right: 14
     },
 
-    panelContentOpen: {
-        visibility: "visible"
-    },
-    panelContentClose: {
-        visibility: "hidden"
+    collapse: {
+        backgroundColor: 'rgba(0, 0, 0, .5)',
     }
 
 }));

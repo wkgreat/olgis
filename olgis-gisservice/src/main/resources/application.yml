@@ -1,2 +1,29 @@
 server:
   port: 8081
+  tomcat:
+    max-threads: 200
+    uri-encoding: utf-8
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password:
+    tomcat:
+      max-active: 20
+      initial-size: 10
+      max-idle: 8
+      min-idle: 8
+
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true

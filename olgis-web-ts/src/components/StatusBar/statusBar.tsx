@@ -6,7 +6,7 @@ import ProjectionStatus from "./projectionStatus";
 export interface StatusBarProps {
     visible ?: boolean;
     className ?: string;
-    children?: ReactElement;
+    children?: ReactElement[];
 }
 
 /**

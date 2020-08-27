@@ -1,8 +1,7 @@
 import React, {FC, useEffect, useState} from "react";
-import ToolDrawer from "../toolDrawer";
 import AddDrawLayer from "./addDrawLayer";
 import BaseToolProps from "../baseToolProps";
-import {useTheme} from "@material-ui/core";
+import {Drawer, useTheme} from "@material-ui/core";
 
 export interface AddDrawLayerToolDrawerProps extends BaseToolProps{
 
@@ -18,7 +17,7 @@ const AddDrawLayerToolDrawer: FC<AddDrawLayerToolDrawerProps> = (props)=> {
     },[props.open, props.signal]);
 
     return (
-        <ToolDrawer open={isOpen}
+        <Drawer open={isOpen}
                     variant="permanent"
                     anchor="right"
                     PaperProps={{
@@ -46,7 +45,7 @@ const AddDrawLayerToolDrawer: FC<AddDrawLayerToolDrawerProps> = (props)=> {
                     }
                 }}
             />
-        </ToolDrawer>
+        </Drawer>
     )
 };
 

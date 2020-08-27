@@ -1,11 +1,11 @@
 import BaseToolProps, {ToolCallback} from "../tools/baseToolProps";
 import React, {FC, useEffect, useState} from "react";
-import ToolDrawer from "../tools/toolDrawer";
 import VectorStyleSetting from "./vectorStyleSetting";
 import BaseLayer from "ol/layer/Base";
 import BaseVectorLayer from "ol/layer/BaseVector";
 import BaseTileLayer from "ol/layer/BaseTile";
 import RasterLayerSetting from "./rasterLayerSetting";
+import {Drawer} from "@material-ui/core";
 
 export interface VectorStyleSettingDrawerProps extends BaseToolProps {
     layer ?: BaseLayer
@@ -50,7 +50,7 @@ const LayerSettingDrawer: FC<VectorStyleSettingDrawerProps> = (props) => {
 
     if(isOpen && layer) {
         return (
-            <ToolDrawer
+            <Drawer
                 variant="permanent"
                 anchor="right"
                 PaperProps={{
@@ -62,7 +62,7 @@ const LayerSettingDrawer: FC<VectorStyleSettingDrawerProps> = (props) => {
                 }}
             >
                 {getStyleSettingByType(layer, onOK, onCancel)}
-            </ToolDrawer>
+            </Drawer>
         );
     } else {
         return <></>;

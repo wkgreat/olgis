@@ -1,4 +1,4 @@
-import React, {createContext, ReactNode} from "react";
+import React, {createContext, ReactNode, useRef} from "react";
 import OlMap, {OlMapOptions} from "../../olmap/olMap";
 import 'ol/ol.css'
 import '../../style/index.scss'
@@ -11,10 +11,10 @@ interface MapContextProviderProps extends OlMapOptions{
 
 const MapContextProvider: React.FC<MapContextProviderProps> = ({children, ...restProps}) => {
 
-    const olmap: OlMap = new OlMap(restProps);
+    const olmapRef = useRef(new OlMap(restProps));
 
     return (
-        <MapContext.Provider value={olmap}>
+        <MapContext.Provider value={olmapRef.current}>
             <div id='tool-div'/>
             {children}
         </MapContext.Provider>
