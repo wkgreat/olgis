@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>olgis-domain</artifactId>
-    <version>${olgis.version}</version>
     <packaging>jar</packaging>
 
     <dependencies>

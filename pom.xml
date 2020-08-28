@@ -10,7 +10,7 @@
     </parent>
     <groupId>wkgreat</groupId>
     <artifactId>olgis</artifactId>
-    <version>${olgis.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>olgis</name>
     <packaging>pom</packaging>
     <description>Demo project for Spring Boot</description>

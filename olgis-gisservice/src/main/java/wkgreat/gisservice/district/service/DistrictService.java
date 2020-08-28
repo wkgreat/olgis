@@ -10,5 +10,9 @@ import wkgreat.gisservice.district.bean.ChinaProvince;
 @Service
 public interface DistrictService {
 
-    ChinaProvince get();
+    /**
+     * @param provinceAdcode 省id
+     * @return 省信息
+     */
+    ChinaProvince get(Integer provinceAdcode);
 }

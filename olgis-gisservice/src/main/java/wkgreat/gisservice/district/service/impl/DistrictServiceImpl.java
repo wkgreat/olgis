@@ -20,7 +20,7 @@ public class DistrictServiceImpl implements DistrictService {
 
     @Transactional
     @Override
-    public ChinaProvince get() {
-        return provinceDao.getOne(370000);
+    public ChinaProvince get(Integer provinceAdcode) {
+        return provinceDao.getOne(provinceAdcode);
     }
 }
