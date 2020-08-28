@@ -1,18 +1,18 @@
 import React, {FC, useEffect, useState} from "react";
-import TOC from "../TOC/toc";
+import TOC from "../../../components/TOC/toc";
 import {Box, Collapse, Drawer, List, ListItem, ListItemIcon, ListItemText, Typography} from "@material-ui/core";
 import TocIcon from '@material-ui/icons/Toc';
 import LayersIcon from '@material-ui/icons/Layers';
 import MapIcon from '@material-ui/icons/Map';
-import {ListItemActivator} from "../tools/toolActivator";
-import AddXYZTileLayerTool from "../tools/AddXYZTileLayer/addXYZTileLayerTool";
-import AddDrawLayerToolDrawer from "../tools/AddDrawLayer/addDrawLayerToolDrawer";
-import ScalebarSettingDialog from "../tools/ScalebarSetting/scalebarSettingDialog";
-import AddMapboxVectorTileLayer from "../tools/AddMapboxVectorTileLayer/addMapboxVectorTileLayer";
+import {ListItemActivator} from "../../../components/tools/toolActivator";
+import AddXYZTileLayerTool from "../../../components/tools/AddXYZTileLayer/addXYZTileLayerTool";
+import AddDrawLayerToolDrawer from "../../../components/tools/AddDrawLayer/addDrawLayerToolDrawer";
+import ScalebarSettingDialog from "../../../components/tools/ScalebarSetting/scalebarSettingDialog";
+import AddMapboxVectorTileLayer from "../../../components/tools/AddMapboxVectorTileLayer/addMapboxVectorTileLayer";
 import {panelStyle} from "./panel.style";
 import clsx from "clsx";
-import AddXYZVectorLayer from "../tools/AddXYZVectorLayer/addXYZVectorLayer";
-import AddCSVPointsLayer from "../tools/AddCSVPointsLayer/addCSVPointsLayer";
+import AddXYZVectorLayer from "../../../components/tools/AddXYZVectorLayer/addXYZVectorLayer";
+import AddCSVPointsLayer from "../../../components/tools/AddCSVPointsLayer/addCSVPointsLayer";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 
 export interface PanelProps {
@@ -26,9 +26,9 @@ const Panel:FC<PanelProps> = ({open, width}) => {
 
     const [isOpen, setIsOpen] = useState();
     const [panelWidth, setPanelWidth] = useState(width);
-    const [tocOpen, setTocOpen] = useState(false);
-    const [layerListOpen, setLayerListOpen] = useState(false);
-    const [mapComListOpen, setMapComListOpen] = useState(false);
+    const [tocOpen, setTocOpen] = useState(true);
+    const [layerListOpen, setLayerListOpen] = useState(true);
+    const [mapComListOpen, setMapComListOpen] = useState(true);
 
     useEffect(()=>{
         setIsOpen(open);

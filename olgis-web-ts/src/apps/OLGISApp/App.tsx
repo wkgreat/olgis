@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import MapContextProvider from "./components/MapContext/mapContext";
-import Map from "./components/Map/map";
+import MapContextProvider from "../../components/MapContext/mapContext";
+import Map from "../../components/Map/map";
 import {
     AppBar,
     Button,
@@ -13,8 +13,8 @@ import {
     Toolbar,
     Typography
 } from "@material-ui/core";
-import Panel from "./components/Panel/panel";
-import StatusBar from "./components/StatusBar/statusBar";
+import Panel from "./Panel/panel";
+import StatusBar from "../../components/StatusBar/statusBar";
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import {makeStyles} from "@material-ui/core/styles";
@@ -26,7 +26,7 @@ const darkTheme = createMuiTheme({
     },
 } );
 
-darkTheme.palette.primary.main = 'rgba(31,27,255,0.9)';
+darkTheme.palette.primary.main = 'rgb(83,131,255)';
 
 const drawerWidth = 240;
 
@@ -120,7 +120,7 @@ function App() {
                       <Typography variant="h6" className={classes.title}>
                           OLGIS
                       </Typography>
-                      <Button color="inherit">Login</Button>
+                      <Button color="inherit">wkgreat@outlook.com</Button>
                   </Toolbar>
               </AppBar>
               <Panel open={panelOpen} width={drawerWidth}/>

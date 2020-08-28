@@ -1,5 +1,5 @@
 import React, {FC, FunctionComponentElement, ReactNode, useState} from "react";
-import {ListItemButton} from "../Panel/expansionPanel";
+import {ListItemButton} from "./expansionPanel";
 import {IconButton, IconButtonProps, ListItemProps, ListItemText, Portal} from "@material-ui/core";
 
 export interface ActivatorProps<T>{
