@@ -4,6 +4,7 @@ import {Box, Collapse, Drawer, List, ListItem, ListItemIcon, ListItemText, Typog
 import TocIcon from '@material-ui/icons/Toc';
 import LayersIcon from '@material-ui/icons/Layers';
 import MapIcon from '@material-ui/icons/Map';
+import GridOnIcon from '@material-ui/icons/GridOn';
 import {ListItemActivator} from "../../../components/tools/toolActivator";
 import AddXYZTileLayerTool from "../../../components/tools/AddXYZTileLayer/addXYZTileLayerTool";
 import AddDrawLayerToolDrawer from "../../../components/tools/AddDrawLayer/addDrawLayerToolDrawer";
@@ -14,6 +15,9 @@ import clsx from "clsx";
 import AddXYZVectorLayer from "../../../components/tools/AddXYZVectorLayer/addXYZVectorLayer";
 import AddCSVPointsLayer from "../../../components/tools/AddCSVPointsLayer/addCSVPointsLayer";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import AddGeohashFishnet from "../../../components/tools/grid/geohash/addGeohashFishnet";
+import AddUberH3Cell from "../../../components/tools/grid/h3/addUberH3Cell";
+import AddUberH3GridByExtent from "../../../components/tools/grid/h3/addUberH3GridByExtent";
 
 export interface PanelProps {
     open ?: boolean
@@ -29,15 +33,12 @@ const Panel:FC<PanelProps> = ({open, width}) => {
     const [tocOpen, setTocOpen] = useState(true);
     const [layerListOpen, setLayerListOpen] = useState(true);
     const [mapComListOpen, setMapComListOpen] = useState(true);
+    const [geoGridOpen, setGeoGridOpen] = useState(true);
 
     useEffect(()=>{
         setIsOpen(open);
         setPanelWidth(width);
     }, [open, width]);
-
-    const handleCloseButtonClick = ()=>{
-        setIsOpen(!isOpen);
-    };
 
     const paperClasses = clsx({
         [classes.paperOpen]: isOpen,
@@ -109,6 +110,23 @@ const Panel:FC<PanelProps> = ({open, width}) => {
                 }}>
                     <List>
                         <ListItemActivator label="比例尺设置" target={<ScalebarSettingDialog/>}/>
+                    </List>
+                </Collapse>
+
+                <ListItem button onClick={()=>setGeoGridOpen(!geoGridOpen)}>
+                    <ListItemIcon>
+                        <GridOnIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="地理网格工具"/>
+                    {geoGridOpen ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={geoGridOpen} timeout="auto" unmountOnExit classes={{
+                    container: classes.collapse
+                }}>
+                    <List>
+                        <ListItemActivator label="添加GeoHash渔网" target={<AddGeohashFishnet/>}/>
+                        <ListItemActivator label="添加Uber-H3格子" target={<AddUberH3Cell/>}/>
+                        <ListItemActivator label="添加Uber-H3网格" target={<AddUberH3GridByExtent/>}/>
                     </List>
                 </Collapse>
 

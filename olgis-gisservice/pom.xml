@@ -70,6 +70,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.uber</groupId>
+			<artifactId>h3</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
@@ -94,12 +99,15 @@
 
 	<build>
 
-<!--		<resources>-->
-<!--			<resource>-->
-<!--				<directory>${basedir}/../olgis-web-ts/build</directory>-->
-<!--				<targetPath>${basedir}/src/main/resources/static</targetPath>-->
-<!--			</resource>-->
-<!--		</resources>-->
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>${basedir}/../olgis-web-ts/build</directory>
+				<targetPath>${basedir}/src/main/resources/static</targetPath>
+			</resource>
+		</resources>
 
 		<finalName>${project.name}-${project.version}-app</finalName>
 
@@ -136,6 +144,7 @@
 						<configuration>
 							<executable>npm</executable>
 							<arguments>
+								<argument>run</argument>
 								<argument>build</argument>
 							</arguments>
 							<workingDirectory>${basedir}/../olgis-web-ts</workingDirectory>

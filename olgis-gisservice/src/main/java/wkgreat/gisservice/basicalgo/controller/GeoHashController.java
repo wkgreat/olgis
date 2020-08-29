@@ -9,7 +9,7 @@ import wkgreat.domain.basic.BaseResponse;
 @Slf4j
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("geohash")
+@RequestMapping("/grid/geohash")
 public class GeoHashController {
 
     @Autowired

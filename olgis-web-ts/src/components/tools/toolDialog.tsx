@@ -5,8 +5,10 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import {Box, Grid, GridSize, Typography} from "@material-ui/core";
+import {Box, Grid, GridSize, IconButton, Theme, Typography} from "@material-ui/core";
 import BaseToolProps from "./baseToolProps";
+import {makeStyles} from "@material-ui/core/styles";
+import MemoryTwoToneIcon from '@material-ui/icons/MemoryTwoTone';
 
 /**
  *  open
@@ -16,7 +18,20 @@ import BaseToolProps from "./baseToolProps";
  *  children
  * */
 
-type OnButtonClickCallBack = (event:React.MouseEvent<HTMLButtonElement, Event>) => void
+const useStyles = makeStyles((theme: Theme) => ({
+
+    root: {
+        backgroundColor: "transparent",
+        pointerEvents: "none"
+    },
+    paper: {
+        pointerEvents: "auto",
+    },
+    title: {
+        backgroundColor: theme.palette.primary.main
+    }
+
+}));
 
 export interface ToolDialogProps extends BaseToolProps{
     children ?: React.ReactNode
@@ -26,6 +41,8 @@ const ToolDialog: FC<ToolDialogProps> = ({open, title, enableOK, enableCancel, o
 
     const [isOpen, setIsOpen] = useState(Boolean(open));
 
+    const classes = useStyles();
+
     useEffect(()=>{
         setIsOpen(Boolean(open));
     },[open]);
@@ -33,15 +50,25 @@ const ToolDialog: FC<ToolDialogProps> = ({open, title, enableOK, enableCancel, o
     if(isOpen) {
         return (
             <Dialog
+                classes={{
+                    root: classes.root,
+                    paper: classes.paper,
+                }}
+                hideBackdrop={true}
                 open={Boolean(open)}
                 onClose={onCancel}
                 PaperComponent={DraggablePaper}
                 aria-labelledby="draggable-dialog-title"
                 fullWidth={true}
+                disableBackdropClick={true}
+                scroll="paper"
             >
                 {title ?
-                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        {title}
+                    <DialogTitle className={classes.title} style={{ cursor: 'move' }} id="draggable-dialog-title">
+                        <Box display="flex" alignItems="center">
+                            <Box><IconButton><MemoryTwoToneIcon/></IconButton></Box>
+                            <Box>{title}</Box>
+                        </Box>
                     </DialogTitle> :
                     <></>}
 

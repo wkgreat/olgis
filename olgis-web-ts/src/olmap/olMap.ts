@@ -2,9 +2,27 @@ import {MapOptions} from 'ol/PluggableMap'
 import {OSM} from "ol/source";
 import TileLayer from "ol/layer/Tile";
 import {Map, View} from "ol";
-import {fromLonLat} from "ol/proj";
+import {fromLonLat, ProjectionLike, transformExtent} from "ol/proj";
 import {ScaleLine} from "ol/control";
 import {Options} from 'ol/control/ScaleLine'
+import {Extent} from "ol/extent";
+
+/**
+ * 获取地图当前可视范围
+ * @function
+ * @param map 地图对象
+ * @param proj 返回范围的坐标系
+ * @returns 范围
+ * */
+export function getCurrentViewExtent(map: OlMap, proj?:ProjectionLike):Extent {
+    const extent = map.getView().calculateExtent(map.getSize());
+    if(proj) {
+        return transformExtent(extent, map.getView().getProjection(), proj);
+    } else {
+        return extent;
+    }
+}
+
 
 export interface OlMapOptions extends MapOptions{
 

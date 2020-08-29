@@ -40,7 +40,7 @@ const ProjectionStatus: FC<ProjectionStatusProps> = (props) => {
                 map.un("change:view", callback);
             }
         }
-    }, [visible]);
+    }, [visible, map, vis, callback]);
 
     const boxProps = {
         p: 0.2,
