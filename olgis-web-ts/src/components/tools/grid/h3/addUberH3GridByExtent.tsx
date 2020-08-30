@@ -10,12 +10,13 @@ import TextField from "../../../common/textField";
 import ExtentSetting from "../../ExtentSetting/extentSetting";
 import {Extent} from "ol/extent";
 import {arrayEquals} from "../../../../olmap/utils";
+import {SERVICE_URL} from "../../../common/utils";
 
 export interface AddUberH3GridByExtentProps extends BaseToolProps{}
 
 const AddUberH3GridByExtent: FC<AddUberH3GridByExtentProps> = (props) => {
 
-    const url = "http://localhost:8081/grid/h3/getH3Grid";
+    const url = `${SERVICE_URL}/grid/h3/getH3Grid`;
 
     const olmap = useContext(MapContext);
 
@@ -74,8 +75,10 @@ const AddUberH3GridByExtent: FC<AddUberH3GridByExtentProps> = (props) => {
                     LayerUtils.addLayer(olmap, layer);
                     LayerUtils.zoomToLayer(olmap, layer.get('name'));
                 }
-            }).catch(()=>{
-        });
+            })
+            .catch((error)=>{
+                console.log(error);
+            });
 
     };
 

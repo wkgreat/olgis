@@ -7,6 +7,7 @@ import {isLatitude, isLongitude, isValidInt} from "../../../../olmap/utils";
 import axios from "axios";
 import {LayerUtils} from "../../../../olmap";
 import {MapContext} from "../../../MapContext/mapContext";
+import {SERVICE_URL} from "../../../common/utils";
 
 interface AddUberH3CellProps extends BaseToolProps{
 
@@ -14,7 +15,7 @@ interface AddUberH3CellProps extends BaseToolProps{
 
 const AddUberH3Cell: FC<AddUberH3CellProps> = (props) => {
 
-    const url = "http://localhost:8081/grid/h3/getH3Boundary";
+    const url = `${SERVICE_URL}/grid/h3/getH3Boundary`;
 
     const olmap = useContext(MapContext);
 
@@ -51,8 +52,10 @@ const AddUberH3Cell: FC<AddUberH3CellProps> = (props) => {
                     LayerUtils.addLayer(olmap, layer);
                     LayerUtils.zoomToLayer(olmap, layer.get('name'));
                 }
-            }).catch(()=>{
-        });
+            })
+            .catch((error)=>{
+                console.log(error);
+            });
 
     };
 

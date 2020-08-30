@@ -16,7 +16,6 @@ const ProjectionStatus: FC<ProjectionStatusProps> = (props) => {
 
     const getProjInfo = ():string => {
         const view = map.getView();
-        console.log(view);
         const proj = view.getProjection();
         return parseText(proj);
     };

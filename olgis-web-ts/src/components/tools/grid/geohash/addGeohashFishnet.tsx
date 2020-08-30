@@ -9,6 +9,7 @@ import BaseToolProps from "../../baseToolProps";
 import TextField from "../../../common/textField";
 import ExtentSetting from "../../ExtentSetting/extentSetting";
 import {Extent} from "ol/extent";
+import {SERVICE_URL} from "../../../common/utils";
 
 interface AddGeohashFishnetProps extends BaseToolProps{
 }
@@ -17,7 +18,7 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
     const olmap = useContext(MapContext);
 
     //TODO URL configurable
-    const url = "http://localhost:8081/grid/geohash/fishnet";
+    const url = `${SERVICE_URL}/grid/geohash/fishnet`;
 
     const [inputName, setInputName] = useState("geohash-grid");
     const [open, setOpen] = useState(!!props.open);
@@ -52,8 +53,10 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
                     LayerUtils.addLayer(olmap, layer);
                     LayerUtils.zoomToLayer(olmap, layer.get('name'));
                 }
-            }).catch(()=>{
-        });
+            })
+            .catch((error)=>{
+                console.log(error);
+            });
 
     };
 

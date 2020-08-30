@@ -19,6 +19,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
+import {SERVICE_URL} from "../../components/common/utils";
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -120,7 +121,7 @@ function App() {
                       <Typography variant="h6" className={classes.title}>
                           OLGIS
                       </Typography>
-                      <Button color="inherit">wkgreat@outlook.com</Button>
+                      <Button color="inherit">{`服务端地址: ${SERVICE_URL}`}</Button>
                   </Toolbar>
               </AppBar>
               <Panel open={panelOpen} width={drawerWidth}/>
