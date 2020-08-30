@@ -2,21 +2,24 @@ package wkgreat.gisservice.basicalgo.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import wkgreat.gisservice.basicalgo.service.GeoHashService;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import wkgreat.domain.basic.BaseResponse;
+import wkgreat.gisservice.basicalgo.service.GeoHashService;
 
 @Slf4j
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("geohash")
+@RequestMapping("/grid/geohash")
 public class GeoHashController {
 
     @Autowired
     GeoHashService geoHashService;
 
     @GetMapping("/geohash")
-    public BaseResponse<String> geohash(Double lon,Double lat, Integer len) {
+    public BaseResponse<String> geohash(Double lon, Double lat, Integer len) {
         String geohash = geoHashService.geohash(lon, lat, len);
         return BaseResponse.success(geohash);
     }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <title>OLGIS - A WebGIS App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <input hidden id="%REACT_APP_HOST_ADDR_INPUT_ID%" type="text" th:value="${address}" name="address">
+    <input hidden id="%REACT_APP_HOST_PORT_INPUT_ID%" type="text" th:value="${port}" name="port">
+    <div id="root"></div>
+  </body>
+</html>
