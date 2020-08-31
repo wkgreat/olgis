@@ -47,7 +47,7 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
             olmap.addInteraction(drawInteraction);
         }
 
-    }, [props.open,layerName,layerType,olmap]);
+    }, [props.open, props.signal]);
 
 
 
@@ -66,18 +66,28 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
         setLayerType(type);
     };
 
+    const getButtonType = (theType: GeometryType, layerType: GeometryType): 'text' | 'outlined' | 'contained' => {
+        return layerType===theType ? "contained" : "outlined"
+    };
+
     const getButtonColor = (theType: GeometryType, layerType: GeometryType): PropTypes.Color => {
         return layerType===theType ? "primary" : "default"
     };
 
     const onOK = () => {
         drawInteraction && olmap.removeInteraction(drawInteraction);
+        source = undefined;
+        layer = undefined;
+        drawInteraction = undefined;
         props.onOK && props.onOK();
     };
 
     const onCancel = () => {
         if(olmap && drawInteraction) olmap.removeInteraction(drawInteraction);
         if(layer) LayerUtils.removeLayerByName(olmap, layer.get('name'));
+        source = undefined;
+        layer = undefined;
+        drawInteraction = undefined;
         if(props.onCancel) props.onCancel();
     };
 
@@ -97,21 +107,25 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
                 <ButtonGroup size="small" aria-label="small outlined button group">
                     <Button
                         size="small"
+                        variant={getButtonType(GeometryType.POINT, layerType)}
                         color={getButtonColor(GeometryType.POINT, layerType)}
                         onClick={()=>{onLayerTypeChange(GeometryType.POINT)}}
                     >Point</Button>
                     <Button
                         size="small"
+                        variant={getButtonType(GeometryType.LINE_STRING, layerType)}
                         color={getButtonColor(GeometryType.LINE_STRING, layerType)}
                         onClick={()=>{onLayerTypeChange(GeometryType.LINE_STRING)}}
                     >LineString</Button>
                     <Button
                         size="small"
+                        variant={getButtonType(GeometryType.POLYGON, layerType)}
                         color={getButtonColor(GeometryType.POLYGON, layerType)}
                         onClick={()=>{onLayerTypeChange(GeometryType.POLYGON)}}
                     >Polygon</Button>
                     <Button
                         size="small"
+                        variant={getButtonType(GeometryType.CIRCLE, layerType)}
                         color={getButtonColor(GeometryType.CIRCLE, layerType)}
                         onClick={()=>{onLayerTypeChange(GeometryType.CIRCLE)}}
                     >Circle</Button>
