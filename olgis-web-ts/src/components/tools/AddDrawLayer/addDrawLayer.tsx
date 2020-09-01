@@ -1,25 +1,19 @@
-import React, {ChangeEvent, FC, useContext, useEffect, useState} from "react";
+import React, {ChangeEvent, FC, useContext, useEffect, useRef, useState} from "react";
 import {Box, BoxProps, Button, ButtonGroup, Divider, InputLabel, PropTypes, Switch} from "@material-ui/core";
 import BaseToolProps from "../baseToolProps";
 import TextField from "@material-ui/core/TextField/TextField";
-import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import Draw from "ol/interaction/Draw";
 import {MapContext} from "../../MapContext/mapContext";
-import {genLayerName} from "../../../olmap/olmapLayer";
-import {LayerUtils, StyleUtils} from "../../../olmap";
+import {LayerUtils} from "../../../olmap";
 import GeometryType from "ol/geom/GeometryType";
 import ToolTitle from "../../common/toolTitle";
+import {makeDrawWithNewLayer} from "../../../olmap/interaction";
 
 
 interface AddDrawLayerProps extends BaseToolProps{
     boxProps?: BoxProps
 }
-
-//TODO useRef
-let source: VectorSource | undefined = undefined;
-let layer: VectorLayer | undefined = undefined;
-let drawInteraction: Draw | undefined = undefined;
 
 const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
 
@@ -29,23 +23,22 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     const [layerType, setLayerType] = useState<GeometryType>(GeometryType.POINT);
     const [freehand, setFreehand] = useState(false);
 
+    const drawInteration = useRef<[Draw,VectorLayer]|undefined>(undefined);
+
     useEffect(()=>{
 
         if(props.open) {
-            source = new VectorSource();
-            layer = new VectorLayer({
-                source: source,
-                style: StyleUtils.getDefaultStyle()
-            });
-            layer.set('name', genLayerName(olmap, layerName));
-            LayerUtils.addLayer(olmap, layer);
-
-            drawInteraction = new Draw({
-                source: source,
+            const dl = drawInteration.current;
+            if(dl && dl[0]) {
+                olmap.removeInteraction(dl[0])
+            }
+            drawInteration.current = makeDrawWithNewLayer(olmap,{
                 type: layerType,
                 freehand
-            });
-            olmap.addInteraction(drawInteraction);
+            },layerName);
+            olmap.addInteraction(drawInteration.current[0]);
+            LayerUtils.addLayer(olmap, drawInteration.current[1])
+
         }
 
     }, [props.open, props.signal]);
@@ -58,14 +51,19 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     };
 
     const onLayerTypeChange = (type: GeometryType) => {
-        drawInteraction && olmap.removeInteraction(drawInteraction);
-        drawInteraction = new Draw({
-            source: source,
-            type: type,
-            freehand
-        });
-        olmap.addInteraction(drawInteraction);
-        setLayerType(type);
+        const dl = drawInteration.current;
+        if(dl) {
+            olmap.removeInteraction(dl[0]);
+            const newDraw = new Draw({
+                type,
+                freehand,
+                source: dl[1].getSource()
+            });
+            olmap.addInteraction(newDraw);
+            drawInteration.current = [newDraw, dl[1]];
+            setLayerType(type);
+        }
+
     };
 
     const disableFreehand = ():boolean => {
@@ -79,15 +77,19 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
         return true;
     };
 
-    const onFreeHandChange = (e:any,v:boolean) => {
-        drawInteraction && olmap.removeInteraction(drawInteraction);
-        drawInteraction = new Draw({
-            source: source,
-            type: layerType,
-            freehand: v
-        });
-        olmap.addInteraction(drawInteraction);
-        setFreehand(v);
+    const onFreeHandChange = (e:any,freehand:boolean) => {
+        const dl = drawInteration.current;
+        if(dl) {
+            olmap.removeInteraction(dl[0]);
+            const newDraw = new Draw({
+                type: layerType,
+                freehand,
+                source: dl[1].getSource()
+            });
+            olmap.addInteraction(newDraw);
+            drawInteration.current = [newDraw, dl[1]];
+            setFreehand(freehand);
+        }
     };
 
     const getButtonType = (theType: GeometryType, layerType: GeometryType): 'text' | 'outlined' | 'contained' => {
@@ -99,19 +101,24 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     };
 
     const onOK = () => {
-        drawInteraction && olmap.removeInteraction(drawInteraction);
-        source = undefined;
-        layer = undefined;
-        drawInteraction = undefined;
+        const dl = drawInteration.current;
+        if(dl) {
+            const draw = dl[0];
+            draw && olmap.removeInteraction(draw);
+        }
+
         props.onOK && props.onOK();
     };
 
     const onCancel = () => {
-        if(olmap && drawInteraction) olmap.removeInteraction(drawInteraction);
-        if(layer) LayerUtils.removeLayerByName(olmap, layer.get('name'));
-        source = undefined;
-        layer = undefined;
-        drawInteraction = undefined;
+        const dl = drawInteration.current;
+        if(dl) {
+            const draw = dl[0];
+            const layer = dl[1];
+            if(olmap && draw) olmap.removeInteraction(draw);
+            if(layer) LayerUtils.removeLayerByName(olmap, layer.get('name'));
+        }
+
         if(props.onCancel) props.onCancel();
     };
 
