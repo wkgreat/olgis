@@ -124,11 +124,13 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
                            onOK={onOK} onCancel={onCancel}
                 />
                 <Divider/>
-                <TextField id="standard-basic" label="图层名称" margin="normal" fullWidth={true}
-                           value={layerName} onChange={onLayerNameChange}
-                />
-                <Box display="flex" alignItems="center">
-                    <Box><InputLabel shrink={true}>要素类型</InputLabel></Box>
+                <Box py={1}>
+                    <TextField id="standard-basic" label="图层名称" margin="normal" fullWidth={true}
+                               value={layerName} onChange={onLayerNameChange}
+                    />
+                </Box>
+                <Box py={1} display="flex" alignItems="center">
+                    <Box flexGrow={1}><InputLabel shrink={true}>要素类型</InputLabel></Box>
                     <Box>
                         <ButtonGroup size="small" aria-label="small outlined button group">
                             <Button
@@ -158,9 +160,9 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
                         </ButtonGroup>
                     </Box>
                 </Box>
-                <Divider/>
-                <Box display="flex" alignItems="center">
-                    <Box><InputLabel shrink={true}>是否徒手画(在Polyline和Polygon模式下可选)</InputLabel></Box>
+
+                <Box py={1} display="flex" alignItems="center">
+                    <Box flexGrow={1}><InputLabel shrink={true}>是否徒手画<br/>(在Polyline和Polygon模式下可选,同时按住SHIFT键也为该模式)</InputLabel></Box>
                     <Box><Switch size="small" disabled={disableFreehand()} checked={freehand} onChange={onFreeHandChange}/></Box>
                 </Box>
             </Box>
