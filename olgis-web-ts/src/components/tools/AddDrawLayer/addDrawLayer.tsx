@@ -1,5 +1,5 @@
 import React, {ChangeEvent, FC, useContext, useEffect, useState} from "react";
-import {Box, BoxProps, Button, ButtonGroup, Divider, InputLabel, PropTypes} from "@material-ui/core";
+import {Box, BoxProps, Button, ButtonGroup, Divider, InputLabel, PropTypes, Switch} from "@material-ui/core";
 import BaseToolProps from "../baseToolProps";
 import TextField from "@material-ui/core/TextField/TextField";
 import VectorSource from "ol/source/Vector";
@@ -27,11 +27,11 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
 
     const [layerName, setLayerName] = useState("ol-draw-layer");
     const [layerType, setLayerType] = useState<GeometryType>(GeometryType.POINT);
+    const [freehand, setFreehand] = useState(false);
 
     useEffect(()=>{
 
         if(props.open) {
-            console.log("addDrawLayer useEffect!!");
             source = new VectorSource();
             layer = new VectorLayer({
                 source: source,
@@ -42,7 +42,8 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
 
             drawInteraction = new Draw({
                 source: source,
-                type: layerType
+                type: layerType,
+                freehand
             });
             olmap.addInteraction(drawInteraction);
         }
@@ -60,10 +61,33 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
         drawInteraction && olmap.removeInteraction(drawInteraction);
         drawInteraction = new Draw({
             source: source,
-            type: type
+            type: type,
+            freehand
         });
         olmap.addInteraction(drawInteraction);
         setLayerType(type);
+    };
+
+    const disableFreehand = ():boolean => {
+        if(layerType===GeometryType.LINE_STRING
+            || layerType===GeometryType.MULTI_LINE_STRING
+            || layerType===GeometryType.POLYGON
+            || layerType===GeometryType.MULTI_POLYGON
+        ) {
+            return false;
+        }
+        return true;
+    };
+
+    const onFreeHandChange = (e:any,v:boolean) => {
+        drawInteraction && olmap.removeInteraction(drawInteraction);
+        drawInteraction = new Draw({
+            source: source,
+            type: layerType,
+            freehand: v
+        });
+        olmap.addInteraction(drawInteraction);
+        setFreehand(v);
     };
 
     const getButtonType = (theType: GeometryType, layerType: GeometryType): 'text' | 'outlined' | 'contained' => {
@@ -103,33 +127,42 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
                 <TextField id="standard-basic" label="图层名称" margin="normal" fullWidth={true}
                            value={layerName} onChange={onLayerNameChange}
                 />
-                <Box><InputLabel shrink={true}>要素类型</InputLabel></Box>
-                <ButtonGroup size="small" aria-label="small outlined button group">
-                    <Button
-                        size="small"
-                        variant={getButtonType(GeometryType.POINT, layerType)}
-                        color={getButtonColor(GeometryType.POINT, layerType)}
-                        onClick={()=>{onLayerTypeChange(GeometryType.POINT)}}
-                    >Point</Button>
-                    <Button
-                        size="small"
-                        variant={getButtonType(GeometryType.LINE_STRING, layerType)}
-                        color={getButtonColor(GeometryType.LINE_STRING, layerType)}
-                        onClick={()=>{onLayerTypeChange(GeometryType.LINE_STRING)}}
-                    >LineString</Button>
-                    <Button
-                        size="small"
-                        variant={getButtonType(GeometryType.POLYGON, layerType)}
-                        color={getButtonColor(GeometryType.POLYGON, layerType)}
-                        onClick={()=>{onLayerTypeChange(GeometryType.POLYGON)}}
-                    >Polygon</Button>
-                    <Button
-                        size="small"
-                        variant={getButtonType(GeometryType.CIRCLE, layerType)}
-                        color={getButtonColor(GeometryType.CIRCLE, layerType)}
-                        onClick={()=>{onLayerTypeChange(GeometryType.CIRCLE)}}
-                    >Circle</Button>
-                </ButtonGroup>
+                <Box display="flex" alignItems="center">
+                    <Box><InputLabel shrink={true}>要素类型</InputLabel></Box>
+                    <Box>
+                        <ButtonGroup size="small" aria-label="small outlined button group">
+                            <Button
+                                size="small"
+                                variant={getButtonType(GeometryType.POINT, layerType)}
+                                color={getButtonColor(GeometryType.POINT, layerType)}
+                                onClick={()=>{onLayerTypeChange(GeometryType.POINT)}}
+                            >Point</Button>
+                            <Button
+                                size="small"
+                                variant={getButtonType(GeometryType.LINE_STRING, layerType)}
+                                color={getButtonColor(GeometryType.LINE_STRING, layerType)}
+                                onClick={()=>{onLayerTypeChange(GeometryType.LINE_STRING)}}
+                            >LineString</Button>
+                            <Button
+                                size="small"
+                                variant={getButtonType(GeometryType.POLYGON, layerType)}
+                                color={getButtonColor(GeometryType.POLYGON, layerType)}
+                                onClick={()=>{onLayerTypeChange(GeometryType.POLYGON)}}
+                            >Polygon</Button>
+                            <Button
+                                size="small"
+                                variant={getButtonType(GeometryType.CIRCLE, layerType)}
+                                color={getButtonColor(GeometryType.CIRCLE, layerType)}
+                                onClick={()=>{onLayerTypeChange(GeometryType.CIRCLE)}}
+                            >Circle</Button>
+                        </ButtonGroup>
+                    </Box>
+                </Box>
+                <Divider/>
+                <Box display="flex" alignItems="center">
+                    <Box><InputLabel shrink={true}>是否徒手画(在Polyline和Polygon模式下可选)</InputLabel></Box>
+                    <Box><Switch size="small" disabled={disableFreehand()} checked={freehand} onChange={onFreeHandChange}/></Box>
+                </Box>
             </Box>
         );
     } else {
