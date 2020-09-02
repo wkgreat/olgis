@@ -2,13 +2,12 @@ import React, {ChangeEvent, FC, useContext, useEffect, useRef, useState} from "r
 import {Box, BoxProps, Button, ButtonGroup, Divider, InputLabel, PropTypes, Switch} from "@material-ui/core";
 import BaseToolProps from "../baseToolProps";
 import TextField from "@material-ui/core/TextField/TextField";
-import VectorLayer from "ol/layer/Vector";
 import Draw from "ol/interaction/Draw";
 import {MapContext} from "../../MapContext/mapContext";
 import {LayerUtils} from "../../../olmap";
 import GeometryType from "ol/geom/GeometryType";
 import ToolTitle from "../../common/toolTitle";
-import {makeDrawWithNewLayer} from "../../../olmap/interaction";
+import {DrawLayer, makeDrawWithNewLayer} from "../../../olmap/interaction";
 
 
 interface AddDrawLayerProps extends BaseToolProps{
@@ -23,21 +22,21 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     const [layerType, setLayerType] = useState<GeometryType>(GeometryType.POINT);
     const [freehand, setFreehand] = useState(false);
 
-    const drawInteration = useRef<[Draw,VectorLayer]|undefined>(undefined);
+    const drawInteration = useRef<DrawLayer|undefined>(undefined);
 
     useEffect(()=>{
 
         if(props.open) {
             const dl = drawInteration.current;
-            if(dl && dl[0]) {
-                olmap.removeInteraction(dl[0])
+            if(dl) {
+                olmap.removeInteraction(dl.draw)
             }
             drawInteration.current = makeDrawWithNewLayer(olmap,{
                 type: layerType,
                 freehand
             },layerName);
-            olmap.addInteraction(drawInteration.current[0]);
-            LayerUtils.addLayer(olmap, drawInteration.current[1])
+            olmap.addInteraction(drawInteration.current.draw);
+            LayerUtils.addLayer(olmap, drawInteration.current.layer);
 
         }
 
@@ -53,14 +52,14 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     const onLayerTypeChange = (type: GeometryType) => {
         const dl = drawInteration.current;
         if(dl) {
-            olmap.removeInteraction(dl[0]);
+            olmap.removeInteraction(dl.draw);
             const newDraw = new Draw({
                 type,
                 freehand,
-                source: dl[1].getSource()
+                source: dl.layer.getSource()
             });
             olmap.addInteraction(newDraw);
-            drawInteration.current = [newDraw, dl[1]];
+            drawInteration.current = {draw:newDraw, layer:dl.layer};
             setLayerType(type);
         }
 
@@ -80,14 +79,14 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     const onFreeHandChange = (e:any,freehand:boolean) => {
         const dl = drawInteration.current;
         if(dl) {
-            olmap.removeInteraction(dl[0]);
+            olmap.removeInteraction(dl.draw);
             const newDraw = new Draw({
                 type: layerType,
                 freehand,
-                source: dl[1].getSource()
+                source: dl.layer.getSource()
             });
             olmap.addInteraction(newDraw);
-            drawInteration.current = [newDraw, dl[1]];
+            drawInteration.current = {draw:newDraw, layer: dl.layer};
             setFreehand(freehand);
         }
     };
@@ -103,7 +102,7 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     const onOK = () => {
         const dl = drawInteration.current;
         if(dl) {
-            const draw = dl[0];
+            const draw = dl.draw;
             draw && olmap.removeInteraction(draw);
         }
 
@@ -113,8 +112,7 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     const onCancel = () => {
         const dl = drawInteration.current;
         if(dl) {
-            const draw = dl[0];
-            const layer = dl[1];
+            const {draw, layer} = dl;
             if(olmap && draw) olmap.removeInteraction(draw);
             if(layer) LayerUtils.removeLayerByName(olmap, layer.get('name'));
         }
