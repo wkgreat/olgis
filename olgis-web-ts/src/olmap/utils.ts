@@ -36,4 +36,13 @@ export const arrayEquals = (a: any[], b: any[]) => {
         }
     }
     return true;
+};
+
+export function arrayContains<T>(array: T[], ele : T): boolean {
+    for(let i in array) {
+        if(array[i] === ele) {
+            return true;
+        }
+    }
+    return false;
 }
