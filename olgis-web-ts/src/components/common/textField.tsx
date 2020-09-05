@@ -1,5 +1,5 @@
 import {styled, TextField as MTextField, TextFieldProps as MTextFieldProps} from "@material-ui/core";
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 
 const StyledTextField = styled(MTextField)({
     minWidth: 100,
@@ -7,13 +7,24 @@ const StyledTextField = styled(MTextField)({
     marginLeft: 5
 });
 
+/**
+ * Properties of {@link TextField} component
+ * */
 interface BasicTextFieldProps{
+    /** Default value on input value is error*/
+    defaultValue ?: string
+    /** function to check whether input value is error or not*/
     checker ?: (s:string) => boolean
-    errorText ?: string
+    /** prompting text when input value is error*/
+    errorText ?: string,
 }
 
 export type TextFieldProps = BasicTextFieldProps & MTextFieldProps;
 
+/**
+ * @function
+ * TextField Function Component, providing the functionality of checking input value error or not
+ * */
 const TextField: FC<TextFieldProps> = ({checker, ...restProps}) => {
 
     const judge = (v:string) => {
@@ -23,18 +34,32 @@ const TextField: FC<TextFieldProps> = ({checker, ...restProps}) => {
         return checker;
     };
 
+    const [text, setText] = useState(restProps.value);
     const [isError, setIsError] = useState(judge(restProps.value as string));
 
     const onChange = (e:any) => {
-        setIsError(judge(e.target.value));
-        if(restProps.onChange && !isError) {
-            restProps.onChange(e);
+        const error = judge(e.target.value);
+        setIsError(error);
+        if(restProps.onChange) {
+            if(error) {
+                e.target.value = restProps.defaultValue;
+                setText(restProps.defaultValue);
+                restProps.onChange(e);
+            } else {
+                setText(e.target.value);
+                restProps.onChange(e);
+            }
         }
     };
+
+    useEffect(()=>{
+        setText(restProps.value);
+    }, [restProps.value]);
 
     return (
         <StyledTextField
             {...restProps}
+            value={text}
             error={isError}
             helperText={isError ? restProps.errorText : restProps.helperText}
             onChange={onChange}
@@ -42,6 +67,10 @@ const TextField: FC<TextFieldProps> = ({checker, ...restProps}) => {
         </StyledTextField>
     );
 
+};
+
+TextField.defaultProps = {
+    defaultValue: ""
 };
 
 

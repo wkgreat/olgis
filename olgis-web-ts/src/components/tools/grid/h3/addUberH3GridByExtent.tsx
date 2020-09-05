@@ -22,7 +22,7 @@ const AddUberH3GridByExtent: FC<AddUberH3GridByExtentProps> = (props) => {
 
     const [open, setOpen] = useState(!!props.open);
     const [layerName, setLayerName] = useState("uber-u3-extent-grid");
-    const [res, setRes] = useState(0);
+    const [res, setRes] = useState(2);
     const [extent, setExtent] = useState(useCurrentViewExtent(olmap,"EPSG:4326"));
 
     useEffect(()=>{
@@ -77,9 +77,17 @@ const AddUberH3GridByExtent: FC<AddUberH3GridByExtentProps> = (props) => {
                 }
             })
             .catch((error)=>{
-                console.log(error);
+                console.error(error);
             });
 
+    };
+
+    const checkRes = (s?:string) => {
+        if(!s) {
+            return false;
+        }
+        const n = Number(s);
+        return n>=0 && n <=20;
     };
 
     return (
@@ -96,11 +104,13 @@ const AddUberH3GridByExtent: FC<AddUberH3GridByExtentProps> = (props) => {
                            checker={(s)=>!!s}
                            errorText={"图层名称不能为空"}
                 />
-                <TextField id="standard-basic" label="H3格网分辨率" value={res}
+                <TextField id="standard-basic" label="H3格网分辨率"
                            margin="normal" fullWidth={true}
                            onChange={handleResChange}
-                           checker={(s)=>!!s}
-                           errorText={"不能为空"}
+                           defaultValue={""}
+                           value={res}
+                           checker={checkRes}
+                           errorText={"H3格网分辨率应该为[0,20]区间内的整数"}
                 />
                 <ExtentSetting
                     value={extent}
