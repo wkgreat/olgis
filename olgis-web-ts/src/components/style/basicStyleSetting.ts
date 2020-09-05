@@ -49,10 +49,10 @@ export const getColor = (style ?: StyleIncludeColor | OptionsIncludeColor) => {
     if(!style) {
         return '#ffffff';
     }
-    if((<StyleIncludeColor> style).getColor) {
-        theColor = (<StyleIncludeColor> style).getColor();
-    } else if((<OptionsIncludeColor> style).color) {
-        theColor = (<OptionsIncludeColor> style).color;
+    if((style as StyleIncludeColor).getColor) {
+        theColor = (style as StyleIncludeColor).getColor();
+    } else if((style as OptionsIncludeColor).color) {
+        theColor = (style as OptionsIncludeColor).color;
     }
     if(theColor instanceof Array) {
         return theColor;

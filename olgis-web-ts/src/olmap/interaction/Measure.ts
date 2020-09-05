@@ -98,7 +98,7 @@ function drawOptions(measureOptions: MeasureOptions): DrawOptions {
         throw Error("现在还不支持测量磁方位角，magnetic_azimuth unsupported!")
     }
 
-    if(mt=="line") {
+    if(mt==="line") {
         measureOptions.maxPoints=2;
     }
     if(mt==="angle") {

@@ -3,11 +3,11 @@ import LatLon from 'geodesy/latlon-ellipsoidal-vincenty';
 
 export * from "ol/sphere"
 
-const WGS84 = {
-    radius: 6378137.0,
-    flattening: 1 / 298.257223563,
-    eccentricity: 0
-};
+// const WGS84 = {
+//     radius: 6378137.0,
+//     flattening: 1 / 298.257223563,
+//     eccentricity: 0
+// };
 
 /**
  * 角度差值 in degree
