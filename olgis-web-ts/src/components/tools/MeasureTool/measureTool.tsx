@@ -82,7 +82,7 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
     const [unit, setUnit] = useState<Units>(Units.METER);
     const [result, setResult] = useState<MeasureResult|undefined>(undefined);
     const [refline, setRefline] = useState<boolean>(true);
-    const [freehand, setFreehand] = useState<boolean>(false);
+    const [freehand] = useState<boolean>(false);
 
     const measure = useRef<Measure|undefined>(undefined);
     const layer = useRef<VectorLayer|undefined>(undefined);
@@ -127,14 +127,11 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
     };
 
     useEffect(()=>{
-        console.log("MeasureTool useEffect 1");
         setMeasure();
     });
 
     useEffect(()=>{
-        console.log("MeasureTool useEffect 2");
         setOpen(!!props.open);
-        setMeasure();
     }, [props.open, props.signal]);
 
     const closeTool = () => {
@@ -200,18 +197,18 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
         }
     }
 
-    function canFreeHand() {
-        const b = measureType==="line" || measureType==="path" || measureType==="area" ;
-        return b;
-    }
-
-    function onFreeHandChange(e:any, fh: boolean) {
-        setFreehand(fh);
-        changeMeasure(measureType, unit, {
-            freehand: fh,
-            refline
-        })
-    }
+    // function canFreeHand() {
+    //     const b = measureType==="line" || measureType==="path" || measureType==="area" ;
+    //     return b;
+    // }
+    //
+    // function onFreeHandChange(e:any, fh: boolean) {
+    //     setFreehand(fh);
+    //     changeMeasure(measureType, unit, {
+    //         freehand: fh,
+    //         refline
+    //     })
+    // }
 
     function onReflineChange(e:any, rf: boolean) {
         setRefline(rf);
@@ -258,8 +255,8 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
                             onChange={onUnitChange}
                         >
                             {
-                                units.map(m=>(
-                                    <MenuItem value={m}>{m}</MenuItem>
+                                units.map((m,k)=>(
+                                    <MenuItem key={k} value={m}>{m}</MenuItem>
                                 ))
                             }
                         </Select>

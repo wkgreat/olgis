@@ -14,6 +14,8 @@ interface ExtentSettingProps {
     useMapViewExtent ?: boolean
     /**初始Extent对象*/
     value ?: Extent
+    /**加载时回调函数*/
+    onLoad ?: (extent: Extent) => void
     /**Extent变化回调函数*/
     onChange ?: (extent: Extent) => void
 }
@@ -25,7 +27,7 @@ const ExtentSetting: FC<ExtentSettingProps> = (props) => {
 
     const olmap = useContext(MapContext);
 
-    const [useMapViewExtent, setUseMapViewExtent] = useState(props.useMapViewExtent);
+    const [useMapViewExtent, setUseMapViewExtent] = useState(!!props.useMapViewExtent);
     const [extent, setExtent] = useState<Extent>(props.value||[0,0,0,0]);
 
     const onUseMapViewExtentClick = () => {
@@ -35,13 +37,22 @@ const ExtentSetting: FC<ExtentSettingProps> = (props) => {
     const mapViewExtent = useCurrentViewExtent(olmap,"EPSG:4326");
 
     useEffect(()=>{
+        if(useMapViewExtent && props.onLoad) {
+            if(!arrayEquals(mapViewExtent, extent)) {
+                setExtent(mapViewExtent);
+            }
+            props.onLoad(mapViewExtent);
+        }
+    }, []);
+
+    useEffect(()=>{
         if(useMapViewExtent && !arrayEquals(mapViewExtent, extent)) {
             setExtent(mapViewExtent);
             if(props.onChange) {
-                props.onChange(extent);
+                props.onChange(mapViewExtent);
             }
         }
-    },[mapViewExtent]);
+    },[mapViewExtent, useMapViewExtent]);
 
     const setExtentValue = (s: string, index: 0 | 1 | 2 | 3) => {
         const v: number = Number(s);

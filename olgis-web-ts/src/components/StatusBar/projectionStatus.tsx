@@ -2,6 +2,7 @@ import React, {FC, useContext, useEffect, useState} from "react";
 import {Box, Typography} from "@material-ui/core";
 import {MapContext} from "../MapContext/mapContext";
 import Projection from "ol/proj/Projection";
+import useViewProjection from "../../hooks/useViewProjection";
 
 export interface ProjectionStatusProps {
     visible ?: boolean;
@@ -14,32 +15,17 @@ const ProjectionStatus: FC<ProjectionStatusProps> = (props) => {
 
     const map = useContext(MapContext);
 
-    const getProjInfo = ():string => {
-        const view = map.getView();
-        const proj = view.getProjection();
-        return parseText(proj);
-    };
-
     const parseText = (proj:Projection) => {
-        return proj ? `Proj: ${proj.getCode()} Unit: ${proj.getUnits()}` : "Unknown Proj";
+        return proj ? `Projection: ${proj.getCode()} Unit: ${proj.getUnits()}` : "Unknown Proj";
     };
 
     const [vis, setVis] = useState(!!visible);
-    const [text, setText] = useState(getProjInfo());
 
-    const callback = () => {
-        setText(getProjInfo());
-    };
+    const text = parseText(useViewProjection(map));
 
     useEffect(()=>{
         setVis(!!visible);
-        if(vis) {
-            map.on("change:view", callback);
-            return () => {
-                map.un("change:view", callback);
-            }
-        }
-    }, [visible, map, vis, callback]);
+    }, [visible, map, vis]);
 
     const boxProps = {
         p: 0.2,
