@@ -21,6 +21,7 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    Switch,
     Theme,
     Typography
 } from "@material-ui/core";
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 /**
  * 地图测量工具
- * TODO 角度测量功能
+ * TODO 磁方位角测量
  * TODO 调整对话框大小，对话框标题栏大小
  * TODO 解决徒手画的问题
  * TODO 增加吸附功能
@@ -80,6 +81,7 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
     const [measureType, setMeasureType] = useState<MeasureType>("line");
     const [unit, setUnit] = useState<Units>(Units.METER);
     const [result, setResult] = useState<MeasureResult|undefined>(undefined);
+    const [refline, setRefline] = useState<boolean>(true);
     const [freehand, setFreehand] = useState<boolean>(false);
 
     const measure = useRef<Measure|undefined>(undefined);
@@ -97,6 +99,7 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
                 measureType : theMeasureType,
                 unit: theUnit,
                 freehand,
+                refline,
                 measureCallback: (res) => {
                     setResult(res);
                 },
@@ -120,7 +123,6 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
             LayerUtils.removeLayerByName(olmap, layer.current.get("name"));
             layer.current = undefined
         }
-        console.log(measureType, unit);
         setMeasure(measureType, unit, measureOptions)
     };
 
@@ -206,9 +208,17 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
     function onFreeHandChange(e:any, fh: boolean) {
         setFreehand(fh);
         changeMeasure(measureType, unit, {
-            freehand: fh
+            freehand: fh,
+            refline
         })
+    }
 
+    function onReflineChange(e:any, rf: boolean) {
+        setRefline(rf);
+        changeMeasure(measureType, unit, {
+            freehand,
+            refline: rf
+        })
     }
 
     const units = unitsOfMeasureType(measureType);
@@ -236,7 +246,7 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
                             <MenuItem value={"area"}>Area(多边形面积)</MenuItem>
                             <MenuItem value={"angle"}>Angle(两线夹角)</MenuItem>
                             <MenuItem value={"true_azimuth"}>True Azimuth(真方位角)</MenuItem>
-                            <MenuItem value={"magnetic_azimuth"}>Magnetic Azimuth(磁方位角)</MenuItem>
+                            <MenuItem disabled={true} value={"magnetic_azimuth"}>Magnetic Azimuth(磁方位角)</MenuItem>
                         </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>
@@ -260,6 +270,10 @@ const MeasureTool: FC<MeasureToolProps> = (props) => {
                 {/*    <Switch disabled={!canFreeHand()} checked={freehand}*/}
                 {/*            onChange={onFreeHandChange}/>*/}
                 {/*</Box>*/}
+                <Box>
+                    <InputLabel disableAnimation={true} id="measureTool-refline-inoutlabel">参照线</InputLabel>
+                    <Switch checked={refline} onChange={onReflineChange}/>
+                </Box>
                 <Box>
                     <Button size="small" variant="outlined" onClick={onClear}>清除已测结果</Button>
                 </Box>

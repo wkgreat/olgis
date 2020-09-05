@@ -3,11 +3,15 @@ import {getArea, getLength} from "ol/sphere";
 import VectorSource from "ol/source/Vector";
 import {arrayContains} from "../utils";
 import GeometryType from "ol/geom/GeometryType";
-import {Feature, MapBrowserPointerEvent, PluggableMap} from "ol";
-import {Fill, Stroke, Style, Text} from "ol/style";
+import {Feature, MapBrowserPointerEvent} from "ol";
+import {Fill, RegularShape, Stroke, Style, Text} from "ol/style";
 import {degree2Radian, meter2imperial, meter2kilometer, meter2nautical, radian2Degree} from "../units";
-import {Geometry, Point} from "ol/geom";
+import {Geometry, LineString, Point} from "ol/geom";
 import EventType from "ol/events/EventType";
+import {getRelativeAngle, getTrueAzimuth, moveInBearing} from "../sphere";
+import {transform} from "ol/proj";
+import {StyleLike} from "ol/style/Style";
+import {Coordinate} from "ol/coordinate";
 
 /**
  * 测量类型
@@ -78,7 +82,105 @@ export interface MeasureOptions extends Omit<DrawOptions, "type">{
     /** 测量单位 */
     unit ?: Units
     /** 测量结果回调函数 */
-    measureCallback ?: MeasureCallback
+    measureCallback ?: MeasureCallback,
+    /** 是否显示参考线 */
+    refline ?: boolean
+}
+
+/**
+ * @private
+ * */
+function drawOptions(measureOptions: MeasureOptions): DrawOptions {
+
+    const mt = measureOptions.measureType;
+
+    if(mt==="magnetic_azimuth") {
+        throw Error("现在还不支持测量磁方位角，magnetic_azimuth unsupported!")
+    }
+
+    if(mt=="line") {
+        measureOptions.maxPoints=2;
+    }
+    if(mt==="angle") {
+        measureOptions.maxPoints=3;
+        measureOptions.freehand=false;
+    }
+    if(mt==="true_azimuth") {
+        measureOptions.maxPoints=2;
+        measureOptions.freehand=false;
+    }
+    return {
+        type : chooseDrawType(measureOptions),
+        ...measureOptions
+    }
+}
+
+/**
+ * @private
+ * */
+function chooseDrawType(measureOptions: MeasureOptions): GeometryType {
+    if(measureOptions.measureType==="area") {
+        return GeometryType.POLYGON;
+    } else {
+        return GeometryType.LINE_STRING;
+    }
+}
+
+/**
+ * 获取测量类型支持的单位
+ * @param measureType 测量类型
+ * @returns 支持的单位列表
+ * */
+export function unitsOfMeasureType(measureType: MeasureType): Units[] {
+    if(measureType==="line"||measureType==="path" ){
+        return [Units.METER,Units.KILOMETER,Units.IMPERIAL,Units.NAUTICAL]
+    } else if (measureType==="area") {
+        return [Units.METER2,Units.KILOMETER2,Units.IMPERIAL2,Units.NAUTICAL2]
+    } else {
+        return [Units.DEGREE, Units.RADIAN];
+    }
+}
+
+/**
+ * 转换测量值单位
+ * @param value 测量值
+ * @param from 输入测量值单位
+ * @param to 返回的测量值单位
+ * @returns 转换后的测量值
+ * */
+export function unitConversion(value: number, from: Units, to: Units) {
+    if(from===to) {
+        return value;
+    }
+    if(from===Units.METER) {
+        if(to===Units.KILOMETER) {
+            return meter2kilometer(value);
+        }
+        if(to===Units.IMPERIAL) {
+            return meter2imperial(value);
+        }
+        if(to===Units.NAUTICAL) {
+            return meter2nautical(value);
+        }
+    }
+    if(from===Units.METER2) {
+        if(to===Units.KILOMETER2) {
+            return Math.pow(meter2kilometer(Math.sqrt(value)),2);
+        }
+        if(to===Units.IMPERIAL2) {
+            return Math.pow(meter2imperial(Math.sqrt(value)),2);
+        }
+        if(to===Units.NAUTICAL2) {
+            return Math.pow(meter2nautical(Math.sqrt(value)),2);
+        }
+    }
+    if(from===Units.DEGREE && to===Units.RADIAN) {
+        return degree2Radian(value);
+    }
+    if(from===Units.RADIAN && to===Units.DEGREE) {
+        return radian2Degree(value);
+    }
+    throw Error("unitConversion unsupported units");
 }
 
 /**
@@ -86,20 +188,22 @@ export interface MeasureOptions extends Omit<DrawOptions, "type">{
  * openlayers 测量交互工具(Measure), 继承自{@link Draw}交互工具
  * TODO 2 考虑坐标系转换
  * TODO 5 如果是地理坐标系，是否绘制大圆线
+ * TODO 6 磁方位角实现
  * */
 class Measure extends Draw {
 
     measureType_ ?: MeasureType = "line";
     unit_ ?: Units = Units.METER;
-    lastMap_ ?: PluggableMap;
 
     measureCallback_ ?: MeasureCallback;
     source_ ?: VectorSource;
+    refline_ ?: boolean
 
     constructor(options: MeasureOptions) {
         super(drawOptions(options));
         this.source_ = options.source;
         this.measureType_ = options.measureType;
+        this.refline_ = options.refline;
         const units = unitsOfMeasureType(options.measureType);
         if(options.unit) {
             if(arrayContains(units, options.unit)) {
@@ -139,16 +243,34 @@ class Measure extends Draw {
         return features[features.length-1];
     }
 
-    measureFeature(feature?: Feature, style?:Style): MeasureResult|undefined {
+    measureFeature(feature?: Feature): MeasureResult|undefined {
         let result: MeasureResult|undefined = undefined;
         if(feature) {
             const geom = feature.getGeometry();
             if(geom instanceof Point) {
+                if(this.refline_) {
+                    if(this.measureType_==="true_azimuth") {
+                        const p = geom as Point;
+                        const refStyle = this.genNorthLineStyle(p.getFirstCoordinate());
+                        feature.setStyle(refStyle)
+                    }
+                }
                 return undefined;
             }
             geom.on(EventType.CHANGE,()=>{
+
                 const result = this.measureGeom(geom,this.measureType_,this.unit_);
-                this.setResultStyle(feature, result, style);
+
+                let theStyle: StyleLike|undefined = undefined;
+                if(this.measureType_==="true_azimuth") {
+                    const line = geom as LineString;
+
+                    if(this.refline_) {
+                        const refStyle = this.genNorthLineStyle(line.getFirstCoordinate());
+                        theStyle = [refStyle];
+                    }
+                }
+                this.setResultStyle(feature, result, theStyle);
                 if(this.measureCallback_ && result) {
                     this.measureCallback_({
                         ...result,
@@ -160,23 +282,37 @@ class Measure extends Draw {
         return result
     }
 
-    measureGeom(geom:Geometry, measureType?: MeasureType, unit?: Units):MeasureResult {
+    measureGeom(geom:Geometry, measureType?: MeasureType, unit?: Units): MeasureResult {
         let result: MeasureResult|undefined = undefined;
         let value: number = 0;
         if(measureType==="line" || measureType==="path") {
             value = getLength(geom);
-        } else if(measureType==="area") {
-            value = getArea(geom);
-        } else {
-            value = 0.0;
-        }
-        if(measureType==="line" || measureType==="path") {
             value = unitConversion(value, Units.METER, unit as Units);
         } else if (measureType==="area") {
+            value = getArea(geom);
             value = unitConversion(value, Units.METER2, unit as Units);
-        } else {
+        } else if (measureType==="true_azimuth"){
             //TODO 确定测量初始单位
-            value = unitConversion(value, Units.RADIAN, unit as Units);
+            const coords = (geom as LineString).getCoordinates();
+            if(coords.length>=1) {
+                const c1 = transform(coords[0],"EPSG:3857", "EPSG:4326");
+                const c2 = transform(coords[coords.length-1],"EPSG:3857", "EPSG:4326");
+                value = getTrueAzimuth(c1,c2);
+            }
+            value = unitConversion(value, Units.DEGREE, unit as Units);
+        } else if (measureType==="angle") {
+            const coords = (geom as LineString).getCoordinates();
+            if(coords.length>=3) {
+                const c1 = transform(coords[0],"EPSG:3857", "EPSG:4326");
+                const c2 = transform(coords[1],"EPSG:3857", "EPSG:4326");
+                const c3 = transform(coords[coords.length-1],"EPSG:3857", "EPSG:4326");
+                value = getRelativeAngle(c1,c2,c3);
+            } else {
+                value = NaN
+            }
+            value = unitConversion(value, Units.DEGREE, unit as Units);
+        } else if (measureType==="magnetic_azimuth") {
+            //TODO
         }
         result = {
             value,
@@ -191,7 +327,7 @@ class Measure extends Draw {
         this.measureFeature(feature);
     }
 
-    setResultStyle(feature: Feature, result: MeasureResult, style?:Style) {
+    setResultStyle(feature: Feature, result: MeasureResult, style?:StyleLike) {
 
         const content =
             `测量类型(Type):${result.measureType}\n测量值(Value):${result.value}\n单位(Unit):${result.unit}`;
@@ -212,107 +348,56 @@ class Measure extends Draw {
             })
         });
 
+        let theStyle: StyleLike;
 
-        let theStyle: Style;
-        if(style) {
+        if(style instanceof Style) {
             theStyle = style.clone();
             theStyle.setText(text)
+        } else if (typeof style === "function") {
+            theStyle = style;
         } else {
-            theStyle = new Style({
+            const textStyle = new Style({
+                text,
                 stroke: new Stroke({
                     color: "rgb(22,0,255)",
                     width: 2
                 }),
                 fill: new Fill({
                     color: "rgba(0,138,255,0.51)"
-                }),
-                text
+                })
             });
+            if(typeof style === "object") {
+                style.push(textStyle);
+                theStyle = style;
+            } else {
+                theStyle = textStyle;
+            }
         }
 
         feature.setStyle(theStyle);
 
     }
 
+    genNorthLineStyle(c:Coordinate) {
+        const p = transform(c,"EPSG:3857","EPSG:4326");
+        const p2 = moveInBearing(p,2000*1000,0);
+        const c2 = transform(p2, "EPSG:4326", "EPSG:3857");
+        const line = new LineString([c,c2]);
+        return new Style({
+            geometry: line,
+            image: new RegularShape({
+                points:4,
+                fill: new Fill({
+                    color: "red"
+                })
+            }),
+            stroke: new Stroke({
+                color:"red",
+                width:2,
+                lineDash: [0,0,5,5]
+            })
+        })
+    }
+
 }
 export default Measure;
-
-/**
- * @private
- * */
-function drawOptions(measureOptions: MeasureOptions): DrawOptions {
-    const mt = measureOptions.measureType;
-    if(mt=="line") {
-        measureOptions.maxPoints=2;
-    }
-    if(mt==="angle" || mt==="magnetic_azimuth" || mt==="true_azimuth"
-    ) {
-        measureOptions.maxPoints=3;
-        measureOptions.freehand=false;
-    }
-    return {
-        type : chooseDrawType(measureOptions),
-        ...measureOptions
-    }
-}
-
-/**
- * @private
- * */
-function chooseDrawType(measureOptions: MeasureOptions): GeometryType {
-    if(measureOptions.measureType==="area") {
-        return GeometryType.POLYGON;
-    } else {
-        return GeometryType.LINE_STRING;
-    }
-}
-
-/**
- * 获取测量类型支持的单位
- * @param measureType 测量类型
- * @returns 支持的单位列表
- * */
-export function unitsOfMeasureType(measureType: MeasureType): Units[] {
-    if(measureType==="line"||measureType==="path" ){
-        return [Units.METER,Units.KILOMETER,Units.IMPERIAL,Units.NAUTICAL]
-    } else if (measureType==="area") {
-        return [Units.METER2,Units.KILOMETER2,Units.IMPERIAL2,Units.NAUTICAL2]
-    } else {
-        return [Units.DEGREE, Units.RADIAN];
-    }
-}
-
-export function unitConversion(value: number, from: Units, to: Units) {
-    if(from===to) {
-        return value;
-    }
-    if(from===Units.METER) {
-        if(to===Units.KILOMETER) {
-            return meter2kilometer(value);
-        }
-        if(to===Units.IMPERIAL) {
-            return meter2imperial(value);
-        }
-        if(to===Units.NAUTICAL) {
-            return meter2nautical(value);
-        }
-    }
-    if(from===Units.METER2) {
-        if(to===Units.KILOMETER2) {
-            return Math.pow(meter2kilometer(Math.sqrt(value)),2);
-        }
-        if(to===Units.IMPERIAL2) {
-            return Math.pow(meter2imperial(Math.sqrt(value)),2);
-        }
-        if(to===Units.NAUTICAL2) {
-            return Math.pow(meter2nautical(Math.sqrt(value)),2);
-        }
-    }
-    if(from===Units.DEGREE && to===Units.RADIAN) {
-        return degree2Radian(value);
-    }
-    if(from===Units.RADIAN && to===Units.DEGREE) {
-        return radian2Degree(value);
-    }
-    throw Error("unitConversion unsupported units");
-}
