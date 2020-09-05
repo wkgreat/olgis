@@ -60,6 +60,13 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
 
     };
 
+    const setExtent = (extent: Extent) => {
+        setWest(extent[0]);
+        setSouth(extent[1]);
+        setEast(extent[2]);
+        setNorth(extent[3]);
+    };
+
     return (
         <ToolDialog
             open={open}
@@ -80,14 +87,7 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
                            onChange={(e)=>{setLen(Number(e.target.value))}}
                 />
                 <Divider/>
-                <ExtentSetting
-                    value={[0,0,0,0]}
-                    onChange={(extent: Extent)=>{
-                    setWest(extent[0]);
-                    setSouth(extent[1]);
-                    setEast(extent[2]);
-                    setNorth(extent[3]);
-                }}/>
+                <ExtentSetting onChange={setExtent}/>
             </Box>
         </ToolDialog>
     )
