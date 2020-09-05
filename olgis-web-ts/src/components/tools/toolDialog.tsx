@@ -9,6 +9,7 @@ import {Box, Grid, GridSize, IconButton, Theme, Typography} from "@material-ui/c
 import BaseToolProps from "./baseToolProps";
 import {makeStyles} from "@material-ui/core/styles";
 import MemoryTwoToneIcon from '@material-ui/icons/MemoryTwoTone';
+import {DialogProps} from "@material-ui/core/Dialog/Dialog";
 
 /**
  *  open
@@ -28,20 +29,29 @@ const useStyles = makeStyles((theme: Theme) => ({
         pointerEvents: "auto",
     },
     title: {
-        backgroundColor: theme.palette.primary.main
+        backgroundColor: theme.palette.primary.main,
+        height: 15,
+        font : "10px Arial"
     }
 
 }));
 
-export interface ToolDialogProps extends BaseToolProps{
-    children ?: React.ReactNode
-}
+export type ToolDialogProps = BaseToolProps & DialogProps;
 
-const ToolDialog: FC<ToolDialogProps> = ({open, title, enableOK, enableCancel, onOK, onCancel, children}) => {
+const ToolDialog: FC<ToolDialogProps> = ({
+                                             open,
+                                             title,
+                                             enableOK,
+                                             enableCancel,
+                                             onOK,
+                                             onCancel,
+                                             children,
+                                             ...rest}) => {
 
     const [isOpen, setIsOpen] = useState(Boolean(open));
 
     const classes = useStyles();
+    Object.assign(classes, rest.classes);
 
     useEffect(()=>{
         setIsOpen(Boolean(open));
@@ -64,7 +74,11 @@ const ToolDialog: FC<ToolDialogProps> = ({open, title, enableOK, enableCancel, o
                 scroll="paper"
             >
                 {title ?
-                    <DialogTitle className={classes.title} style={{ cursor: 'move' }} id="draggable-dialog-title">
+                    <DialogTitle className={classes.title}
+                                 style={{ cursor: 'move' }}
+                                 id="draggable-dialog-title"
+                                 disableTypography={false}
+                    >
                         <Box display="flex" alignItems="center">
                             <Box><IconButton><MemoryTwoToneIcon/></IconButton></Box>
                             <Box>{title}</Box>
