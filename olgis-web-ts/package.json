@@ -1,6 +1,6 @@
 {
   "name": "olgis-web-ts",
-  "version": "0.1.0",
+  "version": "0.0.2",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -9,6 +9,7 @@
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "clsx": "latest",
+    "geodesy": "^2.2.1",
     "ol": "^6.3.1",
     "ol-proj-ch": "1.0.3",
     "react": "^16.13.1",
@@ -17,8 +18,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "build": "npm run test:nowatch && react-scripts build",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!ol)/\"",
+    "test:nowatch": "react-scripts test --watchAll=false --transformIgnorePatterns \"node_modules/(?!ol)/\"",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
@@ -45,11 +47,11 @@
     "@storybook/addons": "^5.3.19",
     "@storybook/preset-create-react-app": "^3.0.0",
     "@storybook/react": "^5.3.19",
-    "react-docgen-typescript-loader": "^3.7.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/classnames": "^2.2.10",
+    "@types/geodesy": "^2.2.1",
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
     "@types/ol": "^6.3.1",
@@ -58,6 +60,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/storybook__addon-info": "^5.2.1",
     "node-sass": "^4.14.1",
+    "react-docgen-typescript-loader": "^3.7.2",
     "react-scripts": "3.4.1",
     "typescript": "~3.7.2"
   }

@@ -18,6 +18,7 @@ import {ExpandLess, ExpandMore} from "@material-ui/icons";
 import AddGeohashFishnet from "../../../components/tools/grid/geohash/addGeohashFishnet";
 import AddUberH3Cell from "../../../components/tools/grid/h3/addUberH3Cell";
 import AddUberH3GridByExtent from "../../../components/tools/grid/h3/addUberH3GridByExtent";
+import MeasureTool from "../../../components/tools/MeasureTool/measureTool";
 
 export interface PanelProps {
     open ?: boolean
@@ -34,6 +35,7 @@ const Panel:FC<PanelProps> = ({open, width}) => {
     const [layerListOpen, setLayerListOpen] = useState(true);
     const [mapComListOpen, setMapComListOpen] = useState(true);
     const [geoGridOpen, setGeoGridOpen] = useState(true);
+    const [spatialAnalysis, setSpatialAnalysis] = useState(true);
 
     useEffect(()=>{
         setIsOpen(open);
@@ -127,6 +129,21 @@ const Panel:FC<PanelProps> = ({open, width}) => {
                         <ListItemActivator label="添加GeoHash渔网" target={<AddGeohashFishnet/>}/>
                         <ListItemActivator label="添加Uber-H3格子" target={<AddUberH3Cell/>}/>
                         <ListItemActivator label="添加Uber-H3网格" target={<AddUberH3GridByExtent/>}/>
+                    </List>
+                </Collapse>
+
+                <ListItem button onClick={()=>setSpatialAnalysis(!spatialAnalysis)}>
+                    <ListItemIcon>
+                        <GridOnIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="空间分析"/>
+                    {geoGridOpen ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={spatialAnalysis} timeout="auto" unmountOnExit classes={{
+                    container: classes.collapse
+                }}>
+                    <List>
+                        <ListItemActivator label="地图测量工具" target={<MeasureTool/>}/>
                     </List>
                 </Collapse>
 

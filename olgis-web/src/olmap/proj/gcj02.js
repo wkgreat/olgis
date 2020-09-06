@@ -12,19 +12,14 @@
 import Projection from 'ol/proj/Projection';
 
 import {
-    toEPSG4326 as from3857to4326,
     fromEPSG4326 as from4326to3857,
-    PROJECTIONS as EPSG3857_PROJECTIONS
+    PROJECTIONS as EPSG3857_PROJECTIONS,
+    toEPSG4326 as from3857to4326
 } from 'ol/proj/epsg3857';
 
-import {
-    PROJECTIONS as EPSG4326_PROJECTIONS
-} from 'ol/proj/epsg4326';
+import {PROJECTIONS as EPSG4326_PROJECTIONS} from 'ol/proj/epsg4326';
 
-import {
-    addEquivalentProjections,
-    addEquivalentTransforms
-} from "ol/proj";
+import {addEquivalentProjections, addEquivalentTransforms} from "ol/proj";
 
 export const RADIUS = 6378137;
 

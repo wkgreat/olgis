@@ -65,7 +65,7 @@ const MousePosition: FC<MousePositionProps> = ({visible, projection, followMouse
     if(vis) {
         return <Box {...getBoxProps()}>
             <Typography variant="caption" display="block">
-                {`Mouse Position: ${pos ? formatter(pos[0]) : "Unknown"}`}
+                {`Pointer: ${pos ? formatter(pos[0]) : "Unknown"}`}
             </Typography>
         </Box>
     } else {

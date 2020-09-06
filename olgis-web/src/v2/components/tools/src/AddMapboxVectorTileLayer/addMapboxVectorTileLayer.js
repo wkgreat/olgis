@@ -4,7 +4,6 @@ import ToolDialog from "../ToolDialog";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField/TextField";
 import {Switch} from "@material-ui/core";
-import * as LAYERS from "../../../../../olmap/olmapLayer";
 
 /**
  * TODO UNFISHED

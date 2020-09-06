@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect} from "react";
+import React, {useEffect} from "react";
 import {LayerItem} from "./LayerItem";
 import {List} from "@material-ui/core";
 import {MapContext} from "../../mapContext";

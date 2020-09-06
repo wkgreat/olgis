@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import {createMuiTheme, useTheme} from '@material-ui/core/styles';
+import {ThemeProvider, useTheme} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,7 +10,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import {Header} from "./components/layout/src";
-import {ThemeProvider } from '@material-ui/core/styles';
 import {darkTheme, useStyles} from "./style";
 import Logo from "./components/layout/src/logo";
 import Box from "@material-ui/core/Box";

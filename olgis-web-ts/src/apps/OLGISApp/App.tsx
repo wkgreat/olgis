@@ -3,7 +3,6 @@ import MapContextProvider from "../../components/MapContext/mapContext";
 import Map from "../../components/Map/map";
 import {
     AppBar,
-    Button,
     createMuiTheme,
     createStyles,
     CssBaseline,
@@ -19,7 +18,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
-import {SERVICE_URL} from "../../components/common/utils";
+import About from "./About";
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -121,7 +120,7 @@ function App() {
                       <Typography variant="h6" className={classes.title}>
                           OLGIS
                       </Typography>
-                      <Button color="inherit">{`服务端地址: ${SERVICE_URL}`}</Button>
+                      <About/>
                   </Toolbar>
               </AppBar>
               <Panel open={panelOpen} width={drawerWidth}/>

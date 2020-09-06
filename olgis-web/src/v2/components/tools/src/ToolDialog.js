@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import DraggablePaper from "./DraggablePaper";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";

@@ -9,10 +9,10 @@ export interface ScalebarSettingDialogProps extends BaseToolProps{
 
 const ScalebarSettingDialog: FC<ScalebarSettingDialogProps> = (props)=> {
 
-    const [open, setOpen] = useState(props.open);
+    const [open, setOpen] = useState(!!props.open);
 
     useEffect(()=>{
-        setOpen(props.open);
+        setOpen(!!props.open);
     },[props.open, props.signal]);
 
     return (

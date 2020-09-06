@@ -1,25 +1,18 @@
-import React, {ChangeEvent, FC, useContext, useEffect, useState} from "react";
-import {Box, BoxProps, Button, ButtonGroup, Divider, InputLabel, PropTypes} from "@material-ui/core";
+import React, {ChangeEvent, FC, useContext, useEffect, useRef, useState} from "react";
+import {Box, BoxProps, Button, ButtonGroup, Divider, InputLabel, PropTypes, Switch} from "@material-ui/core";
 import BaseToolProps from "../baseToolProps";
 import TextField from "@material-ui/core/TextField/TextField";
-import VectorSource from "ol/source/Vector";
-import VectorLayer from "ol/layer/Vector";
 import Draw from "ol/interaction/Draw";
 import {MapContext} from "../../MapContext/mapContext";
-import {genLayerName} from "../../../olmap/olmapLayer";
-import {LayerUtils, StyleUtils} from "../../../olmap";
+import {LayerUtils} from "../../../olmap";
 import GeometryType from "ol/geom/GeometryType";
 import ToolTitle from "../../common/toolTitle";
+import {DrawLayer, makeDrawWithNewLayer} from "../../../olmap/interaction";
 
 
 interface AddDrawLayerProps extends BaseToolProps{
     boxProps?: BoxProps
 }
-
-//TODO useRef
-let source: VectorSource | undefined = undefined;
-let layer: VectorLayer | undefined = undefined;
-let drawInteraction: Draw | undefined = undefined;
 
 const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
 
@@ -27,27 +20,27 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
 
     const [layerName, setLayerName] = useState("ol-draw-layer");
     const [layerType, setLayerType] = useState<GeometryType>(GeometryType.POINT);
+    const [freehand, setFreehand] = useState(false);
+
+    const drawInteration = useRef<DrawLayer|undefined>(undefined);
 
     useEffect(()=>{
 
         if(props.open) {
-            console.log("addDrawLayer useEffect!!");
-            source = new VectorSource();
-            layer = new VectorLayer({
-                source: source,
-                style: StyleUtils.getDefaultStyle()
-            });
-            layer.set('name', genLayerName(olmap, layerName));
-            LayerUtils.addLayer(olmap, layer);
+            const dl = drawInteration.current;
+            if(dl) {
+                olmap.removeInteraction(dl.draw)
+            }
+            drawInteration.current = makeDrawWithNewLayer(olmap,{
+                type: layerType,
+                freehand
+            },layerName);
+            olmap.addInteraction(drawInteration.current.draw);
+            LayerUtils.addLayer(olmap, drawInteration.current.layer);
 
-            drawInteraction = new Draw({
-                source: source,
-                type: layerType
-            });
-            olmap.addInteraction(drawInteraction);
         }
 
-    }, [props.open,layerName,layerType,olmap]);
+    }, [props.open, props.signal]);
 
 
 
@@ -57,13 +50,49 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     };
 
     const onLayerTypeChange = (type: GeometryType) => {
-        drawInteraction && olmap.removeInteraction(drawInteraction);
-        drawInteraction = new Draw({
-            source: source,
-            type: type
-        });
-        olmap.addInteraction(drawInteraction);
-        setLayerType(type);
+        const dl = drawInteration.current;
+        if(dl) {
+            olmap.removeInteraction(dl.draw);
+            const newDraw = new Draw({
+                type,
+                freehand,
+                source: dl.layer.getSource()
+            });
+            olmap.addInteraction(newDraw);
+            drawInteration.current = {draw:newDraw, layer:dl.layer};
+            setLayerType(type);
+        }
+
+    };
+
+    const disableFreehand = ():boolean => {
+        if(layerType===GeometryType.LINE_STRING
+            || layerType===GeometryType.MULTI_LINE_STRING
+            || layerType===GeometryType.POLYGON
+            || layerType===GeometryType.MULTI_POLYGON
+        ) {
+            return false;
+        }
+        return true;
+    };
+
+    const onFreeHandChange = (e:any,freehand:boolean) => {
+        const dl = drawInteration.current;
+        if(dl) {
+            olmap.removeInteraction(dl.draw);
+            const newDraw = new Draw({
+                type: layerType,
+                freehand,
+                source: dl.layer.getSource()
+            });
+            olmap.addInteraction(newDraw);
+            drawInteration.current = {draw:newDraw, layer: dl.layer};
+            setFreehand(freehand);
+        }
+    };
+
+    const getButtonType = (theType: GeometryType, layerType: GeometryType): 'text' | 'outlined' | 'contained' => {
+        return layerType===theType ? "contained" : "outlined"
     };
 
     const getButtonColor = (theType: GeometryType, layerType: GeometryType): PropTypes.Color => {
@@ -71,13 +100,23 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
     };
 
     const onOK = () => {
-        drawInteraction && olmap.removeInteraction(drawInteraction);
+        const dl = drawInteration.current;
+        if(dl) {
+            const draw = dl.draw;
+            draw && olmap.removeInteraction(draw);
+        }
+
         props.onOK && props.onOK();
     };
 
     const onCancel = () => {
-        if(olmap && drawInteraction) olmap.removeInteraction(drawInteraction);
-        if(layer) LayerUtils.removeLayerByName(olmap, layer.get('name'));
+        const dl = drawInteration.current;
+        if(dl) {
+            const {draw, layer} = dl;
+            if(olmap && draw) olmap.removeInteraction(draw);
+            if(layer) LayerUtils.removeLayerByName(olmap, layer.get('name'));
+        }
+
         if(props.onCancel) props.onCancel();
     };
 
@@ -90,32 +129,47 @@ const AddDrawLayer:FC<AddDrawLayerProps> = (props) => {
                            onOK={onOK} onCancel={onCancel}
                 />
                 <Divider/>
-                <TextField id="standard-basic" label="图层名称" margin="normal" fullWidth={true}
-                           value={layerName} onChange={onLayerNameChange}
-                />
-                <Box><InputLabel shrink={true}>要素类型</InputLabel></Box>
-                <ButtonGroup size="small" aria-label="small outlined button group">
-                    <Button
-                        size="small"
-                        color={getButtonColor(GeometryType.POINT, layerType)}
-                        onClick={()=>{onLayerTypeChange(GeometryType.POINT)}}
-                    >Point</Button>
-                    <Button
-                        size="small"
-                        color={getButtonColor(GeometryType.LINE_STRING, layerType)}
-                        onClick={()=>{onLayerTypeChange(GeometryType.LINE_STRING)}}
-                    >LineString</Button>
-                    <Button
-                        size="small"
-                        color={getButtonColor(GeometryType.POLYGON, layerType)}
-                        onClick={()=>{onLayerTypeChange(GeometryType.POLYGON)}}
-                    >Polygon</Button>
-                    <Button
-                        size="small"
-                        color={getButtonColor(GeometryType.CIRCLE, layerType)}
-                        onClick={()=>{onLayerTypeChange(GeometryType.CIRCLE)}}
-                    >Circle</Button>
-                </ButtonGroup>
+                <Box py={1}>
+                    <TextField id="standard-basic" label="图层名称" margin="normal" fullWidth={true}
+                               value={layerName} onChange={onLayerNameChange}
+                    />
+                </Box>
+                <Box py={1} display="flex" alignItems="center">
+                    <Box flexGrow={1}><InputLabel shrink={true}>要素类型</InputLabel></Box>
+                    <Box>
+                        <ButtonGroup size="small" aria-label="small outlined button group">
+                            <Button
+                                size="small"
+                                variant={getButtonType(GeometryType.POINT, layerType)}
+                                color={getButtonColor(GeometryType.POINT, layerType)}
+                                onClick={()=>{onLayerTypeChange(GeometryType.POINT)}}
+                            >Point</Button>
+                            <Button
+                                size="small"
+                                variant={getButtonType(GeometryType.LINE_STRING, layerType)}
+                                color={getButtonColor(GeometryType.LINE_STRING, layerType)}
+                                onClick={()=>{onLayerTypeChange(GeometryType.LINE_STRING)}}
+                            >LineString</Button>
+                            <Button
+                                size="small"
+                                variant={getButtonType(GeometryType.POLYGON, layerType)}
+                                color={getButtonColor(GeometryType.POLYGON, layerType)}
+                                onClick={()=>{onLayerTypeChange(GeometryType.POLYGON)}}
+                            >Polygon</Button>
+                            <Button
+                                size="small"
+                                variant={getButtonType(GeometryType.CIRCLE, layerType)}
+                                color={getButtonColor(GeometryType.CIRCLE, layerType)}
+                                onClick={()=>{onLayerTypeChange(GeometryType.CIRCLE)}}
+                            >Circle</Button>
+                        </ButtonGroup>
+                    </Box>
+                </Box>
+
+                <Box py={1} display="flex" alignItems="center">
+                    <Box flexGrow={1}><InputLabel shrink={true}>是否徒手画<br/>(在Polyline和Polygon模式下可选,同时按住SHIFT键也为该模式)</InputLabel></Box>
+                    <Box><Switch size="small" disabled={disableFreehand()} checked={freehand} onChange={onFreeHandChange}/></Box>
+                </Box>
             </Box>
         );
     } else {
