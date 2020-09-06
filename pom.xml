@@ -10,7 +10,7 @@
     </parent>
     <groupId>wkgreat</groupId>
     <artifactId>olgis</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <name>olgis</name>
     <packaging>pom</packaging>
     <description>Demo project for Spring Boot</description>
@@ -21,7 +21,7 @@
     </modules>
 
     <properties>
-        <olgis.version>0.0.2-SNAPSHOT</olgis.version>
+        <olgis.version>0.0.2</olgis.version>
         <java.version>1.8</java.version>
         <doraemon.version>1.3</doraemon.version>
         <uber.h3.version>3.6.4</uber.h3.version>
