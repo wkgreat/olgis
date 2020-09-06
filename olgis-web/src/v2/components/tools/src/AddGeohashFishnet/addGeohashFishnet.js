@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import ToolDialog from "../ToolDialog";
 import {MapContext} from "../../../mapContext";
@@ -7,7 +7,6 @@ import TextField from "@material-ui/core/TextField/TextField";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import * as LAYERS from "../../../../../olmap/olmapLayer";
-import useGetRequest from "../../../../hooks/useGetRequest";
 import axios from "axios";
 import {Divider} from "@material-ui/core";
 

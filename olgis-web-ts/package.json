@@ -18,8 +18,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "build": "npm run test:nowatch && react-scripts build",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!ol)/\"",
+    "test:nowatch": "react-scripts test --watchAll=false --transformIgnorePatterns \"node_modules/(?!ol)/\"",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"

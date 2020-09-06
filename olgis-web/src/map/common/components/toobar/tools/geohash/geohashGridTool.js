@@ -3,7 +3,6 @@ import {Input, Modal, Slider} from "antd";
 import * as OLMAP from "../../../map/olmapLayer";
 import {actionCreators} from "../../../store";
 import {connect} from "react-redux";
-import axios from 'axios';
 
 class GeoHashGridTool extends Component {
 

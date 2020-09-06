@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from 'react';
-import {Box, Button} from "@material-ui/core";
+import React, {Component} from 'react';
+import {Box} from "@material-ui/core";
 import LayerMenu from "../../menus/src/LayerMenu";
 import VectorAnalysisMenu from "../../menus/src/VectorAnalysisMenu";
 import RasterAnalysisMenu from "../../menus/src/RasterAnalysisMenu";
