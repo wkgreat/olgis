@@ -5,7 +5,7 @@
     <parent>
         <artifactId>olgis</artifactId>
         <groupId>wkgreat</groupId>
-        <version>0.0.2</version>
+        <version>0.0.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -17,6 +17,16 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>wkgreat</groupId>
+            <artifactId>doraemon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.uber</groupId>
+            <artifactId>h3</artifactId>
         </dependency>
     </dependencies>
 
