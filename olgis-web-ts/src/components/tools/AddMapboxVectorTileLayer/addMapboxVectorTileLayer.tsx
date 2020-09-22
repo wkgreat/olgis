@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import ToolDialog from "../toolDialog";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField/TextField";
@@ -21,9 +21,9 @@ const AddMapboxVectorTileLayer: FC<AddMapboxVectorTileLayerProps> = (props) => {
     const [token, setToken] = useState("");
     const [declutter, setDeclutter] = useState(true);
 
-    // const onHandlerClick = () => {
-    //     setOpen(true);
-    // };
+    useEffect(()=>{
+        setOpen(!!props.open);
+    }, [props.open, props.signal]);
 
     const handleOK = () => {
         setOpen(false);

@@ -85,7 +85,7 @@ export const makeXYZVectorLayer = (olmap:Map, name:string, url:string) => {
         })
     });
     theLayer.set("name", genLayerName(olmap, name));
-    STYLE.applyMapboxStyleJson(theLayer,mbStyle,"composite");
+    STYLE.applyMapboxStyleJson(theLayer, mbStyle,"composite");
     return theLayer;
 };
 

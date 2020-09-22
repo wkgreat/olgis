@@ -1,6 +1,6 @@
-import React, {CSSProperties, useContext, useEffect} from "react";
-import OlMap from "../../olmap/olMap";
+import React, {CSSProperties, useContext, useLayoutEffect} from "react";
 import {MapContext} from "../MapContext/mapContext";
+import {PluggableMap} from "ol";
 
 type MapType = "box" | "full";
 
@@ -20,9 +20,11 @@ export interface BaseMapProps {
 
 type MapProps = BaseMapProps
 
-export const OLMap: React.FC<MapProps> = ({id, bgColor, mapType, className, style}) => {
+export const OLMap: React.FC<MapProps> = (props) => {
 
-    const olmap: OlMap|undefined = useContext(MapContext);
+    const {id, bgColor, mapType, className, style} = props;
+
+    const olmap: PluggableMap|undefined = useContext(MapContext);
 
     const mapDivResizeFunc = () => {
 
@@ -34,9 +36,7 @@ export const OLMap: React.FC<MapProps> = ({id, bgColor, mapType, className, styl
         }
     };
 
-
-    useEffect(()=>{
-
+    useLayoutEffect(()=>{
         document.body.onload = mapDivResizeFunc;
         document.body.onresize = mapDivResizeFunc;
         document.body.onchange = mapDivResizeFunc;
@@ -48,9 +48,7 @@ export const OLMap: React.FC<MapProps> = ({id, bgColor, mapType, className, styl
                 olmap.updateSize();
             },1000);
         }
-
-
-    }, []);
+    });
 
     const refresh = () => {
         if(olmap) {

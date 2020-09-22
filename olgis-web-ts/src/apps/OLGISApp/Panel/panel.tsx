@@ -15,6 +15,7 @@ import clsx from "clsx";
 import AddXYZVectorLayer from "../../../components/tools/AddXYZVectorLayer/addXYZVectorLayer";
 import AddCSVPointsLayer from "../../../components/tools/AddCSVPointsLayer/addCSVPointsLayer";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import FunctionsIcon from '@material-ui/icons/Functions';
 import AddGeohashFishnet from "../../../components/tools/grid/geohash/addGeohashFishnet";
 import AddUberH3Cell from "../../../components/tools/grid/h3/addUberH3Cell";
 import AddUberH3GridByExtent from "../../../components/tools/grid/h3/addUberH3GridByExtent";
@@ -134,7 +135,7 @@ const Panel:FC<PanelProps> = ({open, width}) => {
 
                 <ListItem button onClick={()=>setSpatialAnalysis(!spatialAnalysis)}>
                     <ListItemIcon>
-                        <GridOnIcon/>
+                        <FunctionsIcon/>
                     </ListItemIcon>
                     <ListItemText primary="空间分析"/>
                     {geoGridOpen ? <ExpandLess /> : <ExpandMore />}

@@ -23,13 +23,13 @@ const makeLayerList: (layers: Collection<BaseLayer>) => ReactNode
         if (layer instanceof Group) { // 如果是groupLayer
             return (
                 <>
-                    <LayerItem layerName={name} key={name}/>
+                    <LayerItem layer={layer} layerName={name} key={name}/>
                     {makeLayerList(layer.getLayers())}
                 </>
             );
         } else {
             return (
-                <LayerItem layerName={name} key={name}/>
+                <LayerItem layer={layer} layerName={name} key={name}/>
             );
         }
 

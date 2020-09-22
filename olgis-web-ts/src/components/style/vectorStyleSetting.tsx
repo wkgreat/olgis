@@ -79,12 +79,15 @@ const VectorStyleSetting: FC<VectorStyleSettingProps> = (props) => {
 
                     <div><Typography variant="subtitle1" color="primary">图层属性</Typography></div>
                     <LayerBasePropsSetting open={true} layer={layer} isLayerChange={true} paperProps={{elevation:2}}/>
+
                     <div><Typography variant="subtitle1" color="primary">点要素属性</Typography></div>
                     <RegularShapeSetting style={options.image as RegularShape} open={true} paperProps={{elevation:2}}
                                          onChange={(opt) => setOp({image: new RegularShape(opt)})}/>
+
                     <div><Typography variant="subtitle1" color="primary">线要素属性</Typography></div>
                     <StrokeSetting style={options.stroke} open={true} paperProps={{elevation:2}}
                                    onChange={(opt)=>setOp({stroke: new Stroke(opt)})}/>
+
                     <div><Typography variant="subtitle1" color="primary">多边形要素属性</Typography></div>
                     <FillSetting style={options.fill} open={true} paperProps={{elevation:2}}
                                  onChange={(opt)=>setOp({fill: new Fill(opt)})}/>

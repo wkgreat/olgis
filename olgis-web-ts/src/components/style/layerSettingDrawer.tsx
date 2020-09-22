@@ -20,11 +20,8 @@ const getStyleSettingByType = (layer: BaseLayer, onOK: ToolCallback, onCancel: T
             <VectorStyleSetting open={true} layer={layer as BaseVectorLayer} onOK={onOK} onCancel={onCancel}/>
         );
     } else if (layer instanceof BaseTileLayer){
-        //TODO
         return (
-
-            <RasterLayerSetting open={true} layer={layer} onOK={onOK}/>
-
+            <RasterLayerSetting open={true} layer={layer} onOK={onOK} onCancel={onCancel}/>
         );
     } else {
         console.warn("getStyleSettingByType MISS TYPE")
