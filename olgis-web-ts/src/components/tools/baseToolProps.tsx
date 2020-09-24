@@ -1,3 +1,5 @@
+import {RequestProgress} from "../../hooks/useRequestProgress";
+
 export type ToolCallback = (event?:any) => void
 
 /**
@@ -39,6 +41,11 @@ interface BaseToolProps {
      * Cancel的回调函数
      * */
     onCancel ?: ToolCallback;
+
+    /**
+     * progress 处理
+     * */
+    onProgress ?: (progress: RequestProgress) => any
 
 }
 

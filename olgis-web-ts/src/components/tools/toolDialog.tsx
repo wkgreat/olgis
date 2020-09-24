@@ -10,6 +10,10 @@ import BaseToolProps from "./baseToolProps";
 import {makeStyles} from "@material-ui/core/styles";
 import MemoryTwoToneIcon from '@material-ui/icons/MemoryTwoTone';
 import {DialogProps} from "@material-ui/core/Dialog/Dialog";
+import {RequestProgress} from "../../hooks/useRequestProgress";
+import ProgressBar from "../common/progressbar";
+import MuiAlert, {AlertProps} from '@material-ui/lab/Alert';
+import {useSnackbar} from 'notistack';
 
 /**
  *  open
@@ -36,19 +40,37 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 }));
 
-export type ToolDialogProps = BaseToolProps & DialogProps;
+interface BaseToolDialogProps {
+    showProgress ?: boolean
+    progress ?: RequestProgress
+}
 
-const ToolDialog: FC<ToolDialogProps> = ({
-                                             open,
-                                             title,
-                                             enableOK,
-                                             enableCancel,
-                                             onOK,
-                                             onCancel,
-                                             children,
-                                             ...rest}) => {
+export type ToolDialogProps = BaseToolProps & DialogProps & BaseToolDialogProps;
+
+function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const ToolDialog: FC<ToolDialogProps> = (props) => {
+
+    const {
+        open,
+        title,
+        enableOK,
+        enableCancel,
+        onOK,
+        onCancel,
+        children,
+        progress,
+        showProgress,
+        ...rest
+    } = props;
 
     const [isOpen, setIsOpen] = useState(Boolean(open));
+    const [_showProgress, _setShowProress] = useState<boolean|undefined>(showProgress);
+    const [_progress, _setProress] = useState<RequestProgress|undefined>(progress);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const classes = useStyles();
     Object.assign(classes, rest.classes);
@@ -56,6 +78,39 @@ const ToolDialog: FC<ToolDialogProps> = ({
     useEffect(()=>{
         setIsOpen(Boolean(open));
     },[open]);
+
+    useEffect(()=>{
+        if(showProgress!==_showProgress) {
+            _setShowProress(showProgress);
+        }
+        if(progress!==_progress) {
+            displayProgress(progress);
+            _setProress(progress);
+        }
+
+    }, [showProgress, progress]);
+
+    //"SESSION_OPEN" | "SESSION_CLOSE" | "SESSION_ERROR" | "RUNNING" | "FINISHED" | "FAILED"
+    const displayProgress = (progress ?: RequestProgress): void => {
+        if(progress && progress.status) {
+            const status = progress.status;
+            if(status==="SUCCESS") {
+                enqueueSnackbar(`SUCCESS: ${progress?.requestId} 执行成功`, {variant: 'success'});
+            }
+            if(status==="FAILED") {
+                enqueueSnackbar(`ERROR: ${progress?.requestId} 执行失败 MSG: ${progress?.message}`, {variant: 'error'});
+            }
+            if(status==="SESSION_OPEN") {
+                enqueueSnackbar(`INFO: ${progress?.requestId} 进度会话开始`, {variant: 'info'});
+            }
+            if(status==="SESSION_CLOSE") {
+                enqueueSnackbar(`INFO: ${progress?.requestId} 进度会话关闭`, {variant: 'info'});
+            }
+            if(status==="SESSION_ERROR") {
+                enqueueSnackbar(`WARN: ${progress?.requestId} 进度会话失败 MSG: ${progress?.message}`, {variant: 'warning'});
+            }
+        }
+    };
 
     if(isOpen) {
         return (
@@ -85,7 +140,7 @@ const ToolDialog: FC<ToolDialogProps> = ({
                         </Box>
                     </DialogTitle> :
                     <></>}
-
+                {progress && progress.status==='RUNNING' ? <ProgressBar autoShow={true} value={progress?.progress}/> : <></>}
                 <DialogContent>
                     {children}
                 </DialogContent>
@@ -99,11 +154,12 @@ const ToolDialog: FC<ToolDialogProps> = ({
         return <></>;
     }
 
-}
+};
 
 ToolDialog.defaultProps = {
     enableOK: true,
-    enableCancel: true
+    enableCancel: true,
+    showProgress: true
 };
 
 export default ToolDialog;

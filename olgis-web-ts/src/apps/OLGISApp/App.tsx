@@ -19,6 +19,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 import About from "./About";
+import {SnackbarProvider} from "notistack";
 
 const darkTheme = createMuiTheme({
     palette: {
@@ -107,6 +108,7 @@ function App() {
       <ThemeProvider theme={darkTheme}>
           <CssBaseline/>
           <MapContextProvider showDefaultControls={false}>
+              <SnackbarProvider maxSnack={3}>
               <AppBar position="fixed"
                       className={clsx(classes.appBar, {
                           [classes.appBarShift]: panelOpen,
@@ -126,6 +128,7 @@ function App() {
               <Panel open={panelOpen} width={drawerWidth}/>
               <Map/>
               <StatusBar visible={true}/>
+              </SnackbarProvider>
           </MapContextProvider>
       </ThemeProvider>
 

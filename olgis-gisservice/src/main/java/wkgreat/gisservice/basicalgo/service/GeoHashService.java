@@ -8,11 +8,16 @@ import org.geotools.geojson.feature.FeatureJSON;
 import org.locationtech.jts.geom.Polygon;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wk.doraemon.geo.JTSUtils;
 import wk.doraemon.geo.geohash.GeoBits;
 import wk.doraemon.geo.geohash.GeoHash;
+import wkgreat.domain.basic.RequestProgress;
 import wkgreat.domain.gis.shapefile.ShapefileWriter;
+import wkgreat.gisservice.basicalgo.beans.GeoHashFishnetRequest;
+import wkgreat.gisservice.basicalgo.beans.GeoHashRequest;
+import wkgreat.gisservice.socket.RequestProgressSocketEndPoint;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -23,30 +28,34 @@ import java.util.Set;
 @Service
 public class GeoHashService {
 
+    @Autowired
+    RequestProgressSocketEndPoint requestProgressSocketEndPoint;
+
     /**
      * 获得经纬度位置的geohash
-     * @param lon 经度
-     * @param lat 维度
-     * @param len geohash base32位数
+     * @param request {@link GeoHashRequest}
      * @return geohash
      * */
-    public String geohash(double lon, double lat, int len) {
+    public String geohash(GeoHashRequest request) {
 
-        return GeoHash.getGeoHash(lon, lat, len);
+        return GeoHash.getGeoHash(request.getLon(), request.getLat(), request.getLen());
 
     }
 
     /**
      * 获得对应经纬度范围的geohash网格
-     * @param west 矩形范围西边界
-     * @param east 矩形范围东边界
-     * @param south 矩形范围南边界
-     * @param north 矩形范围北边界
-     * @param len geohash base32位数
+     * @param request {@link GeoHashFishnetRequest}
      * @return 网格矢量数据geojson
      * @throws Exception 计算异常
      * */
-    public String fishnet(double west, double east, double south, double north, int len) throws Exception {
+    public String fishnet(GeoHashFishnetRequest request) throws Exception {
+
+        String requestId = request.getRequestId();
+        Double west = request.getWest();
+        Double east = request.getEast();
+        Double south = request.getSouth();
+        Double north = request.getNorth();
+        Integer len = request.getLen();
 
         final SimpleFeatureType TYPE = DataUtilities.createType("Geohash",
                 "geometry:Polygon," +
@@ -60,6 +69,8 @@ public class GeoHashService {
         FeatureJSON fjson = new FeatureJSON();
 
         Set<Long> geobits = GeoBits.expandGeohashes(west, east, south, north, len*5);
+        int total = geobits.size();
+        int cur = 0;
         for(long geobit : geobits) {
             String wkt = GeoBits.toWKT(geobit);
             Polygon polygon = (Polygon) JTSUtils.wkt2geom(wkt);
@@ -67,6 +78,8 @@ public class GeoHashService {
             featureBuilder.add(geobit);
             featureBuilder.add(GeoBits.geobitsToBase32(geobit));
             features.add(featureBuilder.buildFeature(null));
+            RequestProgress requestProgress = RequestProgress.running(requestId, ++cur, total);
+            requestProgressSocketEndPoint.sendProgress(requestProgress);
         }
         StringWriter writer = new StringWriter();
         fjson.writeFeatureCollection(collection, writer);

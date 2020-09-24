@@ -6,15 +6,18 @@
   "dependencies": {
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "clsx": "latest",
     "geodesy": "^2.2.1",
+    "notistack": "^1.0.0",
     "ol": "^6.3.1",
     "ol-proj-ch": "1.0.3",
     "react": "^16.13.1",
     "react-color": "^2.18.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-virtualized": "^9.22.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -58,6 +61,7 @@
     "@types/react": "^16.9.0",
     "@types/react-color": "^3.0.2",
     "@types/react-dom": "^16.9.0",
+    "@types/react-virtualized": "^9.21.10",
     "@types/storybook__addon-info": "^5.2.1",
     "node-sass": "^4.14.1",
     "react-docgen-typescript-loader": "^3.7.2",

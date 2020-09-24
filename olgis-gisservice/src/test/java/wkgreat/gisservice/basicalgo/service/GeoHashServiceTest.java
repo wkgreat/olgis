@@ -3,6 +3,7 @@ package wkgreat.gisservice.basicalgo.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wkgreat.gisservice.GisserviceApplicationTests;
+import wkgreat.gisservice.basicalgo.beans.GeoHashFishnetRequest;
 
 /**
  * @author Ke Wang
@@ -24,7 +25,14 @@ class GeoHashServiceTest extends GisserviceApplicationTests {
 
     @Test
     void fishnet() throws Exception {
-        String json = geoHashService.fishnet(CHINA_WEST, CHINA_EAST, CHINA_SOUTH, CHINA_NORTH, 3);
+        GeoHashFishnetRequest request = new GeoHashFishnetRequest();
+        request.setWest(CHINA_WEST);
+        request.setEast(CHINA_EAST);
+        request.setSouth(CHINA_SOUTH);
+        request.setNorth(CHINA_NORTH);
+        request.setLen(3);
+        request.setRequestId("request-1");
+        String json = geoHashService.fishnet(request);
         System.out.println(json);
     }
 

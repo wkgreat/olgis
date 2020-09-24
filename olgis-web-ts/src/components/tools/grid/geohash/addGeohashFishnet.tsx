@@ -9,7 +9,8 @@ import BaseToolProps from "../../baseToolProps";
 import TextField from "../../../common/textField";
 import ExtentSetting from "../../ExtentSetting/extentSetting";
 import {Extent} from "ol/extent";
-import {SERVICE_URL} from "../../../common/utils";
+import {genRequestId, SERVICE_URL, WEBSOCKET_URL} from "../../../common/utils";
+import useRequestProgress from "../../../../hooks/useRequestProgress";
 
 interface AddGeohashFishnetProps extends BaseToolProps{
 }
@@ -27,6 +28,10 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
     const [east, setEast] = useState(0);
     const [south, setSouth] = useState(0);
     const [north, setNorth] = useState(0);
+    const [requestId, setRequestId] = useState<string>("");
+
+    const wsUrl = `${WEBSOCKET_URL}/requestProgress/${requestId}`;
+    const progress = useRequestProgress(wsUrl, requestId, open);
 
     useEffect(()=>{
         setOpen(!!props.open);
@@ -38,15 +43,16 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
 
     const handleOK = () => {
         addGeoHashGridLayer();
-        setOpen(false)
+        //setOpen(false)
     };
     const handleCancel = () => {
         setOpen(false)
     };
 
     const addGeoHashGridLayer = () => {
-
-        axios.get(url,{params: {west,east,south,north,len}})
+        const rid = genRequestId("AddGeohashFishnet");
+        setRequestId(rid);
+        axios.get(url,{params: {requestId: rid, west,east,south,north,len}})
             .then(res=>{
                 const layer = LayerUtils.makeGeoJsonLayer(olmap, inputName, res.data.data);
                 if(layer) {
@@ -57,7 +63,6 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
             .catch((error)=>{
                 console.log(error);
             });
-
     };
 
     const setExtent = (extent: Extent) => {
@@ -73,6 +78,7 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
             title="添加Geohash渔网图层"
             onOK={handleOK}
             onCancel={handleCancel}
+            progress={progress}
         >
             <Box component='div'>
                 <TextField id="standard-basic" label="图层名称" value={inputName}
