@@ -37,6 +37,22 @@ public class RequestProgressSocketEndPoint {
         log.info("RequestProgressSocketEndPoint onMessage, requestId=[{}], message=[{}]", requestId, message);
     }
 
+    public void sendRunningProgress(String requestId, Double progress) {
+        sendProgress(RequestProgress.running(requestId, progress));
+    }
+
+    public void sendRunningProgress(String requestId, Double cur, Double total) {
+        sendProgress(RequestProgress.running(requestId, cur, total));
+    }
+
+    public void sendSuccessProgress(String requestId) {
+        sendProgress(RequestProgress.success(requestId));
+    }
+
+    public void sendFailedProgress(String requestId, String msg) {
+        sendProgress(RequestProgress.failed(requestId, msg));
+    }
+
     public void sendProgress(RequestProgress requestProgress) {
         log.info("RequestProgressSocketEndPoint sendProgress [{}]", requestProgress);
         Session session = sessionPools.get(requestProgress.getRequestId());

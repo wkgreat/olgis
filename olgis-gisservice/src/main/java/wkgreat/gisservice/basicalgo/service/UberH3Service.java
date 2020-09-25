@@ -11,8 +11,12 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wk.doraemon.geo.JTSUtils;
+import wkgreat.gisservice.basicalgo.beans.H3BoundaryRequest;
+import wkgreat.gisservice.basicalgo.beans.H3GridRequest;
+import wkgreat.gisservice.socket.RequestProgressSocketEndPoint;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -27,7 +31,15 @@ import java.util.stream.Collectors;
 @Service
 public class UberH3Service {
 
-    public String getH3Boundary(Double lon, double lat, int res) throws Exception {
+    @Autowired
+    RequestProgressSocketEndPoint requestProgressSocketEndPoint;
+
+    public String getH3Boundary(H3BoundaryRequest request) throws Exception {
+
+        String requestId = request.getRequestId();
+        Double lon = request.getLon();
+        Double lat = request.getLat();
+        Integer res = request.getRes();
 
         String geojson;
 
@@ -58,7 +70,15 @@ public class UberH3Service {
 
     }
 
-    public String getH3Grid(Double west, Double south, Double east, Double north, int res) throws Exception {
+    public String getH3Grid(H3GridRequest request) throws Exception {
+
+        String requestId = request.getRequestId();
+        double west = request.getWest();
+        double east = request.getEast();
+        double south = request.getSouth();
+        double north = request.getNorth();
+        int res = request.getRes();
+
         String geojson;
 
         final SimpleFeatureType TYPE = DataUtilities.createType("h3",
@@ -81,7 +101,9 @@ public class UberH3Service {
         List<SimpleFeature> features = new ArrayList<>();
         SimpleFeatureCollection collection = new ListFeatureCollection(TYPE, features);
 
-        int i=0;
+        int cur=0;
+        int total = h3codes.size();
+        requestProgressSocketEndPoint.sendRunningProgress(requestId, cur*1.0, total*1.0);
         for(Long h3code : h3codes) {
             String h3Addr = h3Core.h3ToString(h3code);
             List<GeoCoord> geoCoordList = h3Core.h3ToGeoBoundary(h3code);
@@ -91,8 +113,9 @@ public class UberH3Service {
             featureBuilder.add(lineString);
             featureBuilder.add(h3code);
             featureBuilder.add(h3Addr);
-            SimpleFeature feature = featureBuilder.buildFeature(String.valueOf(i++));
+            SimpleFeature feature = featureBuilder.buildFeature(String.valueOf(cur++));
             features.add(feature);
+            requestProgressSocketEndPoint.sendRunningProgress(requestId, cur*1.0, total*1.0);
         }
 
         StringWriter stringWriter = new StringWriter();

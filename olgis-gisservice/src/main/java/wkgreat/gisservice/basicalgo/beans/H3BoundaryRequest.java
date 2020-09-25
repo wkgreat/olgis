@@ -6,16 +6,14 @@ import wkgreat.domain.basic.BaseRequest;
 
 /**
  * @author Ke Wang
- * @since 2020/9/24
+ * @since 2020/9/25
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GeoHashFishnetRequest extends BaseRequest {
+public class H3BoundaryRequest extends BaseRequest {
 
-    Double west;
-    Double east;
-    Double south;
-    Double north;
-    Integer len;
+    Double lon;
+    Double lat;
+    Integer res;
 
 }

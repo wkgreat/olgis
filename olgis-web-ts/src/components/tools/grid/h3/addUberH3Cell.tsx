@@ -7,7 +7,9 @@ import {isLatitude, isLongitude, isValidInt} from "../../../../olmap/utils";
 import axios from "axios";
 import {LayerUtils} from "../../../../olmap";
 import {MapContext} from "../../../MapContext/mapContext";
-import {SERVICE_URL} from "../../../common/utils";
+import {genRequestId, SERVICE_URL, WEBSOCKET_URL} from "../../../common/utils";
+import useRequestProgress from "../../../../hooks/useRequestProgress";
+import {useSnackbar} from "notistack";
 
 interface AddUberH3CellProps extends BaseToolProps{
 
@@ -18,12 +20,18 @@ const AddUberH3Cell: FC<AddUberH3CellProps> = (props) => {
     const url = `${SERVICE_URL}/grid/h3/getH3Boundary`;
 
     const olmap = useContext(MapContext);
+    const { enqueueSnackbar } = useSnackbar();
 
     const [open, setOpen] = useState(!!props.open);
     const [layerName, setLayerName] = useState("h3-cell");
     const [res, setRes] = useState(0);
     const [lon, setLon] = useState(0);
     const [lat, setLat] = useState(0);
+
+    //progress
+    const [requestId, setRequestId] = useState<string>("");
+    const wsUrl = `${WEBSOCKET_URL}/requestProgress/${requestId}`;
+    const progress = useRequestProgress(wsUrl, requestId, open);
 
     useEffect(()=>{
         setOpen(!!props.open);
@@ -34,9 +42,8 @@ const AddUberH3Cell: FC<AddUberH3CellProps> = (props) => {
     };
 
     const onOK = () => {
-        console.log("AddUberH3Cell OK");
         addU3Layer();
-        setOpen(false);
+        //setOpen(false);
     };
 
     const onCancel = () => {
@@ -44,8 +51,9 @@ const AddUberH3Cell: FC<AddUberH3CellProps> = (props) => {
     };
 
     const addU3Layer = () => {
-
-        axios.get(url,{params: {lon,lat,res}})
+        const rid = genRequestId("AddGeohashFishnet");
+        setRequestId(rid);
+        axios.get(url,{params: {requestId: rid, lon,lat,res}})
             .then(res=>{
                 const layer = LayerUtils.makeGeoJsonLayer(olmap, layerName, res.data.data);
                 if(layer) {
@@ -55,8 +63,8 @@ const AddUberH3Cell: FC<AddUberH3CellProps> = (props) => {
             })
             .catch((error)=>{
                 console.log(error);
+                enqueueSnackbar(`ERROR: ${rid} 执行失败 [${error.toString()}]`, {variant: 'error'});
             });
-
     };
 
     return (
@@ -65,6 +73,7 @@ const AddUberH3Cell: FC<AddUberH3CellProps> = (props) => {
             onOK={onOK}
             onCancel={onCancel}
             title="添加Uber-H3索引格子"
+            progress={progress}
         >
             <Box>
                 <TextField id="standard-basic" label="图层名称" value={layerName}

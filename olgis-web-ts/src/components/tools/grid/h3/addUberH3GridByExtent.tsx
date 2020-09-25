@@ -10,7 +10,8 @@ import TextField from "../../../common/textField";
 import ExtentSetting from "../../ExtentSetting/extentSetting";
 import {Extent} from "ol/extent";
 import {arrayEquals} from "../../../../olmap/utils";
-import {SERVICE_URL} from "../../../common/utils";
+import {genRequestId, SERVICE_URL, WEBSOCKET_URL} from "../../../common/utils";
+import useRequestProgress from "../../../../hooks/useRequestProgress";
 
 export interface AddUberH3GridByExtentProps extends BaseToolProps{}
 
@@ -24,6 +25,11 @@ const AddUberH3GridByExtent: FC<AddUberH3GridByExtentProps> = (props) => {
     const [layerName, setLayerName] = useState("uber-u3-extent-grid");
     const [res, setRes] = useState(2);
     const [extent, setExtent] = useState(useCurrentViewExtent(olmap,"EPSG:4326"));
+
+    //progress
+    const [requestId, setRequestId] = useState<string>("");
+    const wsUrl = `${WEBSOCKET_URL}/requestProgress/${requestId}`;
+    const progress = useRequestProgress(wsUrl, requestId, open);
 
     useEffect(()=>{
         setOpen(!!props.open);
@@ -51,7 +57,7 @@ const AddUberH3GridByExtent: FC<AddUberH3GridByExtentProps> = (props) => {
 
     const onOK = () => {
         addU3GridLayer();
-        setOpen(!open);
+        //setOpen(!open);
     };
 
     const onCancel = () => {
@@ -60,7 +66,11 @@ const AddUberH3GridByExtent: FC<AddUberH3GridByExtentProps> = (props) => {
 
     const addU3GridLayer = () => {
 
+        const rid = genRequestId("AddGeohashFishnet");
+        setRequestId(rid);
+
         const params = {
+            requestId: rid,
             west: extent[0],
             south: extent[1],
             east: extent[2],
@@ -96,6 +106,7 @@ const AddUberH3GridByExtent: FC<AddUberH3GridByExtentProps> = (props) => {
             onOK={onOK}
             onCancel={onCancel}
             title="根据经纬度矩形范围添加Uber-H3索引网格"
+            progress={progress}
         >
             <Box>
                 <TextField id="standard-basic" label="图层名称" value={layerName}

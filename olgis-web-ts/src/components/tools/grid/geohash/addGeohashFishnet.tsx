@@ -30,8 +30,9 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
     const [east, setEast] = useState(0);
     const [south, setSouth] = useState(0);
     const [north, setNorth] = useState(0);
-    const [requestId, setRequestId] = useState<string>("");
 
+    //progress
+    const [requestId, setRequestId] = useState<string>("");
     const wsUrl = `${WEBSOCKET_URL}/requestProgress/${requestId}`;
     const progress = useRequestProgress(wsUrl, requestId, open);
 
