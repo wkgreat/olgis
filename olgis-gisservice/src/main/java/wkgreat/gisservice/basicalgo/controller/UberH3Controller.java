@@ -38,14 +38,23 @@ public class UberH3Controller {
     @GetMapping("/getH3Boundary")
     BaseResponse<String> getH3Boundary(H3BoundaryRequest request){
         BaseResponse<String> baseResponse = null;
+        String requestId = request.getRequestId();
         try {
             String geojson = uberH3Service.getH3Boundary(request);
             baseResponse = BaseResponse.success(geojson);
+            requestProgressSocketEndPoint.sendSuccessProgress(requestId);
             return baseResponse;
         } catch (Exception e) {
             e.printStackTrace();
             log.error("getH3Boundary Error, [{}]", e.getMessage());
             baseResponse = BaseResponse.error(e.getMessage());
+            requestProgressSocketEndPoint.sendFailedProgress(requestId, e.getMessage());
+        } finally {
+            try {
+                requestProgressSocketEndPoint.close(requestId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return baseResponse;
     }
