@@ -1,4 +1,4 @@
-package wkgreat.gisservice.app;
+package wkgreat.gisservice.app.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
