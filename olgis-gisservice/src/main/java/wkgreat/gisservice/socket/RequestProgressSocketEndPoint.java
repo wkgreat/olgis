@@ -55,17 +55,18 @@ public class RequestProgressSocketEndPoint {
 
     public void sendProgress(RequestProgress requestProgress) {
         log.info("RequestProgressSocketEndPoint sendProgress [{}]", requestProgress);
-        Session session = sessionPools.get(requestProgress.getRequestId());
-        if(session!=null) {
-            try {
+        try {
+            Session session = sessionPools.get(requestProgress.getRequestId());
+            if(session!=null) {
                 session.getBasicRemote().sendText(JSON.toJSONString(requestProgress));
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.error("RequestProgressSocketEndPoint sendProgress error, msg=[{}]", e.getMessage());
+            } else {
+                log.warn("RequestProgressSocketEndPoint sendProgress session is null! requestId=[{}]",
+                        requestProgress.getRequestId());
             }
-        } else {
-            log.warn("RequestProgressSocketEndPoint sendProgress session is null! requestId=[{}]",
-                    requestProgress.getRequestId());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("RequestProgressSocketEndPoint sendProgress error, msg=[{}]", e.getMessage());
         }
     }
 
