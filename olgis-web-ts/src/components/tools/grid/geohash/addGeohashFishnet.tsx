@@ -11,12 +11,14 @@ import ExtentSetting from "../../ExtentSetting/extentSetting";
 import {Extent} from "ol/extent";
 import {genRequestId, SERVICE_URL, WEBSOCKET_URL} from "../../../common/utils";
 import useRequestProgress from "../../../../hooks/useRequestProgress";
+import {useSnackbar} from "notistack";
 
 interface AddGeohashFishnetProps extends BaseToolProps{
 }
 
 const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
     const olmap = useContext(MapContext);
+    const { enqueueSnackbar } = useSnackbar();
 
     //TODO URL configurable
     const url = `${SERVICE_URL}/grid/geohash/fishnet`;
@@ -62,6 +64,7 @@ const AddGeohashFishnet: FC<AddGeohashFishnetProps> = (props) => {
             })
             .catch((error)=>{
                 console.log(error);
+                enqueueSnackbar(`ERROR: ${rid} 执行失败 [${error.toString()}]`, {variant: 'error'});
             });
     };
 
