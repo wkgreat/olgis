@@ -58,9 +58,8 @@ export interface DataTableProps extends WithStyles<typeof styles>{
     tableData : TableData;
     maxTableHeight ?:number;
     maxTableWidth ?:number;
-
     onRowClick?: () => void;
-    onDataCellClick?: (e:React.MouseEvent<HTMLTableDataCellElement, MouseEvent>)=>void;
+    //onDataCellClick?: (e:React.MouseEvent<HTMLTableDataCellElement, MouseEvent>)=>void;
 }
 
 const BaseDataTable: FC<DataTableProps> = (props) => {
@@ -96,7 +95,7 @@ const BaseDataTable: FC<DataTableProps> = (props) => {
 
     //内容单元格
     const cellRenderer: TableCellRenderer = ({ cellData, columnIndex}) => {
-        const { classes, rowHeight, tableData, onDataCellClick} = props;
+        const { classes, rowHeight, tableData} = props;
         return (
             <TableCell
                 component="div"
@@ -106,7 +105,9 @@ const BaseDataTable: FC<DataTableProps> = (props) => {
                     height: rowHeight
                 }}
                 align={(columnIndex != null && tableData.columns[columnIndex].numeric) || false ? 'right' : 'left'}
-                onClick={onDataCellClick}
+                // onClick={onDataCellClick}
+                // onKeyDown={handleDataCellKeyDown}
+                // onBlur={onDataCellBlur}
             >
                 {cellData["value"]}
             </TableCell>
@@ -130,6 +131,54 @@ const BaseDataTable: FC<DataTableProps> = (props) => {
         const w = tableData.columns.map(c=>c.width).reduce((x,y)=>x+y);
         return !!maxTableWidth ? Math.min(w, maxTableWidth) : w;
     };
+
+    const onDataCellClick = (event:React.MouseEvent<HTMLTableDataCellElement, MouseEvent>)=>{
+        const ele = event.target as HTMLTableDataCellElement;
+        const oldChildren = ele.children;
+        const value = ele.textContent;
+        const input = document.createElement("input");
+        input.textContent = "xxxxx";
+        ele.textContent = "";
+        input.defaultValue = value || "";
+        if(oldChildren && oldChildren.length>0) {
+            const ce = oldChildren.item(0);
+            if(ce!=null) {
+                ele.replaceChild(input, ce);
+            } else {
+                ele.appendChild(input);
+            }
+        } else {
+            ele.appendChild(input);
+        }
+        ele.focus()
+    };
+
+    const handleDataCellKeyDown = (event: React.KeyboardEvent<HTMLTableDataCellElement>) => {
+        console.log("key down");
+        if(event.keyCode === 13) {
+            console.log("blur");
+            const ele = event.target as HTMLTableDataCellElement;
+            const input = ele.children.item(0) as HTMLInputElement;
+            console.log(input);
+            const value = input.value;
+            ele.removeChild(input);
+            ele.textContent = value;
+        }
+    };
+
+    const onDataCellBlur = (event: React.FocusEvent<HTMLTableDataCellElement>) => {
+        console.log("blur");
+        const ele = event.target as HTMLTableDataCellElement;
+        const input = ele.children.item(0) as HTMLInputElement;
+        console.log(input);
+        const value = input.value;
+        ele.removeChild(input);
+        ele.textContent = value;
+    };
+
+    if(tableData.columns.length==0) {
+        return <></>
+    }
 
     return (
         <Table

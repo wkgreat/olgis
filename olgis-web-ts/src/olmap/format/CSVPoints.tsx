@@ -66,12 +66,16 @@ export default class CSVPoints extends FeatureFormat{
             return new Feature<Geometry>();
         } else {
             let geom = this.readGeometry(source, opt_options);
-            return new Feature<Geometry>(geom);
+            const feature = new Feature<Geometry>(geom);
+            for(let i=0; i<source.numCols; ++i) {
+                const cname = source.columnNames[i];
+                feature.set(cname,rows[0][i]);
+            }
+            return feature;
         }
 
     }
 
-    //TODO 添加属性信息
     readFeatures(source: CSVData, opt_options?: CSVPointsReadOptions): Feature[] {
         let rows = source.rows;
         if(rows.length<=0) {

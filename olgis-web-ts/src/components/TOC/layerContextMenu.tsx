@@ -5,6 +5,9 @@ import BaseVectorLayer from "ol/layer/BaseVector";
 import BaseTileLayer from "ol/layer/BaseTile";
 import {LayerUtils} from "../../olmap";
 import {MapContext} from "../MapContext/mapContext";
+import {ListItemActivator} from "../tools/toolActivator";
+import AttributeTable from "../tools/AttributeTable/attributeTable";
+import VectorLayer from "ol/layer/Vector";
 
 /**
  * 图层对象上下文菜单组件属性
@@ -85,6 +88,7 @@ export const VectorLayerContextMenu: FC<LayerContextMenuProps> = (props) => {
             <MenuItem disabled onClick={props.onClose}>查看属性表</MenuItem>
             <MenuItem disabled onClick={props.onClose}>矢量图层设置</MenuItem>
             <MenuItem disabled onClick={props.onClose}>矢量数据导出</MenuItem>
+            <ListItemActivator label="查看属性表" target={<AttributeTable layer={layer as (VectorLayer|undefined)}/>}/>
         </Menu>
     )
 
