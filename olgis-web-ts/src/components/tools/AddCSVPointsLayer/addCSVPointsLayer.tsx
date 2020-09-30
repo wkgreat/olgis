@@ -50,8 +50,8 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
     const [open, setOpen] = useState(props.open);
     const [layerName, setLayerName] = useState("csv-layer");
     const [csv, setCSV] = useState(defaultCSV);
-    const [xField, setXField] = useState("C0");
-    const [yField, setYField] = useState("C1");
+    const [xField, setXField] = useState("");
+    const [yField, setYField] = useState("");
     const [header] = useState(true);
     const [delimiter] = useState(",");
     //TODO other setting
@@ -97,6 +97,17 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
         setOpen(false);
     };
 
+    const validateXField = (): boolean => {
+        return !!tableData && tableData.columns.map(c=>c.dataKey).includes(xField);
+    };
+
+    const validateYField = (): boolean => {
+        return !!tableData && tableData.columns.map(c=>c.dataKey).includes(yField);
+    };
+
+    const changeXField = (e:any) => setXField(()=>e.target.value);
+    const changeYField = (e:any) => setYField(()=>e.target.value);
+
     const addLayer = () => {
         const csvData = parseCSVText(csv, header, delimiter);
         if(csvData) {
@@ -116,7 +127,7 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
                 title="添加CSV点图层"
                 onOK={handleOK}
                 onCancel={handleCancel}
-                enableOK={!!tableData && !tableData.isEmpty()}
+                enableOK={validateXField()&&validateYField()}
             >
                 <Box component='div'>
                     现在只支持WGS84坐标
@@ -133,39 +144,41 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
                         <br/>
                         <Box display="flex">
                             <Box width="50%" mx={1}>
-                                <FormControl fullWidth={true} size="small">
+                                <FormControl fullWidth={true} size="small" error={!validateXField()}>
                                     <InputLabel>X字段</InputLabel>
                                     <Select
+                                        displayEmpty={true}
                                         variant="filled"
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         value={xField}
-                                        onChange={(e:any)=>{setXField(e.target.value)}}
+                                        onChange={changeXField}
                                         disabled={!tableData || tableData.isEmpty()}
                                     >
                                         {
                                             tableData ?
-                                                tableData.columns.map(c=><MenuItem value={c.dataKey}>{c.label}</MenuItem>)
-                                                : <MenuItem value="">EMPTY</MenuItem>
+                                                tableData.columns.map(c=><MenuItem key={c.dataKey} value={c.dataKey}>{c.label}</MenuItem>)
+                                                : <MenuItem key="EMPTY" value="">EMPTY</MenuItem>
                                         }
                                     </Select>
                                 </FormControl>
                             </Box>
                             <Box width="50%" mx={1}>
-                                <FormControl fullWidth={true} size="small">
+                                <FormControl fullWidth={true} size="small" error={!validateYField()}>
                                     <InputLabel>Y字段</InputLabel>
                                     <Select
+                                        displayEmpty={true}
                                         variant="filled"
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         value={yField}
-                                        onChange={(e:any)=>setYField(e.target.value)}
+                                        onChange={changeYField}
                                         disabled={!tableData || tableData.isEmpty()}
                                     >
                                         {
                                             tableData ?
-                                                tableData.columns.map(c=><MenuItem value={c.dataKey}>{c.label}</MenuItem>)
-                                                : <MenuItem value="">EMPTY</MenuItem>
+                                                tableData.columns.map(c=><MenuItem key={c.dataKey} value={c.dataKey}>{c.label}</MenuItem>)
+                                                : <MenuItem key="EMPTY" value="">EMPTY</MenuItem>
                                         }
                                     </Select>
                                 </FormControl>

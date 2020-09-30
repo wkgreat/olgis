@@ -176,7 +176,7 @@ const BaseDataTable: FC<DataTableProps> = (props) => {
         ele.textContent = value;
     };
 
-    if(tableData.columns.length==0) {
+    if(tableData.columns.length===0) {
         return <></>
     }
 
