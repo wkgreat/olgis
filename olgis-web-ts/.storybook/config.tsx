@@ -8,6 +8,7 @@ import TileLayer from "ol/layer/Tile";
 import {OSM, XYZ} from "ol/source";
 import {ThemeProvider} from "@material-ui/styles";
 import {createMuiTheme, CssBaseline} from "@material-ui/core";
+import {SnackbarProvider} from "notistack";
 
 configure(require.context('../src', true, /\.stories\.tsx$/), module)
 
@@ -44,7 +45,9 @@ const storyWrapper = (storyFn: any) => (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline/>
             <MapContextProvider view={view} layers={layers}>
-                {storyFn()}
+                <SnackbarProvider maxSnack={3}>
+                    {storyFn()}
+                </SnackbarProvider>
             </MapContextProvider>
         </ThemeProvider>
     </div>

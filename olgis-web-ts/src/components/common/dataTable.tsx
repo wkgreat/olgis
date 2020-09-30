@@ -2,24 +2,15 @@ import React, {FC} from 'react';
 import clsx from 'clsx';
 import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
-import {AutoSizer, Column, Index, Table, TableCellRenderer, TableHeaderProps} from 'react-virtualized';
-
-declare module '@material-ui/core/styles/withStyles' {
-    // Augment the BaseCSSProperties so that we can control jss-rtl
-    interface BaseCSSProperties {
-        /*
-         * Used to control if the rule-set should be affected by rtl transformation
-         */
-        flip?: boolean;
-    }
-}
+import {Column, Index, Table, TableCellDataGetter, TableCellRenderer, TableHeaderProps} from 'react-virtualized';
+import {TableData} from "../../olmap/format/TableData";
 
 const styles = (theme: Theme) =>
     createStyles({
         flexContainer: {
             display: 'flex',
             alignItems: 'center',
-            boxSizing: 'border-box',
+            boxSizing: 'border-box'
         },
         table: {
             // temporary right-to-left patch, waiting for
@@ -34,117 +25,148 @@ const styles = (theme: Theme) =>
         },
         tableRowHover: {
             '&:hover': {
-                backgroundColor: theme.palette.grey[200],
+                backgroundColor: theme.palette.grey[800]
+            },
+        },
+        tableColumnHover: {
+            //backgroundColor: "red",
+            '&:hover': {
+                backgroundColor: theme.palette.grey[800]
             },
         },
         tableCell: {
             flex: 1,
+            borderRight: "1px solid black",
+            '&:hover': {
+                backgroundColor: theme.palette.grey[900]
+            },
         },
         noClick: {
             cursor: 'initial',
         },
+        headerCell: {
+            backgroundColor: theme.palette.type==='light' ? "rgba(255,255,255,0.5)" : "rgba(100,100,100,0.5)"
+        },
+        contentCell : {
+            backgroundColor: theme.palette.type==='light' ? "rgba(200,200,200,0.5)" : "rgba(40,40,40,0.5)"
+        }
     });
 
-export type RowData = {[datakey:string]: any}
-
-/** 字段属性 */
-export interface FieldData {
-    dataKey: string;
-    label: string;
-    numeric?: boolean;
-    width: number;
-}
-
 export interface DataTableProps extends WithStyles<typeof styles>{
-    columns : FieldData[]
-    headerHeight ?: number
+    headerHeight : number
     rowHeight : number
-    rowCount : number
+    tableData : TableData;
+    maxTableHeight ?:number;
+    maxTableWidth ?:number;
+
     onRowClick?: () => void;
-    rowGetter?: (info: Index) => RowData;
+    onDataCellClick?: (e:React.MouseEvent<HTMLTableDataCellElement, MouseEvent>)=>void;
 }
 
 const BaseDataTable: FC<DataTableProps> = (props) => {
 
-    const { classes, columns, rowHeight, headerHeight, ...tableProps } = props;
+    const { classes, tableData, rowHeight, headerHeight, maxTableHeight, maxTableWidth, ...tableProps } = props;
     
     const getRowClassName = ({ index }: any) => {
-        const { classes, onRowClick } = props;
-
+        const { classes } = props;
         return clsx(classes.tableRow, classes.flexContainer, {
-            [classes.tableRowHover]: index !== -1 && onRowClick != null,
+            [classes.tableRowHover]: index !== -1
         });
     };
 
-    const cellRenderer: TableCellRenderer = ({ cellData, columnIndex }) => {
-        const { columns, classes, rowHeight, onRowClick } = props;
-        return (
-            <TableCell
-                component="div"
-                className={clsx(classes.tableCell, classes.flexContainer, {
-                    [classes.noClick]: onRowClick == null,
-                })}
-                variant="body"
-                style={{ height: rowHeight }}
-                align={(columnIndex != null && columns[columnIndex].numeric) || false ? 'right' : 'left'}
-            >
-                {cellData}
-            </TableCell>
-        );
-    };
-
+    //表头单元格
     const headerRenderer = ({ label, columnIndex }: TableHeaderProps & { columnIndex: number }) => {
-        const { headerHeight, columns, classes } = props;
+
+        const { headerHeight, classes, tableData} = props;
 
         return (
             <TableCell
                 component="div"
-                className={clsx(classes.tableCell, classes.flexContainer, classes.noClick)}
+                className={clsx(classes.tableCell, classes.flexContainer, classes.noClick, classes.headerCell)}
                 variant="head"
-                style={{ height: headerHeight }}
-                align={columns[columnIndex].numeric || false ? 'right' : 'left'}
+                style={{
+                    height: headerHeight
+                }}
+                align={tableData.columns[columnIndex].numeric || false ? 'right' : 'left'}
             >
                 <span>{label}</span>
             </TableCell>
         );
     };
 
-    
+    //内容单元格
+    const cellRenderer: TableCellRenderer = ({ cellData, columnIndex}) => {
+        const { classes, rowHeight, tableData, onDataCellClick} = props;
+        return (
+            <TableCell
+                component="div"
+                className={clsx(classes.tableCell, classes.flexContainer, classes.contentCell)}
+                variant="body"
+                style={{
+                    height: rowHeight
+                }}
+                align={(columnIndex != null && tableData.columns[columnIndex].numeric) || false ? 'right' : 'left'}
+                onClick={onDataCellClick}
+            >
+                {cellData["value"]}
+            </TableCell>
+        );
+    };
+
+    const rowGetter = ({ index }: Index) => {
+        return tableData.rows[index];
+    };
+
+    const cellDataGetter: TableCellDataGetter = ({columnData, dataKey, rowData}) => {
+        return rowData[dataKey];
+    };
+
+    const getHeight = () => {
+        const h = rowHeight*tableData.rows.length + (headerHeight);
+        return !!maxTableHeight ? Math.min(h, maxTableHeight) : h;
+    };
+
+    const getWidth = () => {
+        const w = tableData.columns.map(c=>c.width).reduce((x,y)=>x+y);
+        return !!maxTableWidth ? Math.min(w, maxTableWidth) : w;
+    };
+
     return (
-        <AutoSizer>
-            {({ height, width }) => (
-                <Table
-                    height={height}
-                    width={width}
-                    rowHeight={rowHeight!}
-                    gridStyle={{
-                        direction: 'inherit',
-                    }}
-                    headerHeight={headerHeight!}
-                    className={classes.table}
-                    {...tableProps}
-                    rowClassName={getRowClassName}
-                >
-                    {columns.map(({ dataKey, ...other }, index) => {
-                        return (
-                            <Column
-                                key={dataKey}
-                                headerRenderer={(headerProps) =>
-                                    headerRenderer({
-                                        ...headerProps,
-                                        columnIndex: index,
-                                    })
-                                }
-                                className={classes.flexContainer}
-                                cellRenderer={cellRenderer}
-                                dataKey={dataKey}
-                                {...other}
-                            />
-                        );
-                    })}
-                </Table>
-            )}
-        </AutoSizer>
+        <Table
+            stickyHeader
+            height={getHeight()}
+            width={getWidth()}
+            rowHeight={rowHeight!}
+            headerHeight={headerHeight!}
+            className={classes.table}
+            rowClassName={getRowClassName}
+            rowCount={tableData.rows.length}
+            rowGetter={rowGetter}
+            rowStyle={{
+                width: getWidth(),
+                border: "1px solid black"
+            }}
+            {...tableProps}
+        >
+            {tableData.columns.map(({ dataKey, ...other }, index) => {
+                return (
+                    <Column
+                        key={dataKey}
+                        headerRenderer={(headerProps) =>
+                            headerRenderer({
+                                ...headerProps,
+                                columnIndex: index,
+                            })
+                        }
+                        className={clsx(classes.flexContainer, classes.tableColumnHover)}
+                        cellRenderer={cellRenderer}
+                        cellDataGetter={cellDataGetter}
+                        dataKey={dataKey}
+                        {...other}
+                    />
+                );
+            })}
+        </Table>
     );
 };
 

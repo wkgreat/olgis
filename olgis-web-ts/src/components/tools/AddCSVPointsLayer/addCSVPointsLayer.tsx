@@ -3,11 +3,13 @@ import BaseToolProps from "../baseToolProps";
 import ToolDialog from "../toolDialog";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField/TextField";
-import {TextareaAutosize} from "@material-ui/core";
+import {Paper, TextareaAutosize} from "@material-ui/core";
 import {MapContext} from "../../MapContext/mapContext";
 import {parseCSVText} from "../../../olmap/format/CSVData";
 import {makeCSVPointsLayer} from "../../../olmap/olmapLayer";
 import {LayerUtils} from "../../../olmap";
+import DataTable from "../../common/dataTable";
+import {TableData} from "../../../olmap/format/TableData";
 
 export interface AddCSVPointsLayerProps extends BaseToolProps{
 }
@@ -30,15 +32,16 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
     const [open, setOpen] = useState(props.open);
     const [layerName, setLayerName] = useState("csv-layer");
     const [csv, setCSV] = useState(`C0,C1,C2
-    117,32,0
-    117.5, 32.5, 1
-    118, 33, 2
+117,32,0
+117.5, 32.5, 1
+118, 33, 2
     `);
     const [xField, setXField] = useState("C0");
     const [yField, setYField] = useState("C1");
     const [header] = useState(true);
     const [delimiter] = useState(",");
     //TODO other setting
+    const [tableData, setTableData] = useState(getTableDataFromCsvText(csv));
 
     const olmap = useContext(MapContext);
 
@@ -51,9 +54,19 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
         setLayerName(inputName);
     }
 
+    function getTableDataFromCsvText(csvText: string) {
+        const csvData = parseCSVText(csvText, header, delimiter);
+        const tdata = TableData.fromCSV(csvData);
+        return tdata;
+    }
+
     function handleCSVChange(e:any) {
         let v = e.target.value;
         setCSV(v);
+        const tdata = getTableDataFromCsvText(v);
+        setTableData(tdata);
+        console.log(v);
+        console.log(tdata);
     }
 
     const handleOK = ()=> {
@@ -68,10 +81,12 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
 
     const addLayer = () => {
         const csvData = parseCSVText(csv, header, delimiter);
-        const layer = makeCSVPointsLayer(olmap, layerName, csvData, xField, yField);
-        if(layer) {
-            LayerUtils.addLayer(olmap, layer);
-            LayerUtils.zoomToLayer(olmap, layer.get("name"));
+        if(csvData) {
+            const layer = makeCSVPointsLayer(olmap, layerName, csvData, xField, yField);
+            if(layer) {
+                LayerUtils.addLayer(olmap, layer);
+                LayerUtils.zoomToLayer(olmap, layer.get("name"));
+            }
         }
     };
 
@@ -112,6 +127,20 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
                                               maxWidth: "100%"
                                           }}
                         />
+                        {!!tableData ?
+                            <Paper style={{ height: tableData.rows.length*36+36, maxHeight: 250, width: '100%', overflowX: 'auto'}}>
+                                <DataTable
+                                    tableData = {tableData}
+                                    headerHeight={24}
+                                    rowHeight={24}
+                                    maxTableHeight={200}
+                                    maxTableWidth={100000}
+                                />
+                            </Paper>
+                            :
+                            <></>
+                        }
+
                     </form>
                 </Box>
             </ToolDialog>
