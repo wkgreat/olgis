@@ -40,35 +40,30 @@ export const parseCSVText = (text : string, header : boolean = false, delimiter 
     let columnNames;
     let rows;
 
-    try {
-        let allRows = text.trim()
-            .split("\n")
-            .map(s=>s.trim())
-            .filter(s => s != null && s.length > 0);
+    let allRows = text.trim()
+        .split("\n")
+        .map(s=>s.trim())
+        .filter(s => s != null && s.length > 0);
 
-        if(header) {
-            columnNames = allRows[0].split(delimiter).map(s=>s.trim())
-        }
-        rows = allRows.slice(1).map(r=>r.split(delimiter).map(s=>s.trim()));
-        let numCols = Math.max(...rows.map(r=>r.length));
-
-        if(!columnNames) {
-            columnNames = rangeArray(0,numCols).map(n=>`C${n}`);
-        }
-
-        const csvData = {
-            columnNames,
-            rows,
-            header,
-            delimiter,
-            numCols
-        };
-
-        return csvData;
-
-    } catch (e) {
-        console.warn(e);
+    if(header) {
+        columnNames = allRows[0].split(delimiter).map(s=>s.trim())
     }
+    rows = allRows.slice(1).map(r=>r.split(delimiter).map(s=>s.trim()));
+    let numCols = Math.max(...rows.map(r=>r.length));
+
+    if(!columnNames) {
+        columnNames = rangeArray(0,numCols).map(n=>`C${n}`);
+    }
+
+    const csvData = {
+        columnNames,
+        rows,
+        header,
+        delimiter,
+        numCols
+    };
+
+    return csvData;
 
     return null;
 

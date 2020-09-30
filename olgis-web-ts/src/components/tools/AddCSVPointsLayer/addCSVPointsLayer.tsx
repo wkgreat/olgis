@@ -3,7 +3,7 @@ import BaseToolProps from "../baseToolProps";
 import ToolDialog from "../toolDialog";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField/TextField";
-import {Paper, TextareaAutosize} from "@material-ui/core";
+import {FormControl, InputLabel, MenuItem, Paper, Select, TextareaAutosize} from "@material-ui/core";
 import {MapContext} from "../../MapContext/mapContext";
 import {parseCSVText} from "../../../olmap/format/CSVData";
 import {makeCSVPointsLayer} from "../../../olmap/olmapLayer";
@@ -13,6 +13,24 @@ import {TableData} from "../../../olmap/format/TableData";
 
 export interface AddCSVPointsLayerProps extends BaseToolProps{
 }
+
+const defaultCSV:string =
+`LAT, LON, CITY, NUMBER
+46.066667, 11.116667, Trento, 140
+44.9441, -93.0852, St Paul, 125
+13.752222, 100.493889, Bangkok, 150
+45.420833, -75.69, Ottawa, 200
+44.9801, -93.251867, Minneapolis, 350
+46.519833, 6.6335, Lausanne, 560
+48.428611, -123.365556, Victoria, 721
+-33.925278, 18.423889, Cape Town, 550
+-33.859972, 151.211111, Sydney, 436
+41.383333, 2.183333, Barcelona, 914
+39.739167, -104.984722, Denver, 869
+52.95, -1.133333, Nottingham, 800
+45.52, -122.681944, Portland, 840
+37.5667,129.681944,Seoul,473
+50.733992,7.099814,Bonn,700`;
 
 /**
  * 参数：
@@ -31,11 +49,7 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
 
     const [open, setOpen] = useState(props.open);
     const [layerName, setLayerName] = useState("csv-layer");
-    const [csv, setCSV] = useState(`C0,C1,C2
-117,32,0
-117.5, 32.5, 1
-118, 33, 2
-    `);
+    const [csv, setCSV] = useState(defaultCSV);
     const [xField, setXField] = useState("C0");
     const [yField, setYField] = useState("C1");
     const [header] = useState(true);
@@ -54,10 +68,16 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
         setLayerName(inputName);
     }
 
-    function getTableDataFromCsvText(csvText: string) {
-        const csvData = parseCSVText(csvText, header, delimiter);
-        const tdata = TableData.fromCSV(csvData);
-        return tdata;
+    function getTableDataFromCsvText(csvText: string):TableData|undefined|null {
+        if(csvText) {
+            const csvData = parseCSVText(csvText, header, delimiter);
+            const tdata = TableData.fromCSV(csvData);
+            return tdata;
+        } else {
+            const tdata = new TableData();
+            return tdata;
+        }
+
     }
 
     function handleCSVChange(e:any) {
@@ -65,8 +85,6 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
         setCSV(v);
         const tdata = getTableDataFromCsvText(v);
         setTableData(tdata);
-        console.log(v);
-        console.log(tdata);
     }
 
     const handleOK = ()=> {
@@ -98,23 +116,61 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
                 title="添加CSV点图层"
                 onOK={handleOK}
                 onCancel={handleCancel}
+                enableOK={!!tableData && !tableData.isEmpty()}
             >
                 <Box component='div'>
                     现在只支持WGS84坐标
                     <form noValidate autoComplete="off">
-                        <TextField id="standard-basic" label="图层名称" value={layerName}
-                                   margin="normal" fullWidth={true}
-                                   onChange={handleLayerNameChange}
-                        />
+                        <Box mx={1}>
+                            <TextField
+                                variant="filled"
+                                id="standard-basic"
+                                label="图层名称" value={layerName}
+                                margin="normal" fullWidth={true}
+                                onChange={handleLayerNameChange}
+                            />
+                        </Box>
                         <br/>
-                        <TextField id="standard-basic" label="X字段名称" value={xField}
-                                   margin="normal" fullWidth={true}
-                                   onChange={(e)=>{setXField(e.target.value)}}
-                        />
-                        <TextField id="standard-basic" label="Y字段名称" value={yField}
-                                   margin="normal" fullWidth={true}
-                                   onChange={(e)=>{setYField(e.target.value)}}
-                        />
+                        <Box display="flex">
+                            <Box width="50%" mx={1}>
+                                <FormControl fullWidth={true} size="small">
+                                    <InputLabel>X字段</InputLabel>
+                                    <Select
+                                        variant="filled"
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={xField}
+                                        onChange={(e:any)=>{setXField(e.target.value)}}
+                                        disabled={!tableData || tableData.isEmpty()}
+                                    >
+                                        {
+                                            tableData ?
+                                                tableData.columns.map(c=><MenuItem value={c.dataKey}>{c.label}</MenuItem>)
+                                                : <MenuItem value="">EMPTY</MenuItem>
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <Box width="50%" mx={1}>
+                                <FormControl fullWidth={true} size="small">
+                                    <InputLabel>Y字段</InputLabel>
+                                    <Select
+                                        variant="filled"
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={yField}
+                                        onChange={(e:any)=>setYField(e.target.value)}
+                                        disabled={!tableData || tableData.isEmpty()}
+                                    >
+                                        {
+                                            tableData ?
+                                                tableData.columns.map(c=><MenuItem value={c.dataKey}>{c.label}</MenuItem>)
+                                                : <MenuItem value="">EMPTY</MenuItem>
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </Box>
                         <br/>
                         CSV文本:
                         <br/>

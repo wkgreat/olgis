@@ -4,6 +4,10 @@ export class TableData {
     private _columns : Column[] = [];
     private _rows : Row[] = [];
 
+    isEmpty(): boolean {
+        return this._columns.length===0 && this._rows.length===0
+    }
+
     get columns(): Column[] {
         return this._columns;
     }
