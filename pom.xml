@@ -23,6 +23,7 @@
     <properties>
         <olgis.version>0.0.3-SNAPSHOT</olgis.version>
         <java.version>1.8</java.version>
+        <swagger.version>2.9.2</swagger.version>
         <doraemon.version>1.3</doraemon.version>
         <uber.h3.version>3.6.4</uber.h3.version>
         <postgresql.jdbc.version>42.2.14</postgresql.jdbc.version>
@@ -82,6 +83,17 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>wkgreat</groupId>

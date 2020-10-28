@@ -197,7 +197,7 @@ const AddCSVPointsLayer: FC<AddCSVPointsLayerProps> = (props) => {
                                           }}
                         />
                         {!!tableData ?
-                            <Paper style={{ height: tableData.rows.length*36+36, maxHeight: 250, width: '100%', overflowX: 'auto'}}>
+                            <Paper style={{ height: tableData.rows.length*24+24, maxHeight: 250, width: '100%', overflowX: 'auto'}}>
                                 <DataTable
                                     tableData = {tableData}
                                     headerHeight={24}
